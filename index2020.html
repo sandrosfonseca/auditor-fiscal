@@ -1,0 +1,2628 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simulado Completo - Auditor Fiscal de Tributos Municipais</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --secondary-color: #3498db;
+            --accent-color: #e74c3c;
+            --light-bg: #f8f9fa;
+            --border-color: #dee2e6;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f5f7fa;
+            color: #333;
+            line-height: 1.6;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, var(--primary-color) 0%, #1a2530 100%);
+            color: white;
+            padding: 2rem 0;
+            border-bottom: 5px solid var(--secondary-color);
+            margin-bottom: 2rem;
+        }
+        
+        .header h1 {
+            font-weight: 700;
+            font-size: 2.2rem;
+        }
+        
+        .header .subtitle {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+        
+        .exam-info {
+            background-color: white;
+            border-radius: 10px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            margin-bottom: 2rem;
+            border-left: 5px solid var(--secondary-color);
+        }
+        
+        .subject-card {
+            background-color: white;
+            border-radius: 10px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            border-top: 4px solid var(--secondary-color);
+            transition: transform 0.3s ease;
+        }
+        
+        .subject-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .subject-title {
+            color: var(--primary-color);
+            border-bottom: 2px solid var(--light-bg);
+            padding-bottom: 0.75rem;
+            margin-bottom: 1.5rem;
+            font-weight: 700;
+        }
+        
+        .question-card {
+            background-color: white;
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 3px 5px rgba(0, 0, 0, 0.04);
+            border-left: 3px solid #e9ecef;
+        }
+        
+        .question-number {
+            display: inline-block;
+            background-color: var(--secondary-color);
+            color: white;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 36px;
+            font-weight: 700;
+            margin-right: 10px;
+        }
+        
+        .question-text {
+            font-weight: 600;
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+        }
+        
+        .options-list {
+            list-style-type: none;
+            padding-left: 0;
+        }
+        
+        .option-item {
+            padding: 0.75rem;
+            margin-bottom: 0.5rem;
+            border-radius: 5px;
+            border: 1px solid var(--border-color);
+            transition: all 0.2s ease;
+            cursor: pointer;
+        }
+        
+        .option-item:hover {
+            background-color: #f0f7ff;
+            border-color: var(--secondary-color);
+        }
+        
+        .option-item.selected {
+            background-color: #e7f3ff;
+            border-color: var(--secondary-color);
+            box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.2);
+        }
+        
+        .option-item.correct {
+            background-color: #d4edda;
+            border-color: #c3e6cb;
+        }
+        
+        .option-item.incorrect {
+            background-color: #f8d7da;
+            border-color: #f5c6cb;
+        }
+        
+        .option-letter {
+            display: inline-block;
+            width: 28px;
+            height: 28px;
+            background-color: #e9ecef;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 28px;
+            font-weight: 700;
+            margin-right: 10px;
+        }
+        
+        .selected .option-letter {
+            background-color: var(--secondary-color);
+            color: white;
+        }
+        
+        .correct .option-letter {
+            background-color: #28a745;
+            color: white;
+        }
+        
+        .incorrect .option-letter {
+            background-color: #dc3545;
+            color: white;
+        }
+        
+        .table-container {
+            overflow-x: auto;
+            margin: 1.5rem 0;
+        }
+        
+        .table-custom {
+            min-width: 100%;
+            border-collapse: collapse;
+        }
+        
+        .table-custom th, .table-custom td {
+            border: 1px solid var(--border-color);
+            padding: 0.75rem;
+            text-align: center;
+        }
+        
+        .table-custom th {
+            background-color: var(--light-bg);
+            font-weight: 600;
+        }
+        
+        .navigation {
+            position: sticky;
+            top: 20px;
+            background-color: white;
+            border-radius: 10px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+        }
+        
+        .nav-title {
+            color: var(--primary-color);
+            font-weight: 700;
+            margin-bottom: 1rem;
+            border-bottom: 2px solid var(--light-bg);
+            padding-bottom: 0.5rem;
+        }
+        
+        .nav-list {
+            list-style-type: none;
+            padding-left: 0;
+        }
+        
+        .nav-item {
+            margin-bottom: 0.5rem;
+        }
+        
+        .nav-link {
+            color: #555;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            padding: 0.5rem;
+            border-radius: 5px;
+            transition: all 0.2s ease;
+        }
+        
+        .nav-link:hover {
+            background-color: #f0f7ff;
+            color: var(--secondary-color);
+        }
+        
+        .nav-link i {
+            margin-right: 8px;
+            width: 20px;
+            text-align: center;
+        }
+        
+        .footer {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 2rem 0;
+            margin-top: 3rem;
+            text-align: center;
+        }
+        
+        .progress-container {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background-color: white;
+            box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
+            padding: 0.75rem;
+            z-index: 1000;
+        }
+        
+        .progress-text {
+            font-size: 0.9rem;
+            margin-bottom: 0.25rem;
+        }
+        
+        .timer {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 50px;
+            font-weight: 700;
+            display: inline-block;
+            margin-bottom: 1rem;
+        }
+        
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 1.8rem;
+            }
+            
+            .navigation {
+                position: static;
+                margin-bottom: 2rem;
+            }
+            
+            .progress-container {
+                position: static;
+                box-shadow: none;
+                border-top: 1px solid var(--border-color);
+            }
+        }
+        
+        .diagram {
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            text-align: center;
+            border: 1px solid var(--border-color);
+        }
+        
+        .diagram-placeholder {
+            font-style: italic;
+            color: #6c757d;
+        }
+        
+        .financial-table {
+            font-size: 0.9rem;
+        }
+        
+        .export-btn {
+            background: linear-gradient(to right, #27ae60, #2ecc71);
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 50px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+        
+        .export-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(39, 174, 96, 0.4);
+            color: white;
+        }
+        
+        .export-section {
+            background-color: white;
+            border-radius: 10px;
+            padding: 1.5rem;
+            margin-top: 2rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            border-top: 4px solid #27ae60;
+        }
+        
+        .response-summary {
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            padding: 1rem;
+            margin-top: 1rem;
+            font-size: 0.9rem;
+        }
+        
+        .response-summary-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.25rem 0;
+            border-bottom: 1px solid #e9ecef;
+        }
+        
+        .response-summary-item:last-child {
+            border-bottom: none;
+        }
+        
+        .success-message {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+            border-radius: 5px;
+            padding: 0.75rem;
+            margin-top: 1rem;
+            display: none;
+        }
+        
+        .account-row {
+            text-align: left;
+        }
+        
+        .account-value {
+            text-align: right;
+            font-weight: 600;
+        }
+        
+        .results-section {
+            background-color: white;
+            border-radius: 10px;
+            padding: 1.5rem;
+            margin-top: 2rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            border-top: 4px solid #f39c12;
+            display: none;
+        }
+        
+        .results-table {
+            font-size: 0.85rem;
+        }
+        
+        .correct-answer {
+            color: #28a745;
+            font-weight: 600;
+        }
+        
+        .incorrect-answer {
+            color: #dc3545;
+            font-weight: 600;
+        }
+        
+        .anulada-badge {
+            background-color: #6c757d;
+            color: white;
+            padding: 0.2rem 0.5rem;
+            border-radius: 3px;
+            font-size: 0.75rem;
+        }
+        
+        .finalize-btn {
+            background: linear-gradient(to right, #f39c12, #e67e22);
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 50px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+        
+        .finalize-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(243, 156, 18, 0.4);
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <!-- Cabeçalho -->
+    <header class="header">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-md-8">
+                    <h1>Simulado Completo - Auditor Fiscal de Tributos Municipais</h1>
+                    <p class="subtitle">Prefeitura Municipal de Santos - Estado de São Paulo | Edital nº 23/2023</p>
+                </div>
+                <div class="col-md-4 text-md-end">
+                    <div class="timer">
+                        <i class="fas fa-clock me-2"></i> Duração: 3h30min
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="row">
+            <!-- Conteúdo principal - Questões -->
+            <div class="col-lg-9">
+                <!-- Informações do exame -->
+                <div class="exam-info">
+                    <h3><i class="fas fa-info-circle me-2"></i>Instruções</h3>
+                    <p>Este caderno contém 50 questões objetivas. Responda a todas as questões, marcando a alternativa que você considera correta. A duração da prova é de 3 horas e 30 minutos.</p>
+                    <div class="row mt-3">
+                        <div class="col-md-6">
+                            <p><i class="fas fa-user me-2"></i><strong>Cargo:</strong> 347 – Auditor Fiscal de Tributos Municipais</p>
+                        </div>
+                        <div class="col-md-6">
+                            <p><i class="fas fa-file-alt me-2"></i><strong>Tipo de Prova:</strong> B</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Língua Portuguesa -->
+                <div class="subject-card" id="lingua-portuguesa">
+                    <h2 class="subject-title"><i class="fas fa-language me-2"></i>Língua Portuguesa</h2>
+                    
+                    <!-- Questão 1 -->
+                    <div class="question-card" data-question="1">
+                        <div class="d-flex align-items-center mb-3">
+                            <span class="question-number">1</span>
+                            <h5 class="question-text">De acordo com o texto, é correto afirmar que o consumo do café</h5>
+                        </div>
+                        <ul class="options-list">
+                            <li class="option-item" data-option="A">
+                                <span class="option-letter">A</span>
+                                foi proibido durante a Idade Média, uma vez que alterava os humores dos monges que viviam reclusos em mosteiros.
+                            </li>
+                            <li class="option-item" data-option="B">
+                                <span class="option-letter">B</span>
+                                nasceu na Turquia, país que possuía um clima ideal para o cultivo desta planta, tornando-se, assim, o maior exportador da bebida.
+                            </li>
+                            <li class="option-item" data-option="C">
+                                <span class="option-letter">C</span>
+                                possibilitou a criação de espaços que se tornaram, em alguns países europeus, lugar de debate e divulgação cultural e de novas ideias.
+                            </li>
+                            <li class="option-item" data-option="D">
+                                <span class="option-letter">D</span>
+                                potencializou a economia mundial, muito por conta de sua constituição química que, por possuir psicoativos, gerava dependência e o desejo de ingeri-lo mais vezes.
+                            </li>
+                        </ul>
+                    </div>
+
+                    <!-- Questão 2 -->
+                    <div class="question-card" data-question="2">
+                        <div class="d-flex align-items-center mb-3">
+                            <span class="question-number">2</span>
+                            <h5 class="question-text">Em relação à história, é correto afirmar que o café</h5>
+                        </div>
+                        <ul class="options-list">
+                            <li class="option-item" data-option="A">
+                                <span class="option-letter">A</span>
+                                criou o movimento abolicionista, que passou a defender a abolição da escravatura alegando que este sistema comprometia a imagem do Brasil no exterior.
+                            </li>
+                            <li class="option-item" data-option="B">
+                                <span class="option-letter">B</span>
+                                ocasionou o fechamento de muitas indústrias produtoras de álcool, visto que ele se tornou uma bebida que tornava o indivíduo mais produtivo e próspero.
+                            </li>
+                            <li class="option-item" data-option="C">
+                                <span class="option-letter">C</span>
+                                promoveu o advento do capitalismo, uma vez que o seu plantio não gerava gastos trabalhistas aos produtores porque eles recorriam à mão de obra escrava.
+                            </li>
+                            <li class="option-item" data-option="D">
+                                <span class="option-letter">D</span>
+                                gera efeitos sobre o indivíduo que permitem a construção de um pensamento mais concentrado e racional, critério fundamental para o desenvolvimento do pensamento científico.
+                            </li>
+                        </ul>
+                    </div>
+                    
+                    <!-- Questão 3 -->
+                    <div class="question-card" data-question="3">
+                        <div class="d-flex align-items-center mb-3">
+                            <span class="question-number">3</span>
+                            <h5 class="question-text">É correto afirmar que os termos destacados "para" e "porque" desempenham, respectivamente, o sentido de</h5>
+                        </div>
+                        <ul class="options-list">
+                            <li class="option-item" data-option="A">
+                                <span class="option-letter">A</span>
+                                finalidade e explicação.
+                            </li>
+                            <li class="option-item" data-option="B">
+                                <span class="option-letter">B</span>
+                                causalidade e conclusão.
+                            </li>
+                            <li class="option-item" data-option="C">
+                                <span class="option-letter">C</span>
+                                conclusão e contraste.
+                            </li>
+                            <li class="option-item" data-option="D">
+                                <span class="option-letter">D</span>
+                                proporção e conclusão.
+                            </li>
+                        </ul>
+                    </div>
+
+                    <!-- Questão 4 -->
+                    <div class="question-card" data-question="4">
+                        <div class="d-flex align-items-center mb-3">
+                            <span class="question-number">4</span>
+                            <h5 class="question-text">Assinale a alternativa cuja frase emprega palavra com sentido figurado.</h5>
+                        </div>
+                        <ul class="options-list">
+                            <li class="option-item" data-option="A">
+                                <span class="option-letter">A</span>
+                                Mas o café como conhecemos hoje — torrado e moído — só foi desenvolvido a partir do século 14.
+                            </li>
+                            <li class="option-item" data-option="B">
+                                <span class="option-letter">B</span>
+                                Essa droga, que amplia a percepção e a concentração, definitivamente fez parte do contexto que desembocou no capitalismo, complementa.
+                            </li>
+                            <li class="option-item" data-option="C">
+                                <span class="option-letter">C</span>
+                                Há 15 séculos atrás, as partes da planta eram usadas com fins medicinais, e monges também passaram a consumi-la para manter a atenção em rezas e vigilias noturnas.
+                            </li>
+                            <li class="option-item" data-option="D">
+                                <span class="option-letter">D</span>
+                                Isso significa que, nos poucos minutos que você demorar para ler este texto, cerca de 10 milhões de pessoas terão tomado uma bebida dessas, segundo os dados de associações do setor.
+                            </li>
+                        </ul>
+                    </div>
+
+                    <!-- Questão 5 -->
+                    <div class="question-card" data-question="5">
+                        <div class="d-flex align-items-center mb-3">
+                            <span class="question-number">5</span>
+                            <h5 class="question-text">Assinale a alternativa cujas palavras, entre parêntesis, substituam os termos destacados, em conformidade com a norma-padrão da Língua Portuguesa.</h5>
+                        </div>
+                        <ul class="options-list">
+                            <li class="option-item" data-option="A">
+                                <span class="option-letter">A</span>
+                                Essa droga, que amplia a percepção e a concentração ... (lhes amplia)
+                            </li>
+                            <li class="option-item" data-option="B">
+                                <span class="option-letter">B</span>
+                                Existem fortes motivos para acreditar que a cafeína contribuiu ... (existem-los)
+                            </li>
+                            <li class="option-item" data-option="C">
+                                <span class="option-letter">C</span>
+                                ... alguns autores creditassem à bebida o desenvolvimento ... (creditassem-lhe)
+                            </li>
+                            <li class="option-item" data-option="D">
+                                <span class="option-letter">D</span>
+                                ... um rito de sociabilidade conquistou partes da Europa e do Oriente Médio ... (conquistou-lhes)
+                            </li>
+                        </ul>
+                    </div>
+
+                    <!-- Questão 6 -->
+                    <div class="question-card" data-question="6">
+                        <div class="d-flex align-items-center mb-3">
+                            <span class="question-number">6</span>
+                            <h5 class="question-text">Assinale a alternativa cuja reescrita do texto emprega um advérbio de afirmação.</h5>
+                        </div>
+                        <ul class="options-list">
+                            <li class="option-item" data-option="A">
+                                <span class="option-letter">A</span>
+                                O café contribuiu, felizmente, para construir espaços de comunicação social.
+                            </li>
+                            <li class="option-item" data-option="B">
+                                <span class="option-letter">B</span>
+                                Seu papel foi extremamente importante para a consolidação de alguns movimentos.
+                            </li>
+                            <li class="option-item" data-option="C">
+                                <span class="option-letter">C</span>
+                                Ela se tornou uma bebida demasiadamente consumida no mundo inteiro.
+                            </li>
+                            <li class="option-item" data-option="D">
+                                <span class="option-letter">D</span>
+                                Essas bebidas alcoólicas realmente comprometiam o raciocínio linear.
+                            </li>
+                        </ul>
+                    </div>
+
+                    <!-- Questão 7 -->
+                    <div class="question-card" data-question="7">
+                        <div class="d-flex align-items-center mb-3">
+                            <span class="question-number">7</span>
+                            <h5 class="question-text">Assinale a alternativa cuja frase na voz ativa pode ser transposta para a voz passiva, em conformidade com a norma-padrão da Língua Portuguesa.</h5>
+                        </div>
+                        <ul class="options-list">
+                            <li class="option-item" data-option="A">
+                                <span class="option-letter">A</span>
+                                Durante as férias, Paulo gostava de ir a novos restaurantes.
+                            </li>
+                            <li class="option-item" data-option="B">
+                                <span class="option-letter">B</span>
+                                Visitei maravilhosos museus durante minha viagem.
+                            </li>
+                            <li class="option-item" data-option="C">
+                                <span class="option-letter">C</span>
+                                O hospital precisava de médicos.
+                            </li>
+                            <li class="option-item" data-option="D">
+                                <span class="option-letter">D</span>
+                                Havia muitas coisas naquela caixa.
+                            </li>
+                        </ul>
+                    </div>
+
+                    <!-- Questão 8 -->
+                    <div class="question-card" data-question="8">
+                        <div class="d-flex align-items-center mb-3">
+                            <span class="question-number">8</span>
+                            <h5 class="question-text">Assinale a alternativa cuja frase emprega a preposição "a" com o sentido de movimento no espaço.</h5>
+                        </div>
+                        <ul class="options-list">
+                            <li class="option-item" data-option="A">
+                                <span class="option-letter">A</span>
+                                Do pier à enseada havia uma longa distância.
+                            </li>
+                            <li class="option-item" data-option="B">
+                                <span class="option-letter">B</span>
+                                Daqui a alguns dias irei te visitar.
+                            </li>
+                            <li class="option-item" data-option="C">
+                                <span class="option-letter">C</span>
+                                Presenciamos uma bela paisagem ao entardecer do dia.
+                            </li>
+                            <li class="option-item" data-option="D">
+                                <span class="option-letter">D</span>
+                                Sua carreira profissional ia de mal a pior.
+                            </li>
+                        </ul>
+                    </div>
+
+                    <!-- Questão 9 -->
+                    <div class="question-card" data-question="9">
+                        <div class="d-flex align-items-center mb-3">
+                            <span class="question-number">9</span>
+                            <h5 class="question-text">Assinale a alternativa cuja frase emprega a regência verbal, em conformidade com a norma-padrão da Língua Portuguesa.</h5>
+                        </div>
+                        <ul class="options-list">
+                            <li class="option-item" data-option="A">
+                                <span class="option-letter">A</span>
+                                Avisaram-no que seu veículo foi furtado.
+                            </li>
+                            <li class="option-item" data-option="B">
+                                <span class="option-letter">B</span>
+                                Um motorista embriagado não obedece o Código de Trânsito.
+                            </li>
+                            <li class="option-item" data-option="C">
+                                <span class="option-letter">C</span>
+                                Visando a realização de seus objetivos, esforçou-se muito.
+                            </li>
+                            <li class="option-item" data-option="D">
+                                <span class="option-letter">D</span>
+                                Mesmo novo na empresa, já aspirava a um cargo de destaque.
+                            </li>
+                        </ul>
+                    </div>
+
+                    <!-- Questão 10 -->
+                    <div class="question-card" data-question="10">
+                        <div class="d-flex align-items-center mb-3">
+                            <span class="question-number">10</span>
+                            <h5 class="question-text">Assinale a alternativa cuja frase emprega a concordância em conformidade com a norma-padrão da Língua Portuguesa.</h5>
+                        </div>
+                        <ul class="options-list">
+                            <li class="option-item" data-option="A">
+                                <span class="option-letter">A</span>
+                                Reformam-se eletrodomésticos usados.
+                            </li>
+                            <li class="option-item" data-option="B">
+                                <span class="option-letter">B</span>
+                                Tratavam-se de problemas que ele adquiriu na infância.
+                            </li>
+                            <li class="option-item" data-option="C">
+                                <span class="option-letter">C</span>
+                                Precisam-se de profissionais especializados em novas tecnologias.
+                            </li>
+                            <li class="option-item" data-option="D">
+                                <span class="option-letter">D</span>
+                                Comprou-se terrenos para realizar novas construções.
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Legislação Municipal -->
+                <div class="subject-card" id="legislacao">
+                    <h2 class="subject-title"><i class="fas fa-gavel me-2"></i>Conhecimentos Básicos de Legislação Municipal</h2>
+                    
+                    <!-- Questão 11 -->
+                    <div class="question-card" data-question="11">
+                        <div class="d-flex align-items-center mb-3">
+                            <span class="question-number">11</span>
+                            <h5 class="question-text">De acordo com a Lei Orgânica do Município de Santos, as Comissões Especiais de Inquérito, que terão poderes de investigação próprios das autoridades _____, além de outros previstos no Regimento Interno, serão criadas mediante requerimento de _____ dos vereadores que compõem a Câmara, para a apuração de fato determinado e por prazo certo, sendo suas conclusões, se for o caso, encaminhadas ao _____ para que promova a responsabilidade civil ou criminal dos infratores. Assinale a alternativa que preenche corretamente as lacunas.</h5>
+                        </div>
+                        <ul class="options-list">
+                            <li class="option-item" data-option="A">
+                                <span class="option-letter">A</span>
+                                policiais / um terço / Ministério Público
+                            </li>
+                            <li class="option-item" data-option="B">
+                                <span class="option-letter">B</span>
+                                policiais / dois terços / juízo competente
+                            </li>
+                            <li class="option-item" data-option="C">
+                                <span class="option-letter">C</span>
+                                judiciais / dois terços / Ministério Público
+                            </li>
+                            <li class="option-item" data-option="D">
+                                <span class="option-letter">D</span>
+                                judiciais / um terço / Ministério Público
+                            </li>
+                        </ul>
+                    </div>
+
+                    <!-- Questão 12 -->
+                    <div class="question-card" data-question="12">
+                        <div class="d-flex align-items-center mb-3">
+                            <span class="question-number">12</span>
+                            <h5 class="question-text">O artigo 35 da Lei Orgânica do Município de Santos estabelece que o processo legislativo compreende a elaboração de emendas à lei orgânica, leis complementares, leis ordinárias,</h5>
+                        </div>
+                        <ul class="options-list">
+                            <li class="option-item" data-option="A">
+                                <span class="option-letter">A</span>
+                                decretos legislativos e resoluções.
+                            </li>
+                            <li class="option-item" data-option="B">
+                                <span class="option-letter">B</span>
+                                medidas provisórias e portarias.
+                            </li>
+                            <li class="option-item" data-option="C">
+                                <span class="option-letter">C</span>
+                                medidas provisórias e resoluções.
+                            </li>
+                            <li class="option-item" data-option="D">
+                                <span class="option-letter">D</span>
+                                decretos legislativos e portarias.
+                            </li>
+                        </ul>
+                    </div>
+
+                    <!-- Questão 13 -->
+                    <div class="question-card" data-question="13">
+                        <div class="d-flex align-items-center mb-3">
+                            <span class="question-number">13</span>
+                            <h5 class="question-text">De acordo com o Estatuto dos Funcionários Públicos Municipais de Santos, serão computados como títulos nos concursos públicos de provas e títulos:<br>
+                            I. diploma ou certificado de conclusão de curso de graduação na área de atribuições do cargo a ser provido.<br>
+                            II. título de mestre na área de atribuições do cargo a ser provido.<br>
+                            III. título de doutor na área de atribuições do cargo a ser provido.<br>
+                            É correto o que se afirma em</h5>
+                        </div>
+                        <ul class="options-list">
+                            <li class="option-item" data-option="A">
+                                <span class="option-letter">A</span>
+                                I e II, apenas.
+                            </li>
+                            <li class="option-item" data-option="B">
+                                <span class="option-letter">B</span>
+                                II e III, apenas.
+                            </li>
+                            <li class="option-item" data-option="C">
+                                <span class="option-letter">C</span>
+                                I e III, apenas.
+                            </li>
+                            <li class="option-item" data-option="D">
+                                <span class="option-letter">D</span>
+                                I, II e III.
+                            </li>
+                        </ul>
+                    </div>
+
+                    <!-- Questão 14 -->
+                    <div class="question-card" data-question="14">
+                        <div class="d-flex align-items-center mb-3">
+                            <span class="question-number">14</span>
+                            <h5 class="question-text">As leis que disponham sobre criação, atribuições e extinção das Secretarias Municipais e órgãos da administração direta e indireta são de iniciativa</h5>
+                        </div>
+                        <ul class="options-list">
+                            <li class="option-item" data-option="A">
+                                <span class="option-letter">A</span>
+                                comum do prefeito e da Câmara Municipal.
+                            </li>
+                            <li class="option-item" data-option="B">
+                                <span class="option-letter">B</span>
+                                privativa da Câmara Municipal.
+                            </li>
+                            <li class="option-item" data-option="C">
+                                <span class="option-letter">C</span>
+                                privativa do prefeito.
+                            </li>
+                            <li class="option-item" data-option="D">
+                                <span class="option-letter">D</span>
+                                comum do prefeito e do presidente da Câmara Municipal.
+                            </li>
+                        </ul>
+                    </div>
+
+                    <!-- Questão 15 -->
+                    <div class="question-card" data-question="15">
+                        <div class="d-flex align-items-center mb-3">
+                            <span class="question-number">15</span>
+                            <h5 class="question-text">Ao funcionário que se deslocar temporariamente da respectiva sede, no desempenho de suas atribuições, poderá ser concedida, além do transporte, uma diária a título de _____ das/pelas despesas de alimentação e pousada. Assinale a alternativa que preenche corretamente a lacuna.</h5>
+                        </div>
+                        <ul class="options-list">
+                            <li class="option-item" data-option="A">
+                                <span class="option-letter">A</span>
+                                gratificação
+                            </li>
+                            <li class="option-item" data-option="B">
+                                <span class="option-letter">B</span>
+                                adicional
+                            </li>
+                            <li class="option-item" data-option="C">
+                                <span class="option-letter">C</span>
+                                remuneração
+                            </li>
+                            <li class="option-item" data-option="D">
+                                <span class="option-letter">D</span>
+                                indenização
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Raciocínio Lógico -->
+                <div class="subject-card" id="raciocinio">
+                    <h2 class="subject-title"><i class="fas fa-brain me-2"></i>Raciocínio Lógico</h2>
+                    
+                    <!-- Questão 16 -->
+                    <div class="question-card" data-question="16">
+                        <div class="d-flex align-items-center mb-3">
+                            <span class="question-number">16</span>
+                            <h5 class="question-text">No final do filme, João Uique diz a seu oponente "Se você se apegar à vida, você morrerá". Do ponto de vista lógico, uma afirmação equivalente à dita pela personagem é</h5>
+                        </div>
+                        <ul class="options-list">
+                            <li class="option-item" data-option="A">
+                                <span class="option-letter">A</span>
+                                "não se apegue à vida e você não morrerá".
+                            </li>
+                            <li class="option-item" data-option="B">
+                                <span class="option-letter">B</span>
+                                "apegue-se à vida ou você morrerá".
+                            </li>
+                            <li class="option-item" data-option="C">
+                                <span class="option-letter">C</span>
+                                "não se apegue à vida ou você morrerá".
+                            </li>
+                            <li class="option-item" data-option="D">
+                                <span class="option-letter">D</span>
+                                "apegue-se à vida ou você não morrerá".
+                            </li>
+                        </ul>
+                    </div>
+
+                    <!-- Questão 17 -->
+                    <div class="question-card" data-question="17">
+                        <div class="d-flex align-items-center mb-3">
+                            <span class="question-number">17</span>
+                            <h5 class="question-text">Em uma empresa foi realizado o levantamento das categorias de CNH dos funcionários. Para tanto, somente foram consideradas as carteiras A, B e C. Da pesquisa, 6 funcionários não possuem habilitação, 20 funcionários possuem categoria A, 25 possuem categoria B, 6 possuem categoria C, 10 possuem categoria A e B, e 5 possuem categoria A, B e C. Sabendo também que na CNH C os motoristas podem dirigir tanto os automóveis que fazem parte da categoria B, quanto veículos de carga (isto é, a CNH C equivale a ter C e B), é possível afirmar que o número total de funcionários que possuem somente CNH B é igual a</h5>
+                        </div>
+                        <ul class="options-list">
+                            <li class="option-item" data-option="A">
+                                <span class="option-letter">A</span>
+                                4.
+                            </li>
+                            <li class="option-item" data-option="B">
+                                <span class="option-letter">B</span>
+                                3.
+                            </li>
+                            <li class="option-item" data-option="C">
+                                <span class="option-letter">C</span>
+                                5.
+                            </li>
+                            <li class="option-item" data-option="D">
+                                <span class="option-letter">D</span>
+                                8.
+                            </li>
+                        </ul>
+                    </div>
+
+                    <!-- Questão 18 -->
+                    <div class="question-card" data-question="18">
+                        <div class="d-flex align-items-center mb-3">
+                            <span class="question-number">18</span>
+                            <h5 class="question-text">Analise a tabela verdade abaixo. Considerando os conectivos lógicos ¬ (não), ∧ (conjunção, e), ∨ (disjunção, ou), e ↔ (bicondicional, se e somente se) e → (condicional, se ... então ...), e que "F" representa falso e "V" verdadeiro, os valores lógicos que substituem respectivamente x, y, z e k são</h5>
+                        </div>
+                        <div class="table-container">
+                            <table class="table-custom">
+                                <thead>
+                                    <tr>
+                                        <th>P</th>
+                                        <th>Q</th>
+                                        <th>¬(P ∧ ¬Q) → (P ↔ Q)</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>F</td>
+                                        <td>F</td>
+                                        <td>x</td>
+                                    </tr>
+                                    <tr>
+                                        <td>F</td>
+                                        <td>V</td>
+                                        <td>y</td>
+                                    </tr>
+                                    <tr>
+                                        <td>V</td>
+                                        <td>F</td>
+                                        <td>z</td>
+                                    </tr>
+                                    <tr>
+                                        <td>V</td>
+                                        <td>V</td>
+                                        <td>k</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <ul class="options-list">
+                            <li class="option-item" data-option="A">
+                                <span class="option-letter">A</span>
+                                F / F / F / F
+                            </li>
+                            <li class="option-item" data-option="B">
+                                <span class="option-letter">B</span>
+                                V / F / V / V
+                            </li>
+                            <li class="option-item" data-option="C">
+                                <span class="option-letter">C</span>
+                                V / V / V / V
+                            </li>
+                            <li class="option-item" data-option="D">
+                                <span class="option-letter">D</span>
+                                V / F / F / V
+                            </li>
+                        </ul>
+                    </div>
+
+                    <!-- Questão 19 -->
+                    <div class="question-card" data-question="19">
+                        <div class="d-flex align-items-center mb-3">
+                            <span class="question-number">19</span>
+                            <h5 class="question-text">Analise o diagrama abaixo. Considerando que em todas as seções e interseções do diagrama apresentado há elementos, é possível afirmar que</h5>
+                        </div>
+                        <div class="diagram">
+                            <div class="diagram-placeholder">
+                                <i class="fas fa-diagram-project fa-3x mb-3"></i><br>
+                                [Diagrama com três círculos sobrepostos: M, A e W]<br>
+                                O círculo M está parcialmente sobreposto aos círculos A e W.<br>
+                                O círculo A está parcialmente sobreposto aos círculos M e W.<br>
+                                O círculo W está sobreposto aos círculos M e A.
+                            </div>
+                        </div>
+                        <ul class="options-list">
+                            <li class="option-item" data-option="A">
+                                <span class="option-letter">A</span>
+                                todo elemento de M, que não é elemento de A, não é elemento de W.
+                            </li>
+                            <li class="option-item" data-option="B">
+                                <span class="option-letter">B</span>
+                                todo elemento de A, que não é elemento de M, é elemento de W.
+                            </li>
+                            <li class="option-item" data-option="C">
+                                <span class="option-letter">C</span>
+                                todo elemento de W, que é elemento de M, é elemento de A.
+                            </li>
+                            <li class="option-item" data-option="D">
+                                <span class="option-letter">D</span>
+                                qualquer elemento de M, que não é elemento de A, é elemento de W.
+                            </li>
+                        </ul>
+                    </div>
+
+                    <!-- Questão 20 -->
+                    <div class="question-card" data-question="20">
+                        <div class="d-flex align-items-center mb-3">
+                            <span class="question-number">20</span>
+                            <h5 class="question-text">Em uma festa infantil há 10 crianças e três instrutores, que irão separar as crianças em 3 grupos, respectivamente, de 4, 3 e 3 crianças cada. A quantidade de formas que é possível realizar esta divisão é igual a</h5>
+                        </div>
+                        <ul class="options-list">
+                            <li class="option-item" data-option="A">
+                                <span class="option-letter">A</span>
+                                2.100.
+                            </li>
+                            <li class="option-item" data-option="B">
+                                <span class="option-letter">B</span>
+                                3.200.
+                            </li>
+                            <li class="option-item" data-option="C">
+                                <span class="option-letter">C</span>
+                                4.200.
+                            </li>
+                            <li class="option-item" data-option="D">
+                                <span class="option-letter">D</span>
+                                3.600.
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Conhecimentos Específicos -->
+                <div class="subject-card" id="especificos">
+                    <h2 class="subject-title"><i class="fas fa-book me-2"></i>Conhecimentos Específicos</h2>
+                    
+                    <!-- Questão 21 -->
+                    <div class="question-card" data-question="21">
+                        <div class="d-flex align-items-center mb-3">
+                            <span class="question-number">21</span>
+                            <h5 class="question-text">O objetivo das demonstrações contábeis é</h5>
+                        </div>
+                        <ul class="options-list">
+                            <li class="option-item" data-option="A">
+                                <span class="option-letter">A</span>
+                                fornecer informações financeiras sobre variações dos ativos, passivos, patrimônio líquido, receitas e despesas da entidade.
+                            </li>
+                            <li class="option-item" data-option="B">
+                                <span class="option-letter">B</span>
+                                fornecer informações financeiras sobre os ativos, passivos, patrimônio líquido, receitas e despesas da entidade que reporta que sejam úteis aos usuários das demonstrações contábeis na avaliação das perspectivas para futuros fluxos de entrada de caixa líquidos para a entidade que reporta e na avaliação da gestão de recursos da administração sobre os recursos econômicos da entidade.
+                            </li>
+                            <li class="option-item" data-option="C">
+                                <span class="option-letter">C</span>
+                                disponibilizar informações relevantes aos investidores sobre o desenvolvimento da entidade, a estrutura de crescimento frente aos investimentos em ativos e a valorizações das ações.
+                            </li>
+                            <li class="option-item" data-option="D">
+                                <span class="option-letter">D</span>
+                                apresentar dados contábeis sobre os ativos, passivos, mutações do patrimônio líquido, crescimento das receitas e diminuição das despesas da entidade e sejam úteis aos usuários das demonstrações contábeis, inclusive acionistas minoritários, na avaliação das perspectivas para futuros fluxos para a entidade que reporta e na avaliação da gestão de recursos econômicos da entidade.
+                            </li>
+                        </ul>
+                    </div>
+
+                    <!-- Questão 22 -->
+                    <div class="question-card" data-question="22">
+                        <div class="d-flex align-items-center mb-3">
+                            <span class="question-number">22</span>
+                            <h5 class="question-text">O que comprova os fatos que originam lançamentos na escrituração da entidade e compreende todos os documentos, livros, papéis, registros e outras peças, de origem interna ou externa, que apoiam ou componham a escrituração é o(a)</h5>
+                        </div>
+                        <ul class="options-list">
+                            <li class="option-item" data-option="A">
+                                <span class="option-letter">A</span>
+                                documentação contábil.
+                            </li>
+                            <li class="option-item" data-option="B">
+                                <span class="option-letter">B</span>
+                                norma contábil.
+                            </li>
+                            <li class="option-item" data-option="C">
+                                <span class="option-letter">C</span>
+                                fato contábil.
+                            </li>
+                            <li class="option-item" data-option="D">
+                                <span class="option-letter">D</span>
+                                princípio contábil.
+                            </li>
+                        </ul>
+                    </div>
+
+                    <!-- Questão 23 -->
+                    <div class="question-card" data-question="23">
+                        <div class="d-flex align-items-center mb-3">
+                            <span class="question-number">23</span>
+                            <h5 class="question-text">Analise as informações do balancete e as transações de julho/23. Ao final do mês de julho/23, o valor do ativo total foi de</h5>
+                        </div>
+                        <div class="table-container">
+                            <table class="table-custom financial-table">
+                                <thead>
+                                    <tr>
+                                        <th colspan="2">Balancete em 30/06/2023</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr><td class="account-row">Estoque para Revenda</td><td class="account-value">185.000</td></tr>
+                                    <tr><td class="account-row">Fornecedores</td><td class="account-value">146.000</td></tr>
+                                    <tr><td class="account-row">Caixa e Equivalentes de Caixa</td><td class="account-value">155.000</td></tr>
+                                    <tr><td class="account-row">Despesas com IR e CS</td><td class="account-value">135.000</td></tr>
+                                    <tr><td class="account-row">Despesas Comerciais</td><td class="account-value">101.250</td></tr>
+                                    <tr><td class="account-row">Receitas de Vendas</td><td class="account-value">1.050.000</td></tr>
+                                    <tr><td class="account-row">Contas a Pagar</td><td class="account-value">45.000</td></tr>
+                                    <tr><td class="account-row">Despesas Gerais</td><td class="account-value">58.500</td></tr>
+                                    <tr><td class="account-row">Impostos a Recolher</td><td class="account-value">13.000</td></tr>
+                                    <tr><td class="account-row">Imposto de Renda e CSLL a Recolher</td><td class="account-value">135.000</td></tr>
+                                    <tr><td class="account-row">Despesas Administrativas</td><td class="account-value">67.500</td></tr>
+                                    <tr><td class="account-row">Duplicatas a Receber</td><td class="account-value">255.000</td></tr>
+                                    <tr><td class="account-row">Impostos sobre Vendas</td><td class="account-value">210.000</td></tr>
+                                    <tr><td class="account-row">Capital Social</td><td class="account-value">225.000</td></tr>
+                                    <tr><td class="account-row">CMV - Custo das Mercadorias Vendidas</td><td class="account-value">415.750</td></tr>
+                                    <tr><td class="account-row">Imobilizado, líquido</td><td class="account-value">180.000</td></tr>
+                                    <tr><td class="account-row">Financiamento Bancário (PNC)</td><td class="account-value">90.000</td></tr>
+                                    <tr><td class="account-row">Despesas Financeiras</td><td class="account-value">9.000</td></tr>
+                                    <tr><td class="account-row">Empréstimos Bancários (PC)</td><td class="account-value">68.000</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <p><strong>Transações em julho/23:</strong><br>
+                        - Vendas à vista: R$ 300.000 (impostos 20%)<br>
+                        - Despesas Comerciais pagas: R$ 50.000<br>
+                        - Despesas Administrativas pagas: R$ 15.000<br>
+                        - Despesas Gerais pagas: R$ 25.000<br>
+                        - Despesas Financeiras pagas: R$ 3.000<br>
+                        - Estoques: inicial R$ 185.000, compras R$ 100.000 (pagar em agosto), final R$ 80.000<br>
+                        - IR e CSLL: 34% sobre lucro líquido</p>
+                        <ul class="options-list">
+                            <li class="option-item" data-option="A">
+                                <span class="option-letter">A</span>
+                                R$ 775.000.
+                            </li>
+                            <li class="option-item" data-option="B">
+                                <span class="option-letter">B</span>
+                                R$ 877.000.
+                            </li>
+                            <li class="option-item" data-option="C">
+                                <span class="option-letter">C</span>
+                                R$ 827.000.
+                            </li>
+                            <li class="option-item" data-option="D">
+                                <span class="option-letter">D</span>
+                                R$ 970.000.
+                            </li>
+                        </ul>
+                    </div>
+
+                    <!-- Questão 24 -->
+                    <div class="question-card" data-question="24">
+                        <div class="d-flex align-items-center mb-3">
+                            <span class="question-number">24</span>
+                            <h5 class="question-text">O valor do patrimônio líquido apurado em julho/23 foi de</h5>
+                        </div>
+                        <ul class="options-list">
+                            <li class="option-item" data-option="A">
+                                <span class="option-letter">A</span>
+                                R$ 139.200.
+                            </li>
+                            <li class="option-item" data-option="B">
+                                <span class="option-letter">B</span>
+                                R$ 380.100.
+                            </li>
+                            <li class="option-item" data-option="C">
+                                <span class="option-letter">C</span>
+                                R$ 413.100.
+                            </li>
+                            <li class="option-item" data-option="D">
+                                <span class="option-letter">D</span>
+                                R$ 310.800.
+                            </li>
+                        </ul>
+                    </div>
+
+                    <!-- Questão 25 -->
+                    <div class="question-card" data-question="25">
+                        <div class="d-flex align-items-center mb-3">
+                            <span class="question-number">25</span>
+                            <h5 class="question-text">O valor do lucro bruto no final do mês de julho/23 foi de</h5>
+                        </div>
+                        <ul class="options-list">
+                            <li class="option-item" data-option="A">
+                                <span class="option-letter">A</span>
+                                R$ 479.250.
+                            </li>
+                            <li class="option-item" data-option="B">
+                                <span class="option-letter">B</span>
+                                R$ 564.250.
+                            </li>
+                            <li class="option-item" data-option="C">
+                                <span class="option-letter">C</span>
+                                R$ 459.250.
+                            </li>
+                            <li class="option-item" data-option="D">
+                                <span class="option-letter">D</span>
+                                R$ 614.250.
+                            </li>
+                        </ul>
+                    </div>
+
+                    <!-- Questão 26 -->
+                    <div class="question-card" data-question="26">
+                        <div class="d-flex align-items-center mb-3">
+                            <span class="question-number">26</span>
+                            <h5 class="question-text">O valor do lucro líquido no final do mês de julho/23 foi de</h5>
+                        </div>
+                        <ul class="options-list">
+                            <li class="option-item" data-option="A">
+                                <span class="option-letter">A</span>
+                                R$ 188.100.
+                            </li>
+                            <li class="option-item" data-option="B">
+                                <span class="option-letter">B</span>
+                                R$ 155.100.
+                            </li>
+                            <li class="option-item" data-option="C">
+                                <span class="option-letter">C</span>
+                                R$ 99.000.
+                            </li>
+                            <li class="option-item" data-option="D">
+                                <span class="option-letter">D</span>
+                                R$ 85.800.
+                            </li>
+                        </ul>
+                    </div>
+
+                    <!-- Questão 27 -->
+                    <div class="question-card" data-question="27">
+                        <div class="d-flex align-items-center mb-3">
+                            <span class="question-number">27</span>
+                            <h5 class="question-text">A formalidade da escrituração contábil deve ser executada e conter, no mínimo, a conta devedora e credora, o valor do registro contábil e a</h5>
+                        </div>
+                        <ul class="options-list">
+                            <li class="option-item" data-option="A">
+                                <span class="option-letter">A</span>
+                                data do registro contábil; histórico que represente a essência econômica da transação; e número do lançamento contábil.
+                            </li>
+                            <li class="option-item" data-option="B">
+                                <span class="option-letter">B</span>
+                                data do registro contábil; histórico que represente a essência econômica da transação; e informação que permita identificar, de forma unívoca, todos os registros que integram um mesmo lançamento contábil.
+                            </li>
+                            <li class="option-item" data-option="C">
+                                <span class="option-letter">C</span>
+                                data do registro contábil; histórico que represente a essência econômica da transação.
+                            </li>
+                            <li class="option-item" data-option="D">
+                                <span class="option-letter">D</span>
+                                forma contábil; ordem cronológica; e código de histórico padronizado, neste caso, baseado em tabela auxiliar inclusa em livro próprio.
+                            </li>
+                        </ul>
+                    </div>
+
+                    <!-- Questão 28 -->
+                    <div class="question-card" data-question="28">
+                        <div class="d-flex align-items-center mb-3">
+                            <span class="question-number">28</span>
+                            <h5 class="question-text">A norma contábil determina que os livros contábeis obrigatórios, entre eles o Livro Diário e o Livro Razão, em forma digital, devem revestir-se de formalidades extrínsecas e são elas:<br>
+                            I. serem assinados digitalmente pela entidade e pelo profissional da contabilidade regularmente habilitado.<br>
+                            II. serem autenticados no registro público competente.<br>
+                            III. quando exigível por legislação específica, serem autenticados no registro público ou entidade competente.<br>
+                            IV. serem registrados e autenticados em cartório de títulos.<br>
+                            É correto o que se afirma, apenas, em</h5>
+                        </div>
+                        <ul class="options-list">
+                            <li class="option-item" data-option="A">
+                                <span class="option-letter">A</span>
+                                I e II.
+                            </li>
+                            <li class="option-item" data-option="B">
+                                <span class="option-letter">B</span>
+                                II e IV.
+                            </li>
+                            <li class="option-item" data-option="C">
+                                <span class="option-letter">C</span>
+                                I, II e III.
+                            </li>
+                            <li class="option-item" data-option="D">
+                                <span class="option-letter">D</span>
+                                I e III.
+                            </li>
+                        </ul>
+                    </div>
+
+                    <!-- Questão 29 -->
+                    <div class="question-card" data-question="29">
+                        <div class="d-flex align-items-center mb-3">
+                            <span class="question-number">29</span>
+                            <h5 class="question-text">As provisões devem ser reavaliadas em cada data de balanço e ajustadas para refletir a melhor estimativa corrente. Se já não for mais provável que seja necessária uma saída de recursos que incorporam benefícios econômicos futuros para liquidar a obrigação, a</h5>
+                        </div>
+                        <ul class="options-list">
+                            <li class="option-item" data-option="A">
+                                <span class="option-letter">A</span>
+                                entidade deve divulgar breve descrição da natureza dos ajustes na data do balanço.
+                            </li>
+                            <li class="option-item" data-option="B">
+                                <span class="option-letter">B</span>
+                                provisão deve ser mantida.
+                            </li>
+                            <li class="option-item" data-option="C">
+                                <span class="option-letter">C</span>
+                                provisão deve ser revertida.
+                            </li>
+                            <li class="option-item" data-option="D">
+                                <span class="option-letter">D</span>
+                                entidade deve divulgar breve descrição da natureza dos ajustes na data do balanço, de acordo com a opinião do auditor.
+                            </li>
+                        </ul>
+                    </div>
+
+                    <!-- Questão 30 -->
+                    <div class="question-card" data-question="30">
+                        <div class="d-flex align-items-center mb-3">
+                            <span class="question-number">30</span>
+                            <h5 class="question-text">Ativo é um recurso económico presente, controlado pela entidade como resultado de eventos passados. Dessa forma, recurso económico é um</h5>
+                        </div>
+                        <ul class="options-list">
+                            <li class="option-item" data-option="A">
+                                <span class="option-letter">A</span>
+                                direito que tem o potencial de produzir benefícios económicos.
+                            </li>
+                            <li class="option-item" data-option="B">
+                                <span class="option-letter">B</span>
+                                direito presente.
+                            </li>
+                            <li class="option-item" data-option="C">
+                                <span class="option-letter">C</span>
+                                bem a ser aplicado dentro do ciclo operacional da entidade.
+                            </li>
+                            <li class="option-item" data-option="D">
+                                <span class="option-letter">D</span>
+                                bem com capacidade de gerar riqueza.
+                            </li>
+                        </ul>
+                    </div>
+
+                    <!-- Questão 31 -->
+                    <div class="question-card" data-question="31">
+                        <div class="d-flex align-items-center mb-3">
+                            <span class="question-number">31</span>
+                            <h5 class="question-text">O custo de aquisição dos estoques compreende o preço de compra, os impostos de importação e outros tributos (exceto os recuperáveis junto ao fisco), bem como os custos de transporte, seguro, manuseio e outros diretamente atribuíveis à aquisição de produtos acabados, materiais e serviços. Descontos comerciais, abatimentos e outros itens semelhantes</h5>
+                        </div>
+                        <ul class="options-list">
+                            <li class="option-item" data-option="A">
+                                <span class="option-letter">A</span>
+                                devem ser deduzidos na determinação do custo de aquisição.
+                            </li>
+                            <li class="option-item" data-option="B">
+                                <span class="option-letter">B</span>
+                                serão contabilizados separadamente.
+                            </li>
+                            <li class="option-item" data-option="C">
+                                <span class="option-letter">C</span>
+                                serão acrescidos ao custo dos estoques.
+                            </li>
+                            <li class="option-item" data-option="D">
+                                <span class="option-letter">D</span>
+                                devem ser deduzidos se os estoques forem calculados pelo PEPS (Primeiro que Entra, Primeiro que Sai).
+                            </li>
+                        </ul>
+                    </div>
+
+                    <!-- Questão 32 -->
+                    <div class="question-card" data-question="32">
+                        <div class="d-flex align-items-center mb-3">
+                            <span class="question-number">32</span>
+                            <h5 class="question-text">Nos estoques existem custos a serem incluídos que não são de aquisição, nem de transformação, porém devem ser incorridos na medida que estejam em condições de alienação. Identifique os itens não incluídos no custo dos estoques e reconhecidos como despesa do período em que são incorridos:<br>
+                            I. valor anormal de desperdício de materiais, mão de obra ou outros insumos de produção.<br>
+                            II. gastos com armazenamento, a menos que sejam necessários ao processo produtivo entre uma e outra fase de produção.<br>
+                            III. despesas administrativas que não contribuem para trazer o estoque ao seu local e condição atuais.<br>
+                            IV. despesas de comercialização, incluindo a venda e a entrega dos bens e serviços aos clients.<br>
+                            É correto o que se afirma em</h5>
+                        </div>
+                        <ul class="options-list">
+                            <li class="option-item" data-option="A">
+                                <span class="option-letter">A</span>
+                                I e III, apenas.
+                            </li>
+                            <li class="option-item" data-option="B">
+                                <span class="option-letter">B</span>
+                                I e IV, apenas.
+                            </li>
+                            <li class="option-item" data-option="C">
+                                <span class="option-letter">C</span>
+                                II e IV, apenas.
+                            </li>
+                            <li class="option-item" data-option="D">
+                                <span class="option-letter">D</span>
+                                I, II, III e IV.
+                            </li>
+                        </ul>
+                    </div>
+
+                    <!-- Questão 33 -->
+                    <div class="question-card" data-question="33">
+                        <div class="d-flex align-items-center mb-3">
+                            <span class="question-number">33</span>
+                            <h5 class="question-text">Os ativos contingentes surgem normalmente de evento não planejado ou de outros não esperados que dão origem à possibilidade de entrada de benefícios económicos para a entidade. Um exemplo é uma reivindicação que a entidade esteja reclamando por meio de processos legais em que o desfecho seja incerto. Dessa forma, a entidade</h5>
+                        </div>
+                        <ul class="options-list">
+                            <li class="option-item" data-option="A">
+                                <span class="option-letter">A</span>
+                                deve reconhecer um ativo contingente.
+                            </li>
+                            <li class="option-item" data-option="B">
+                                <span class="option-letter">B</span>
+                                não deve divulgar quando for provável a saída de benefícios económicos.
+                            </li>
+                            <li class="option-item" data-option="C">
+                                <span class="option-letter">C</span>
+                                não deve divulgar quando for possível a saída de benefícios económicos.
+                            </li>
+                            <li class="option-item" data-option="D">
+                                <span class="option-letter">D</span>
+                                não deve reconhecer um ativo contingente.
+                            </li>
+                        </ul>
+                    </div>
+
+                    <!-- Questão 34 -->
+                    <div class="question-card" data-question="34">
+                        <div class="d-flex align-items-center mb-3">
+                            <span class="question-number">34</span>
+                            <h5 class="question-text">Em conformidade com a legislação contábil vigente, as reservas de capital, dentre outras situações, poderão ser utilizadas para</h5>
+                        </div>
+                        <ul class="options-list">
+                            <li class="option-item" data-option="A">
+                                <span class="option-letter">A</span>
+                                resgate de partes beneficiárias.
+                            </li>
+                            <li class="option-item" data-option="B">
+                                <span class="option-letter">B</span>
+                                aumento das disponibilidades.
+                            </li>
+                            <li class="option-item" data-option="C">
+                                <span class="option-letter">C</span>
+                                aumento/redução de caixa e equivalente de caixa.
+                            </li>
+                            <li class="option-item" data-option="D">
+                                <span class="option-letter">D</span>
+                                redução de passivos contingentes.
+                            </li>
+                        </ul>
+                    </div>
+
+                    <!-- Questão 35 -->
+                    <div class="question-card" data-question="35">
+                        <div class="d-flex align-items-center mb-3">
+                            <span class="question-number">35</span>
+                            <h5 class="question-text">Em 01.01.2023, a empresa A adquiriu 65% do capital social da empresa B, por R$ 3.500.000,00. Em 31 de dezembro de 2022, a empresa B apresentava um patrimônio líquido de R$ 2.800.000,00. Hipoteticamente, ao final do exercício de 2023, a empresa apurou um prejuízo de R$ 600.000,00. Sabendo que o investimento é relevante para a empresa A, e que o valor pago inclui expectativa de rentabilidade futura, pode-se afirmar que em 31 de dezembro de 2023 ela apresentará em suas demonstrações financeiras um</h5>
+                        </div>
+                        <ul class="options-list">
+                            <li class="option-item" data-option="A">
+                                <span class="option-letter">A</span>
+                                deságio de R$ 1.680.000,00.
+                            </li>
+                            <li class="option-item" data-option="B">
+                                <span class="option-letter">B</span>
+                                investimento de R$ 3.500.000,00.
+                            </li>
+                            <li class="option-item" data-option="C">
+                                <span class="option-letter">C</span>
+                                resultado de equivalência de R$ 390.000,00.
+                            </li>
+                            <li class="option-item" data-option="D">
+                                <span class="option-letter">D</span>
+                                prejuízo com o investimento de R$ 2.070.000,00.
+                            </li>
+                        </ul>
+                    </div>
+
+                    <!-- Questão 36 -->
+                    <div class="question-card" data-question="36">
+                        <div class="d-flex align-items-center mb-3">
+                            <span class="question-number">36</span>
+                            <h5 class="question-text">Uma indústria metalúrgica, hipoteticamente, realizou uma avaliação de seu parque industrial, apurando-se, nesse caso, uma mais valia (reavaliação) da ordem de R$ 35.000.000,00. Baseada nessa avaliação, a empresa decidiu por contabilizar essa mais valia no seu ativo imobilizado. Considerando essa situação, assinale a alternativa que apresenta a contrapartida da contabilização da reavaliação.</h5>
+                        </div>
+                        <ul class="options-list">
+                            <li class="option-item" data-option="A">
+                                <span class="option-letter">A</span>
+                                Outros resultados abrangentes após o resultado operacional.
+                            </li>
+                            <li class="option-item" data-option="B">
+                                <span class="option-letter">B</span>
+                                No resultado do exercício.
+                            </li>
+                            <li class="option-item" data-option="C">
+                                <span class="option-letter">C</span>
+                                Lucros ou prejuízos acumulados no patrimônio líquido.
+                            </li>
+                            <li class="option-item" data-option="D">
+                                <span class="option-letter">D</span>
+                                Ajuste de avaliação patrimonial no patrimônio líquido.
+                            </li>
+                        </ul>
+                    </div>
+
+                    <!-- Questão 37 -->
+                    <div class="question-card" data-question="37">
+                        <div class="d-flex align-items-center mb-3">
+                            <span class="question-number">37</span>
+                            <h5 class="question-text">Uma provisão deve ser usada somente para os desembolsos para os quais foi</h5>
+                        </div>
+                        <ul class="options-list">
+                            <li class="option-item" data-option="A">
+                                <span class="option-letter">A</span>
+                                relacionada com o benefício económico.
+                            </li>
+                            <li class="option-item" data-option="B">
+                                <span class="option-letter">B</span>
+                                originalmente reconhecida.
+                            </li>
+                            <li class="option-item" data-option="C">
+                                <span class="option-letter">C</span>
+                                relacionada como despesa.
+                            </li>
+                            <li class="option-item" data-option="D">
+                                <span class="option-letter">D</span>
+                                classificada como provável.
+                            </li>
+                        </ul>
+                    </div>
+
+                    <!-- Questão 38 -->
+                    <div class="question-card" data-question="38">
+                        <div class="d-flex align-items-center mb-3">
+                            <span class="question-number">38</span>
+                            <h5 class="question-text">Na determinação do resultado do exercício será(ão) computado(s)<br>
+                            I. as receitas e os rendimentos ganhos no período, independentemente da sua realização em moeda.<br>
+                            II. os custos, despesas, encargos e perdas, pagos ou incorridos, correspondentes a essas receitas e rendimentos.<br>
+                            III. o aumento do valor de elementos do ativo em virtude de novas avaliações, registrados como reserva de reavaliação.<br>
+                            IV. o saldo positivo de participações estatutárias.<br>
+                            É correto o que se afirma, apenas, em</h5>
+                        </div>
+                        <ul class="options-list">
+                            <li class="option-item" data-option="A">
+                                <span class="option-letter">A</span>
+                                I e III.
+                            </li>
+                            <li class="option-item" data-option="B">
+                                <span class="option-letter">B</span>
+                                II e III.
+                            </li>
+                            <li class="option-item" data-option="C">
+                                <span class="option-letter">C</span>
+                                I e II.
+                            </li>
+                            <li class="option-item" data-option="D">
+                                <span class="option-letter">D</span>
+                                III e IV.
+                            </li>
+                        </ul>
+                    </div>
+
+                    <!-- Questão 39 -->
+                    <div class="question-card" data-question="39">
+                        <div class="d-flex align-items-center mb-3">
+                            <span class="question-number">39</span>
+                            <h5 class="question-text">Segundo as normas contábeis brasileiras, as notas explicativas devem</h5>
+                        </div>
+                        <ul class="options-list">
+                            <li class="option-item" data-option="A">
+                                <span class="option-letter">A</span>
+                                divulgar a informação requerida pelas interpretações da administração e dos auditores que não tenha sido apresentada nas demonstrações contábeis.
+                            </li>
+                            <li class="option-item" data-option="B">
+                                <span class="option-letter">B</span>
+                                prover informação adicional acerca do mercado onde a empresa atua, bem como concorrência, entre outros assuntos dessa natureza.
+                            </li>
+                            <li class="option-item" data-option="C">
+                                <span class="option-letter">C</span>
+                                divulgar e apresentar de maneira detalhada, mas que seja relevante para sua compreensão, sobre o relatório da administração.
+                            </li>
+                            <li class="option-item" data-option="D">
+                                <span class="option-letter">D</span>
+                                apresentar informação acerca da base para a elaboração das demonstrações contábeis e das políticas contábeis específicas utilizadas pela entidade.
+                            </li>
+                        </ul>
+                    </div>
+
+                    <!-- Questão 40 -->
+                    <div class="question-card" data-question="40">
+                        <div class="d-flex align-items-center mb-3">
+                            <span class="question-number">40</span>
+                            <h5 class="question-text">Analise o balancete abaixo. O valor do lucro bruto foi de</h5>
+                        </div>
+                        <div class="table-container">
+                            <table class="table-custom financial-table">
+                                <thead>
+                                    <tr>
+                                        <th colspan="2">Balancete em 31/12/2022</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr><td class="account-row">Estoques</td><td class="account-value">191.250</td></tr>
+                                    <tr><td class="account-row">Despesas de Depreciação</td><td class="account-value">50.000</td></tr>
+                                    <tr><td class="account-row">Fornecedores</td><td class="account-value">135.000</td></tr>
+                                    <tr><td class="account-row">Caixa e Equivalentes de Caixa</td><td class="account-value">195.000</td></tr>
+                                    <tr><td class="account-row">Despesas Administrativas</td><td class="account-value">90.000</td></tr>
+                                    <tr><td class="account-row">Receitas Bruta de Vendas</td><td class="account-value">1.500.000</td></tr>
+                                    <tr><td class="account-row">Contas a Pagar</td><td class="account-value">52.500</td></tr>
+                                    <tr><td class="account-row">Despesas Gerais</td><td class="account-value">60.000</td></tr>
+                                    <tr><td class="account-row">Impostos a Recolher</td><td class="account-value">105.000</td></tr>
+                                    <tr><td class="account-row">Depreciação Acumulada</td><td class="account-value">37.500</td></tr>
+                                    <tr><td class="account-row">Impostos Indiretos</td><td class="account-value">300.000</td></tr>
+                                    <tr><td class="account-row">Clientes</td><td class="account-value">180.000</td></tr>
+                                    <tr><td class="account-row">Capital Social</td><td class="account-value">540.000</td></tr>
+                                    <tr><td class="account-row">CMV – Custo das Mercadorias Vendas</td><td class="account-value">480.000</td></tr>
+                                    <tr><td class="account-row">Máquinas e Equipamentos</td><td class="account-value">180.000</td></tr>
+                                    <tr><td class="account-row">Despesas de IR e CS do Período</td><td class="account-value">170.000</td></tr>
+                                    <tr><td class="account-row">Reserva Legal</td><td class="account-value">26.250</td></tr>
+                                    <tr><td class="account-row">Despesas Financeiras</td><td class="account-value">20.000</td></tr>
+                                    <tr><td class="account-row">Financiamento Bancário LP</td><td class="account-value">180.000</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <ul class="options-list">
+                            <li class="option-item" data-option="A">
+                                <span class="option-letter">A</span>
+                                R$ 780.000.
+                            </li>
+                            <li class="option-item" data-option="B">
+                                <span class="option-letter">B</span>
+                                R$ 1.020.000.
+                            </li>
+                            <li class="option-item" data-option="C">
+                                <span class="option-letter">C</span>
+                                R$ 720.000.
+                            </li>
+                            <li class="option-item" data-option="D">
+                                <span class="option-letter">D</span>
+                                R$ 1.200.000.
+                            </li>
+                        </ul>
+                    </div>
+
+                    <!-- Questão 41 -->
+                    <div class="question-card" data-question="41">
+                        <div class="d-flex align-items-center mb-3">
+                            <span class="question-number">41</span>
+                            <h5 class="question-text">Após o encerramento do exercício, o valor do novo patrimônio líquido foi de</h5>
+                        </div>
+                        <ul class="options-list">
+                            <li class="option-item" data-option="A">
+                                <span class="option-letter">A</span>
+                                R$ 870.000.
+                            </li>
+                            <li class="option-item" data-option="B">
+                                <span class="option-letter">B</span>
+                                R$ 630.000.
+                            </li>
+                            <li class="option-item" data-option="C">
+                                <span class="option-letter">C</span>
+                                R$ 540.000.
+                            </li>
+                            <li class="option-item" data-option="D">
+                                <span class="option-letter">D</span>
+                                R$ 330.000.
+                            </li>
+                        </ul>
+                    </div>
+
+                    <!-- Questão 42 -->
+                    <div class="question-card" data-question="42">
+                        <div class="d-flex align-items-center mb-3">
+                            <span class="question-number">42</span>
+                            <h5 class="question-text">Em decorrência dos resultados apresentados em 2022, a administração resolve constituir uma reserva legal, nos moldes da Lei n.° 6.404/1976, no valor de</h5>
+                        </div>
+                        <ul class="options-list">
+                            <li class="option-item" data-option="A">
+                                <span class="option-letter">A</span>
+                                R$ 108.000.
+                            </li>
+                            <li class="option-item" data-option="B">
+                                <span class="option-letter">B</span>
+                                R$ 43.500.
+                            </li>
+                            <li class="option-item" data-option="C">
+                                <span class="option-letter">C</span>
+                                R$ 27.000.
+                            </li>
+                            <li class="option-item" data-option="D">
+                                <span class="option-letter">D</span>
+                                R$ 16.500.
+                            </li>
+                        </ul>
+                    </div>
+
+                    <!-- Questão 43 -->
+                    <div class="question-card" data-question="43">
+                        <div class="d-flex align-items-center mb-3">
+                            <span class="question-number">43</span>
+                            <h5 class="question-text">O documento pelo qual as operações de incorporação, fusão e cisão serão submetidas à deliberação da assembleia-geral das companhias interessadas, onde serão expostos os motivos ou fins da operação, e o interesse da companhia na sua realização é chamado de</h5>
+                        </div>
+                        <ul class="options-list">
+                            <li class="option-item" data-option="A">
+                                <span class="option-letter">A</span>
+                                protocolo.
+                            </li>
+                            <li class="option-item" data-option="B">
+                                <span class="option-letter">B</span>
+                                contrato.
+                            </li>
+                            <li class="option-item" data-option="C">
+                                <span class="option-letter">C</span>
+                                justificação.
+                            </li>
+                            <li class="option-item" data-option="D">
+                                <span class="option-letter">D</span>
+                                razão.
+                            </li>
+                        </ul>
+                    </div>
+
+                    <!-- Questão 44 -->
+                    <div class="question-card" data-question="44">
+                        <div class="d-flex align-items-center mb-3">
+                            <span class="question-number">44</span>
+                            <h5 class="question-text">A demonstração de lucros e prejuízos acumulados deverá discriminar<br>
+                            I. o lucro do período.<br>
+                            II. o saldo do início do período, os ajustes de exercícios anteriores e a correção monetária do saldo inicial.<br>
+                            III. as reversões de reservas e o lucro líquido do exercício.<br>
+                            IV. as transferências para reservas, os dividendos, a parcela dos lucros incorporada ao capital e o saldo ao fim do período.<br>
+                            V. a distribuição de lucros e dividendos.<br>
+                            É correto o que se afirma, apenas, em</h5>
+                        </div>
+                        <ul class="options-list">
+                            <li class="option-item" data-option="A">
+                                <span class="option-letter">A</span>
+                                I e V.
+                            </li>
+                            <li class="option-item" data-option="B">
+                                <span class="option-letter">B</span>
+                                II, III e IV.
+                            </li>
+                            <li class="option-item" data-option="C">
+                                <span class="option-letter">C</span>
+                                I, II e III.
+                            </li>
+                            <li class="option-item" data-option="D">
+                                <span class="option-letter">D</span>
+                                III, IV e V.
+                            </li>
+                        </ul>
+                    </div>
+
+                    <!-- Questão 45 -->
+                    <div class="question-card" data-question="45">
+                        <div class="d-flex align-items-center mb-3">
+                            <span class="question-number">45</span>
+                            <h5 class="question-text">No que tange à consolidação das demonstrações contábeis, é correto afirmar que</h5>
+                        </div>
+                        <ul class="options-list">
+                            <li class="option-item" data-option="A">
+                                <span class="option-letter">A</span>
+                                o investidor controla a investida quando está exposto a, ou tem direitos sobre, retornos variáveis decorrentes de seu envolvimento com a investida e tem a capacidade de afetar esses retornos por meio de seu poder sobre a investida.
+                            </li>
+                            <li class="option-item" data-option="B">
+                                <span class="option-letter">B</span>
+                                o investidor deve considerar e concentrar os fatos e as circunstâncias económicas ao avaliar se controla a investida.
+                            </li>
+                            <li class="option-item" data-option="C">
+                                <span class="option-letter">C</span>
+                                o investidor perde seu poder sobre a investida quando tem direitos existentes que lhe dão a capacidade atual de dirigir as atividades relevantes, ou seja, as atividades que afetam significativamente os retornos da investida, diante do conflito gerado nessa circunstância.
+                            </li>
+                            <li class="option-item" data-option="D">
+                                <span class="option-letter">D</span>
+                                se torna desnecessária a controladoria apresentar as participações de não controladores no balanço patrimonial consolidado, dentro do patrimônio líquido, tendo em vista que detém o controle da investida.
+                            </li>
+                        </ul>
+                    </div>
+
+                    <!-- Questão 46 -->
+                    <div class="question-card" data-question="46">
+                        <div class="d-flex align-items-center mb-3">
+                            <span class="question-number">46</span>
+                            <h5 class="question-text">O montante dos fluxos de caixa advindos das atividades _____ pela qual as operações da entidade têm gerado suficientes fluxos de caixa para amortizar empréstimos, manter a capacidade operacional da entidade, pagar dividendos e juros sobre o capital próprio e fazer novos investimentos sem recorrer a fontes externas de financiamento. Assinale a alternativa que preenche corretamente a lacuna.</h5>
+                        </div>
+                        <ul class="options-list">
+                            <li class="option-item" data-option="A">
+                                <span class="option-letter">A</span>
+                                de-investimento
+                            </li>
+                            <li class="option-item" data-option="B">
+                                <span class="option-letter">B</span>
+                                de financiamento
+                            </li>
+                            <li class="option-item" data-option="C">
+                                <span class="option-letter">C</span>
+                                de capital
+                            </li>
+                            <li class="option-item" data-option="D">
+                                <span class="option-letter">D</span>
+                                operacionais
+                            </li>
+                        </ul>
+                    </div>
+
+                    <!-- Questão 47 -->
+                    <div class="question-card" data-question="47">
+                        <div class="d-flex align-items-center mb-3">
+                            <span class="question-number">47</span>
+                            <h5 class="question-text">De forma geral, o ciclo orçamentário é composto das seguintes fases:</h5>
+                        </div>
+                        <ul class="options-list">
+                            <li class="option-item" data-option="A">
+                                <span class="option-letter">A</span>
+                                planejamento, apresentação da proposta pelo executivo, aprovação pelo legislativo e divulgação pelo poder judiciário.
+                            </li>
+                            <li class="option-item" data-option="B">
+                                <span class="option-letter">B</span>
+                                elaboração da proposta, promulgação do poder legislativo, sanção do poder executivo e publicação do poder judiciário.
+                            </li>
+                            <li class="option-item" data-option="C">
+                                <span class="option-letter">C</span>
+                                elaboração da proposta, apreciação legislativa, execução, controle e avaliação.
+                            </li>
+                            <li class="option-item" data-option="D">
+                                <span class="option-letter">D</span>
+                                planejamento, preparação, aprovação do legislativo, execução e arrecadação e avaliação.
+                            </li>
+                        </ul>
+                    </div>
+
+                    <!-- Questão 48 -->
+                    <div class="question-card" data-question="48">
+                        <div class="d-flex align-items-center mb-3">
+                            <span class="question-number">48</span>
+                            <h5 class="question-text">Assinale a alternativa que apresenta os três principais sistemas orçamentários, quando se trata de medição de desempenho orçamentário.</h5>
+                        </div>
+                        <ul class="options-list">
+                            <li class="option-item" data-option="A">
+                                <span class="option-letter">A</span>
+                                Por ganho, por lucratividade e por volume.
+                            </li>
+                            <li class="option-item" data-option="B">
+                                <span class="option-letter">B</span>
+                                Traditional, por produto (output) e por resultado (outcome).
+                            </li>
+                            <li class="option-item" data-option="C">
+                                <span class="option-letter">C</span>
+                                Por resultado, por performance e por cobertura.
+                            </li>
+                            <li class="option-item" data-option="D">
+                                <span class="option-letter">D</span>
+                                Contemporâneo, tradicional e avançado.
+                            </li>
+                        </ul>
+                    </div>
+
+                    <!-- Questão 49 -->
+                    <div class="question-card" data-question="49">
+                        <div class="d-flex align-items-center mb-3">
+                            <span class="question-number">49</span>
+                            <h5 class="question-text">Segundo as normas de contabilidade aplicadas à auditoria, a diferença entre o valor divulgado, classificação, apresentação ou divulgação de um item nas demonstrações contábeis e o valor, classificação, apresentação ou divulgação que é requerido para que o item esteja de acordo com a estrutura de relatório financeiro aplicável, é denominado de</h5>
+                        </div>
+                        <ul class="options-list">
+                            <li class="option-item" data-option="A">
+                                <span class="option-letter">A</span>
+                                distorção.
+                            </li>
+                            <li class="option-item" data-option="B">
+                                <span class="option-letter">B</span>
+                                desvio.
+                            </li>
+                            <li class="option-item" data-option="C">
+                                <span class="option-letter">C</span>
+                                ajuste.
+                            </li>
+                            <li class="option-item" data-option="D">
+                                <span class="option-letter">D</span>
+                                amostra.
+                            </li>
+                        </ul>
+                    </div>
+
+                    <!-- Questão 50 -->
+                    <div class="question-card" data-question="50">
+                        <div class="d-flex align-items-center mb-3">
+                            <span class="question-number">50</span>
+                            <h5 class="question-text">Aquele que conduz o trabalho, aplicando habilidades e técnicas de asseguração para obter segurança razoável ou limitada, conforme adequado, sobre se a informação do objeto está livre de distorções relevantes, é denominado de</h5>
+                        </div>
+                        <ul class="options-list">
+                            <li class="option-item" data-option="A">
+                                <span class="option-letter">A</span>
+                                auditor interno.
+                            </li>
+                            <li class="option-item" data-option="B">
+                                <span class="option-letter">B</span>
+                                perito.
+                            </li>
+                            <li class="option-item" data-option="C">
+                                <span class="option-letter">C</span>
+                                avaliador.
+                            </li>
+                            <li class="option-item" data-option="D">
+                                <span class="option-letter">D</span>
+                                auditor independente.
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Seção de Resultados -->
+                <div class="results-section" id="results-section">
+                    <h3><i class="fas fa-chart-line me-2"></i>Resultados da Prova</h3>
+                    <div class="alert alert-info">
+                        <i class="fas fa-info-circle me-2"></i>Resultados comparados com o gabarito oficial. Questões anuladas são marcadas e não contam para a pontuação.
+                    </div>
+                    
+                    <div class="table-container">
+                        <table class="table table-bordered results-table">
+                            <thead>
+                                <tr>
+                                    <th>Questão</th>
+                                    <th>Resposta Selecionada</th>
+                                    <th>Resposta do Gabarito</th>
+                                    <th>Situação</th>
+                                    <th>Situação do Gabarito</th>
+                                </tr>
+                            </thead>
+                            <tbody id="results-table-body">
+                                <!-- Os resultados serão inseridos aqui via JavaScript -->
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                    <div class="row mt-4">
+                        <div class="col-md-6">
+                            <div class="response-summary">
+                                <h6>Resumo do Resultado:</h6>
+                                <div id="results-summary-content">
+                                    <div class="response-summary-item">
+                                        <span>Total de questões:</span>
+                                        <span id="results-total-questions">50</span>
+                                    </div>
+                                    <div class="response-summary-item">
+                                        <span>Questões respondidas:</span>
+                                        <span id="results-answered">0</span>
+                                    </div>
+                                    <div class="response-summary-item">
+                                        <span>Questões não respondidas:</span>
+                                        <span id="results-unanswered">0</span>
+                                    </div>
+                                    <div class="response-summary-item">
+                                        <span>Questões corretas:</span>
+                                        <span id="results-correct" class="correct-answer">0</span>
+                                    </div>
+                                    <div class="response-summary-item">
+                                        <span>Questões incorretas:</span>
+                                        <span id="results-incorrect" class="incorrect-answer">0</span>
+                                    </div>
+                                    <div class="response-summary-item">
+                                        <span>Questões anuladas:</span>
+                                        <span id="results-anuladas">0</span>
+                                    </div>
+                                    <div class="response-summary-item">
+                                        <span>Pontuação final:</span>
+                                        <span id="results-score" class="fw-bold">0/50</span>
+                                    </div>
+                                    <div class="response-summary-item">
+                                        <span>Porcentagem de acerto:</span>
+                                        <span id="results-percentage" class="fw-bold">0%</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="response-summary">
+                                <h6>Desempenho por Matéria:</h6>
+                                <div id="results-by-subject">
+                                    <!-- O desempenho por matéria será inserido aqui via JavaScript -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Seção de Exportação -->
+                <div class="export-section" id="export-section">
+                    <h3><i class="fas fa-file-export me-2"></i>Exportar Respostas</h3>
+                    <p>Após responder às questões, você pode exportar suas respostas para um arquivo CSV. Este arquivo conterá a comparação com o gabarito oficial.</p>
+                    
+                    <div class="response-summary">
+                        <h6>Resumo das Respostas:</h6>
+                        <div id="response-summary-content">
+                            <div class="response-summary-item">
+                                <span>Total de questões:</span>
+                                <span id="total-questions">50</span>
+                            </div>
+                            <div class="response-summary-item">
+                                <span>Questões respondidas:</span>
+                                <span id="answered-questions">0</span>
+                            </div>
+                            <div class="response-summary-item">
+                                <span>Questões não respondidas:</span>
+                                <span id="unanswered-questions">50</span>
+                            </div>
+                            <div class="response-summary-item">
+                                <span>Porcentagem de conclusão:</span>
+                                <span id="completion-percentage">0%</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="mt-4">
+                        <button class="btn export-btn w-100 mb-3" id="export-csv">
+                            <i class="fas fa-file-csv me-2"></i>Exportar Respostas para CSV
+                        </button>
+                        <div id="success-message" class="success-message" style="display: none;">
+                            <i class="fas fa-check-circle me-2"></i> Arquivo CSV exportado com sucesso!
+                        </div>
+                        <p class="text-muted mt-2 small"><i class="fas fa-info-circle me-1"></i>O arquivo CSV conterá todas as 50 questões com suas respectivas respostas selecionadas, comparação com o gabarito e situação de cada questão.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Barra lateral de navegação -->
+            <div class="col-lg-3">
+                <div class="navigation">
+                    <h5 class="nav-title"><i class="fas fa-list me-2"></i>Navegação</h5>
+                    <ul class="nav-list">
+                        <li class="nav-item">
+                            <a href="#lingua-portuguesa" class="nav-link">
+                                <i class="fas fa-language"></i> Língua Portuguesa (1-10)
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="#legislacao" class="nav-link">
+                                <i class="fas fa-gavel"></i> Legislação Municipal (11-15)
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="#raciocinio" class="nav-link">
+                                <i class="fas fa-brain"></i> Raciocínio Lógico (16-20)
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="#especificos" class="nav-link">
+                                <i class="fas fa-book"></i> Conhecimentos Específicos (21-50)
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="#results-section" class="nav-link">
+                                <i class="fas fa-chart-line"></i> Resultados
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="#export-section" class="nav-link">
+                                <i class="fas fa-file-export"></i> Exportar Respostas
+                            </a>
+                        </li>
+                    </ul>
+                    
+                    <h5 class="nav-title mt-4"><i class="fas fa-chart-bar me-2"></i>Progresso</h5>
+                    <div class="progress" style="height: 10px;">
+                        <div class="progress-bar" role="progressbar" style="width: 0%;" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+                    </div>
+                    <div class="progress-text mt-2" id="progress-text">0 de 50 questões respondidas</div>
+                    
+                    <div class="mt-4">
+                        <button class="btn finalize-btn w-100 mb-2" id="finalize-prova">
+                            <i class="fas fa-clipboard-check me-2"></i> Responder
+                        </button>
+                        <button class="btn btn-outline-secondary w-100" id="reset-all">
+                            <i class="fas fa-redo me-2"></i>Limpar todas as respostas
+                        </button>
+                    </div>
+                    
+                    <div class="mt-4">
+                        <h6 class="nav-title"><i class="fas fa-clock me-2"></i>Tempo Restante</h6>
+                        <div class="text-center">
+                            <div id="timer-display" class="fs-4 fw-bold text-primary">03:30:00</div>
+                            <button class="btn btn-sm btn-outline-primary mt-2 w-100" id="start-timer">
+                                <i class="fas fa-play me-1"></i> Iniciar Cronômetro
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Barra de progresso fixa -->
+    <div class="progress-container d-lg-none">
+        <div class="container">
+            <div class="d-flex justify-content-between align-items-center">
+                <div>
+                    <div class="progress-text" id="mobile-progress-text">Progresso: 0%</div>
+                    <div class="progress" style="height: 6px; width: 200px;">
+                        <div class="progress-bar" role="progressbar" style="width: 0%;" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+                    </div>
+                </div>
+                <div>
+                    <a href="#" class="btn btn-sm btn-outline-primary">
+                        <i class="fas fa-arrow-up"></i> Topo
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Rodapé -->
+    <footer class="footer">
+        <div class="container">
+            <p>Simulado completo para o cargo de <strong>Auditor Fiscal de Tributos Municipais</strong></p>
+            <p>Prefeitura Municipal de Santos - Estado de São Paulo | Edital nº 23/2023</p>
+            <p class="mt-3"><small>Clique nas alternativas para selecionar suas respostas, depois clique em "Finalizar Prova" para ver seus resultados.</small></p>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Objeto para armazenar as respostas
+        let userResponses = {};
+        const totalQuestions = 50;
+
+        // Gabarito oficial
+        const gabaritoOficial = {
+            1: { gabarito: "C", situacao: "Válida" },
+            2: { gabarito: "D", situacao: "Válida" },
+            3: { gabarito: "A", situacao: "Válida" },
+            4: { gabarito: "B", situacao: "Válida" },
+            5: { gabarito: "C", situacao: "Válida" },
+            6: { gabarito: "D", situacao: "Válida" },
+            7: { gabarito: "B", situacao: "Válida" },
+            8: { gabarito: "A", situacao: "Válida" },
+            9: { gabarito: "D", situacao: "Válida" },
+            10: { gabarito: "A", situacao: "Válida" },
+            11: { gabarito: "D", situacao: "Válida" },
+            12: { gabarito: "A", situacao: "Válida" },
+            13: { gabarito: "B", situacao: "Válida" },
+            14: { gabarito: "C", situacao: "Válida" },
+            15: { gabarito: "D", situacao: "Válida" },
+            16: { gabarito: "C", situacao: "Válida" },
+            17: { gabarito: "A", situacao: "Anulada" },
+            18: { gabarito: "B", situacao: "Válida" },
+            19: { gabarito: "D", situacao: "Válida" },
+            20: { gabarito: "C", situacao: "Válida" },
+            21: { gabarito: "B", situacao: "Válida" },
+            22: { gabarito: "A", situacao: "Válida" },
+            23: { gabarito: "B", situacao: "Válida" },
+            24: { gabarito: "D", situacao: "Válida" },
+            25: { gabarito: "C", situacao: "Válida" },
+            26: { gabarito: "D", situacao: "Válida" },
+            27: { gabarito: "B", situacao: "Válida" },
+            28: { gabarito: "D", situacao: "Válida" },
+            29: { gabarito: "C", situacao: "Válida" },
+            30: { gabarito: "A", situacao: "Válida" },
+            31: { gabarito: "A", situacao: "Válida" },
+            32: { gabarito: "D", situacao: "Válida" },
+            33: { gabarito: "D", situacao: "Válida" },
+            34: { gabarito: "A", situacao: "Válida" },
+            35: { gabarito: "C", situacao: "Válida" },
+            36: { gabarito: "D", situacao: "Válida" },
+            37: { gabarito: "B", situacao: "Válida" },
+            38: { gabarito: "C", situacao: "Válida" },
+            39: { gabarito: "D", situacao: "Válida" },
+            40: { gabarito: "C", situacao: "Válida" },
+            41: { gabarito: "A", situacao: "Anulada" },
+            42: { gabarito: "D", situacao: "Válida" },
+            43: { gabarito: "C", situacao: "Válida" },
+            44: { gabarito: "B", situacao: "Válida" },
+            45: { gabarito: "A", situacao: "Válida" },
+            46: { gabarito: "D", situacao: "Válida" },
+            47: { gabarito: "C", situacao: "Válida" },
+            48: { gabarito: "B", situacao: "Válida" },
+            49: { gabarito: "A", situacao: "Válida" },
+            50: { gabarito: "D", situacao: "Válida" }
+        };
+
+        // Inicializar objeto de respostas
+        for (let i = 1; i <= totalQuestions; i++) {
+            userResponses[i] = null;
+        }
+
+        // Adicionar interatividade às opções
+        document.querySelectorAll('.option-item').forEach(item => {
+            item.addEventListener('click', function() {
+                const questionCard = this.closest('.question-card');
+                const questionNumber = parseInt(questionCard.getAttribute('data-question'));
+                const selectedOption = this.getAttribute('data-option');
+                
+                // Remover seleção de outras opções na mesma questão
+                questionCard.querySelectorAll('.option-item').forEach(option => {
+                    option.classList.remove('selected');
+                });
+                
+                // Marcar a opção selecionada
+                this.classList.add('selected');
+                
+                // Armazenar a resposta
+                userResponses[questionNumber] = selectedOption;
+                
+                // Atualizar contagem de questões respondidas
+                updateProgress();
+            });
+        });
+
+        // Função para atualizar o progresso
+        function updateProgress() {
+            const answeredQuestions = Object.values(userResponses).filter(response => response !== null).length;
+            const unansweredQuestions = totalQuestions - answeredQuestions;
+            const completionPercentage = Math.round((answeredQuestions / totalQuestions) * 100);
+            
+            // Atualizar barras de progresso
+            document.querySelectorAll('.progress-bar').forEach(bar => {
+                bar.style.width = `${completionPercentage}%`;
+                bar.setAttribute('aria-valuenow', completionPercentage);
+            });
+            
+            // Atualizar textos de progresso
+            document.querySelectorAll('#progress-text, #mobile-progress-text').forEach(text => {
+                text.textContent = `${answeredQuestions} de ${totalQuestions} questões respondidas`;
+            });
+            
+            // Atualizar resumo na seção de exportação
+            document.getElementById('answered-questions').textContent = answeredQuestions;
+            document.getElementById('unanswered-questions').textContent = unansweredQuestions;
+            document.getElementById('completion-percentage').textContent = `${completionPercentage}%`;
+            
+            // Atualizar título da barra de progresso móvel
+            document.querySelector('.progress-container .progress-text').textContent = `Progresso: ${completionPercentage}%`;
+        }
+
+        // Botão para finalizar a prova
+        document.getElementById('finalize-prova').addEventListener('click', function() {
+            // Verificar se todas as questões foram respondidas
+            const answeredQuestions = Object.values(userResponses).filter(response => response !== null).length;
+            
+            if (answeredQuestions === 0) {
+                alert("Nenhuma resposta foi selecionada. Selecione pelo menos uma resposta antes de finalizar a prova.");
+                return;
+            }
+            
+            // Calcular resultados
+            calculateResults();
+            
+            // Mostrar a seção de resultados
+            document.getElementById('results-section').style.display = 'block';
+            
+            // Rolar até a seção de resultados
+            document.getElementById('results-section').scrollIntoView({ behavior: 'smooth' });
+        });
+
+        // Função para calcular os resultados
+        function calculateResults() {
+            let correctCount = 0;
+            let incorrectCount = 0;
+            let unansweredCount = 0;
+            let anuladasCount = 0;
+            
+            // Limpar estilos anteriores
+            document.querySelectorAll('.option-item').forEach(item => {
+                item.classList.remove('correct', 'incorrect');
+            });
+            
+            // Calcular resultados para cada questão
+            for (let i = 1; i <= totalQuestions; i++) {
+                const userAnswer = userResponses[i];
+                const correctAnswer = gabaritoOficial[i].gabarito;
+                const situacao = gabaritoOficial[i].situacao;
+                
+                // Se a questão está anulada, marcar como tal
+                if (situacao === "Anulada") {
+                    anuladasCount++;
+                }
+                
+                // Se o usuário não respondeu
+                if (userAnswer === null) {
+                    unansweredCount++;
+                    continue;
+                }
+                
+                // Encontrar o elemento da questão
+                const questionCard = document.querySelector(`.question-card[data-question="${i}"]`);
+                
+                // Marcar a resposta do usuário
+                const userOption = questionCard.querySelector(`.option-item[data-option="${userAnswer}"]`);
+                
+                // Marcar a resposta correta
+                const correctOption = questionCard.querySelector(`.option-item[data-option="${correctAnswer}"]`);
+                
+                // Se a questão não está anulada, verificar se está correta
+                if (situacao === "Válida") {
+                    if (userAnswer === correctAnswer) {
+                        correctCount++;
+                        if (userOption) userOption.classList.add('correct');
+                    } else {
+                        incorrectCount++;
+                        if (userOption) userOption.classList.add('incorrect');
+                        if (correctOption) correctOption.classList.add('correct');
+                    }
+                } else {
+                    // Questão anulada - marcar como correta independente da resposta
+                    if (userOption) userOption.classList.add('correct');
+                }
+            }
+            
+            // Atualizar a tabela de resultados
+            updateResultsTable(correctCount, incorrectCount, unansweredCount, anuladasCount);
+        }
+
+        // Função para atualizar a tabela de resultados
+        function updateResultsTable(correctCount, incorrectCount, unansweredCount, anuladasCount) {
+            const tableBody = document.getElementById('results-table-body');
+            tableBody.innerHTML = '';
+            
+            // Contadores por matéria
+            const subjectStats = {
+                'portugues': { total: 0, correct: 0, anuladas: 0 },
+                'legislacao': { total: 0, correct: 0, anuladas: 0 },
+                'raciocinio': { total: 0, correct: 0, anuladas: 0 },
+                'especificos': { total: 0, correct: 0, anuladas: 0 }
+            };
+            
+            for (let i = 1; i <= totalQuestions; i++) {
+                const userAnswer = userResponses[i];
+                const correctAnswer = gabaritoOficial[i].gabarito;
+                const situacao = gabaritoOficial[i].situacao;
+                
+                // Determinar situação da resposta do usuário
+                let situacaoResposta = "Não respondida";
+                let situacaoClass = "";
+                
+                if (userAnswer !== null) {
+                    if (situacao === "Anulada") {
+                        situacaoResposta = "Anulada";
+                        situacaoClass = "anulada-badge";
+                    } else if (userAnswer === correctAnswer) {
+                        situacaoResposta = "Correta";
+                        situacaoClass = "correct-answer";
+                    } else {
+                        situacaoResposta = "Incorreta";
+                        situacaoClass = "incorrect-answer";
+                    }
+                }
+                
+                // Determinar matéria
+                let materia = '';
+                if (i >= 1 && i <= 10) {
+                    materia = 'portugues';
+                    subjectStats.portugues.total++;
+                    if (situacaoResposta === "Correta") subjectStats.portugues.correct++;
+                    if (situacao === "Anulada") subjectStats.portugues.anuladas++;
+                } else if (i >= 11 && i <= 15) {
+                    materia = 'legislacao';
+                    subjectStats.legislacao.total++;
+                    if (situacaoResposta === "Correta") subjectStats.legislacao.correct++;
+                    if (situacao === "Anulada") subjectStats.legislacao.anuladas++;
+                } else if (i >= 16 && i <= 20) {
+                    materia = 'raciocinio';
+                    subjectStats.raciocinio.total++;
+                    if (situacaoResposta === "Correta") subjectStats.raciocinio.correct++;
+                    if (situacao === "Anulada") subjectStats.raciocinio.anuladas++;
+                } else if (i >= 21 && i <= 50) {
+                    materia = 'especificos';
+                    subjectStats.especificos.total++;
+                    if (situacaoResposta === "Correta") subjectStats.especificos.correct++;
+                    if (situacao === "Anulada") subjectStats.especificos.anuladas++;
+                }
+                
+                // Adicionar linha à tabela
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${i}</td>
+                    <td>${userAnswer || "Não respondida"}</td>
+                    <td>${correctAnswer}</td>
+                    <td><span class="${situacaoClass}">${situacaoResposta}</span></td>
+                    <td>${situacao === "Anulada" ? '<span class="anulada-badge">Anulada</span>' : situacao}</td>
+                `;
+                tableBody.appendChild(row);
+            }
+            
+            // Atualizar resumo
+            const answeredQuestions = totalQuestions - unansweredCount;
+            const validQuestions = totalQuestions - anuladasCount;
+            const score = correctCount;
+            const percentage = validQuestions > 0 ? Math.round((correctCount / validQuestions) * 100) : 0;
+            
+            document.getElementById('results-total-questions').textContent = totalQuestions;
+            document.getElementById('results-answered').textContent = answeredQuestions;
+            document.getElementById('results-unanswered').textContent = unansweredCount;
+            document.getElementById('results-correct').textContent = correctCount;
+            document.getElementById('results-incorrect').textContent = incorrectCount;
+            document.getElementById('results-anuladas').textContent = anuladasCount;
+            document.getElementById('results-score').textContent = `${score}/${validQuestions}`;
+            document.getElementById('results-percentage').textContent = `${percentage}%`;
+            
+            // Atualizar desempenho por matéria
+            const resultsBySubject = document.getElementById('results-by-subject');
+            resultsBySubject.innerHTML = '';
+            
+            for (const [materia, stats] of Object.entries(subjectStats)) {
+                const materiaName = {
+                    'portugues': 'Língua Portuguesa',
+                    'legislacao': 'Legislação Municipal',
+                    'raciocinio': 'Raciocínio Lógico',
+                    'especificos': 'Conhecimentos Específicos'
+                }[materia];
+                
+                const validQuestionsMateria = stats.total - stats.anuladas;
+                const percentageMateria = validQuestionsMateria > 0 ? Math.round((stats.correct / validQuestionsMateria) * 100) : 0;
+                
+                const subjectDiv = document.createElement('div');
+                subjectDiv.className = 'response-summary-item';
+                subjectDiv.innerHTML = `
+                    <span>${materiaName}:</span>
+                    <span>${stats.correct}/${validQuestionsMateria} (${percentageMateria}%)</span>
+                `;
+                resultsBySubject.appendChild(subjectDiv);
+            }
+        }
+
+        // Botão para limpar todas as respostas
+        document.getElementById('reset-all').addEventListener('click', function() {
+            if (confirm("Tem certeza que deseja limpar todas as respostas? Esta ação não pode ser desfeita.")) {
+                document.querySelectorAll('.option-item').forEach(option => {
+                    option.classList.remove('selected', 'correct', 'incorrect');
+                });
+                
+                // Limpar todas as respostas
+                for (let i = 1; i <= totalQuestions; i++) {
+                    userResponses[i] = null;
+                }
+                
+                // Ocultar seção de resultados
+                document.getElementById('results-section').style.display = 'none';
+                
+                updateProgress();
+            }
+        });
+
+        // Função para exportar para CSV
+        function exportToCSV() {
+            // Verificar se há respostas
+            const answeredQuestions = Object.values(userResponses).filter(response => response !== null).length;
+            
+            if (answeredQuestions === 0) {
+                alert("Nenhuma resposta foi selecionada. Selecione pelo menos uma resposta antes de exportar.");
+                return;
+            }
+            
+            // Calcular resultados para incluir no CSV
+            let correctCount = 0;
+            let incorrectCount = 0;
+            let unansweredCount = 0;
+            let anuladasCount = 0;
+            
+            // Cabeçalho do CSV
+            let csvContent = "Numero da questao,Situacao da questao,Resposta selecionada,Resposta do gabarito,Situacao do gabarito\n";
+            
+            // Adicionar dados das respostas
+            for (let i = 1; i <= totalQuestions; i++) {
+                const userAnswer = userResponses[i] || "Não respondida";
+                const correctAnswer = gabaritoOficial[i].gabarito;
+                const situacaoGabarito = gabaritoOficial[i].situacao;
+                
+                // Determinar situação da questão (Correta/Incorreta/Não respondida/Anulada)
+                let situacaoQuestao = "Não respondida";
+                
+                if (userAnswer !== "Não respondida") {
+                    if (situacaoGabarito === "Anulada") {
+                        situacaoQuestao = "Anulada";
+                        anuladasCount++;
+                    } else if (userAnswer === correctAnswer) {
+                        situacaoQuestao = "Correta";
+                        correctCount++;
+                    } else {
+                        situacaoQuestao = "Incorreta";
+                        incorrectCount++;
+                    }
+                } else {
+                    unansweredCount++;
+                }
+                
+                csvContent += `${i},${situacaoQuestao},${userAnswer},${correctAnswer},${situacaoGabarito}\n`;
+            }
+            
+            // Adicionar resumo no final do CSV
+            const totalValidQuestions = totalQuestions - anuladasCount;
+            const porcentagemAcerto = totalValidQuestions > 0 ? Math.round((correctCount / totalValidQuestions) * 100) : 0;
+            const now = new Date();
+            
+            csvContent += "\n";
+            csvContent += "RESUMO\n";
+            csvContent += `Total de questões,${totalQuestions}\n`;
+            csvContent += `Questões respondidas,${answeredQuestions}\n`;
+            csvContent += `Questões não respondidas,${unansweredCount}\n`;
+            csvContent += `Questões corretas,${correctCount}\n`;
+            csvContent += `Questões incorretas,${incorrectCount}\n`;
+            csvContent += `Questões anuladas,${anuladasCount}\n`;
+            csvContent += `Porcentagem de acerto,${porcentagemAcerto}%\n`;
+            csvContent += `Data da exportação,${now.toLocaleDateString('pt-BR')}\n`;
+            csvContent += `Hora da exportação,${now.toLocaleTimeString('pt-BR')}\n`;
+            
+            // Criar blob e link de download
+            const blob = new Blob(["\uFEFF" + csvContent], { type: 'text/csv;charset=utf-8;' });
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            
+            // Configurar o link de download
+            const timestamp = new Date().toISOString().slice(0, 19).replace(/[:]/g, '-');
+            link.setAttribute('href', url);
+            link.setAttribute('download', `resultados_auditor_fiscal_${timestamp}.csv`);
+            link.style.visibility = 'hidden';
+            
+            // Adicionar ao documento e clicar
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            
+            // Mostrar mensagem de sucesso
+            const successMessage = document.getElementById('success-message');
+            successMessage.style.display = 'block';
+            
+            // Esconder mensagem após 5 segundos
+            setTimeout(() => {
+                successMessage.style.display = 'none';
+            }, 5000);
+        }
+
+        // Botão para exportar CSV
+        document.getElementById('export-csv').addEventListener('click', exportToCSV);
+
+        // Cronômetro
+        let timerInterval;
+        let totalSeconds = 3 * 60 * 60 + 30 * 60; // 3 horas e 30 minutos em segundos
+        let timerRunning = false;
+        
+        function formatTime(seconds) {
+            const hrs = Math.floor(seconds / 3600);
+            const mins = Math.floor((seconds % 3600) / 60);
+            const secs = seconds % 60;
+            
+            return `${hrs.toString().padStart(2, '0')}:${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+        }
+        
+        function updateTimerDisplay() {
+            document.getElementById('timer-display').textContent = formatTime(totalSeconds);
+        }
+        
+        function startTimer() {
+            if (timerRunning) return;
+            
+            timerRunning = true;
+            document.getElementById('start-timer').innerHTML = '<i class="fas fa-pause me-1"></i> Pausar';
+            document.getElementById('start-timer').classList.remove('btn-outline-primary');
+            document.getElementById('start-timer').classList.add('btn-warning');
+            
+            timerInterval = setInterval(() => {
+                if (totalSeconds <= 0) {
+                    clearInterval(timerInterval);
+                    alert('Tempo esgotado! A prova foi finalizada automaticamente.');
+                    document.getElementById('start-timer').innerHTML = '<i class="fas fa-play me-1"></i> Tempo Esgotado';
+                    document.getElementById('start-timer').classList.remove('btn-warning');
+                    document.getElementById('start-timer').classList.add('btn-danger');
+                    document.getElementById('start-timer').disabled = true;
+                    
+                    // Finalizar automaticamente a prova
+                    calculateResults();
+                    document.getElementById('results-section').style.display = 'block';
+                    document.getElementById('results-section').scrollIntoView({ behavior: 'smooth' });
+                    return;
+                }
+                
+                totalSeconds--;
+                updateTimerDisplay();
+                
+                // Avisos de tempo
+                if (totalSeconds === 60 * 60) {
+                    alert('Atenção: Resta 1 hora para o término da prova.');
+                } else if (totalSeconds === 30 * 60) {
+                    alert('Atenção: Restam 30 minutos para o término da prova.');
+                } else if (totalSeconds === 10 * 60) {
+                    alert('Atenção: Restam 10 minutos para o término da prova.');
+                } else if (totalSeconds === 5 * 60) {
+                    alert('Atenção: Restam 5 minutos para o término da prova. Faça a revisão das questões.');
+                }
+            }, 1000);
+        }
+        
+        function pauseTimer() {
+            if (!timerRunning) return;
+            
+            timerRunning = false;
+            clearInterval(timerInterval);
+            document.getElementById('start-timer').innerHTML = '<i class="fas fa-play me-1"></i> Continuar';
+            document.getElementById('start-timer').classList.remove('btn-warning');
+            document.getElementById('start-timer').classList.add('btn-outline-primary');
+        }
+        
+        document.getElementById('start-timer').addEventListener('click', function() {
+            if (timerRunning) {
+                pauseTimer();
+            } else {
+                startTimer();
+            }
+        });
+        
+        // Inicializar o display do timer
+        updateTimerDisplay();
+
+        // Atualizar progresso ao rolar
+        window.addEventListener('scroll', function() {
+            const scrollTop = document.documentElement.scrollTop || document.body.scrollTop;
+            const scrollHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            const scrollPercent = scrollTop / scrollHeight;
+            
+            // Atualizar apenas a barra de progresso fixa (visualização)
+            const fixedProgress = document.querySelector('.progress-container .progress-bar');
+            if (fixedProgress) {
+                const visualProgress = 40 + (scrollPercent * 60);
+                fixedProgress.style.width = `${Math.min(100, visualProgress)}%`;
+            }
+        });
+
+        // Inicializar o progresso
+        updateProgress();
+    </script>
+</body>
+</html>

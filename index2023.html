@@ -1,0 +1,2493 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simulado Completo - Auditor Fiscal de Tributos Municipais</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --secondary-color: #3498db;
+            --accent-color: #e74c3c;
+            --light-bg: #f8f9fa;
+            --border-color: #dee2e6;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f5f7fa;
+            color: #333;
+            line-height: 1.6;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, var(--primary-color) 0%, #1a2530 100%);
+            color: white;
+            padding: 2rem 0;
+            border-bottom: 5px solid var(--secondary-color);
+            margin-bottom: 2rem;
+        }
+        
+        .header h1 {
+            font-weight: 700;
+            font-size: 2.2rem;
+        }
+        
+        .header .subtitle {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+        
+        .exam-info {
+            background-color: white;
+            border-radius: 10px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            margin-bottom: 2rem;
+            border-left: 5px solid var(--secondary-color);
+        }
+        
+        .subject-card {
+            background-color: white;
+            border-radius: 10px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            border-top: 4px solid var(--secondary-color);
+            transition: transform 0.3s ease;
+        }
+        
+        .subject-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .subject-title {
+            color: var(--primary-color);
+            border-bottom: 2px solid var(--light-bg);
+            padding-bottom: 0.75rem;
+            margin-bottom: 1.5rem;
+            font-weight: 700;
+        }
+        
+        .question-card {
+            background-color: white;
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 3px 5px rgba(0, 0, 0, 0.04);
+            border-left: 3px solid #e9ecef;
+        }
+        
+        .question-number {
+            display: inline-block;
+            background-color: var(--secondary-color);
+            color: white;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 36px;
+            font-weight: 700;
+            margin-right: 10px;
+        }
+        
+        .question-text {
+            font-weight: 600;
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+        }
+        
+        .options-list {
+            list-style-type: none;
+            padding-left: 0;
+        }
+        
+        .option-item {
+            padding: 0.75rem;
+            margin-bottom: 0.5rem;
+            border-radius: 5px;
+            border: 1px solid var(--border-color);
+            transition: all 0.2s ease;
+            cursor: pointer;
+        }
+        
+        .option-item:hover {
+            background-color: #f0f7ff;
+            border-color: var(--secondary-color);
+        }
+        
+        .option-item.selected {
+            background-color: #e7f3ff;
+            border-color: var(--secondary-color);
+            box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.2);
+        }
+        
+        .option-item.correct {
+            background-color: #d4edda;
+            border-color: #c3e6cb;
+        }
+        
+        .option-item.incorrect {
+            background-color: #f8d7da;
+            border-color: #f5c6cb;
+        }
+        
+        .option-letter {
+            display: inline-block;
+            width: 28px;
+            height: 28px;
+            background-color: #e9ecef;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 28px;
+            font-weight: 700;
+            margin-right: 10px;
+        }
+        
+        .selected .option-letter {
+            background-color: var(--secondary-color);
+            color: white;
+        }
+        
+        .correct .option-letter {
+            background-color: #28a745;
+            color: white;
+        }
+        
+        .incorrect .option-letter {
+            background-color: #dc3545;
+            color: white;
+        }
+        
+        .table-container {
+            overflow-x: auto;
+            margin: 1.5rem 0;
+        }
+        
+        .table-custom {
+            min-width: 100%;
+            border-collapse: collapse;
+        }
+        
+        .table-custom th, .table-custom td {
+            border: 1px solid var(--border-color);
+            padding: 0.75rem;
+            text-align: center;
+        }
+        
+        .table-custom th {
+            background-color: var(--light-bg);
+            font-weight: 600;
+        }
+        
+        .navigation {
+            position: sticky;
+            top: 20px;
+            background-color: white;
+            border-radius: 10px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+        }
+        
+        .nav-title {
+            color: var(--primary-color);
+            font-weight: 700;
+            margin-bottom: 1rem;
+            border-bottom: 2px solid var(--light-bg);
+            padding-bottom: 0.5rem;
+        }
+        
+        .nav-list {
+            list-style-type: none;
+            padding-left: 0;
+        }
+        
+        .nav-item {
+            margin-bottom: 0.5rem;
+        }
+        
+        .nav-link {
+            color: #555;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            padding: 0.5rem;
+            border-radius: 5px;
+            transition: all 0.2s ease;
+        }
+        
+        .nav-link:hover {
+            background-color: #f0f7ff;
+            color: var(--secondary-color);
+        }
+        
+        .nav-link i {
+            margin-right: 8px;
+            width: 20px;
+            text-align: center;
+        }
+        
+        .footer {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 2rem 0;
+            margin-top: 3rem;
+            text-align: center;
+        }
+        
+        .progress-container {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background-color: white;
+            box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
+            padding: 0.75rem;
+            z-index: 1000;
+        }
+        
+        .progress-text {
+            font-size: 0.9rem;
+            margin-bottom: 0.25rem;
+        }
+        
+        .timer {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 50px;
+            font-weight: 700;
+            display: inline-block;
+            margin-bottom: 1rem;
+        }
+        
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 1.8rem;
+            }
+            
+            .navigation {
+                position: static;
+                margin-bottom: 2rem;
+            }
+            
+            .progress-container {
+                position: static;
+                box-shadow: none;
+                border-top: 1px solid var(--border-color);
+            }
+        }
+        
+        .diagram {
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            text-align: center;
+            border: 1px solid var(--border-color);
+        }
+        
+        .diagram-placeholder {
+            font-style: italic;
+            color: #6c757d;
+        }
+        
+        .financial-table {
+            font-size: 0.9rem;
+        }
+        
+        .export-btn {
+            background: linear-gradient(to right, #27ae60, #2ecc71);
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 50px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+        
+        .export-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(39, 174, 96, 0.4);
+            color: white;
+        }
+        
+        .export-section {
+            background-color: white;
+            border-radius: 10px;
+            padding: 1.5rem;
+            margin-top: 2rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            border-top: 4px solid #27ae60;
+        }
+        
+        .response-summary {
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            padding: 1rem;
+            margin-top: 1rem;
+            font-size: 0.9rem;
+        }
+        
+        .response-summary-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.25rem 0;
+            border-bottom: 1px solid #e9ecef;
+        }
+        
+        .response-summary-item:last-child {
+            border-bottom: none;
+        }
+        
+        .success-message {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+            border-radius: 5px;
+            padding: 0.75rem;
+            margin-top: 1rem;
+            display: none;
+        }
+        
+        .account-row {
+            text-align: left;
+        }
+        
+        .account-value {
+            text-align: right;
+            font-weight: 600;
+        }
+        
+        .results-section {
+            background-color: white;
+            border-radius: 10px;
+            padding: 1.5rem;
+            margin-top: 2rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            border-top: 4px solid #f39c12;
+            display: none;
+        }
+        
+        .results-table {
+            font-size: 0.85rem;
+        }
+        
+        .correct-answer {
+            color: #28a745;
+            font-weight: 600;
+        }
+        
+        .incorrect-answer {
+            color: #dc3545;
+            font-weight: 600;
+        }
+        
+        .anulada-badge {
+            background-color: #6c757d;
+            color: white;
+            padding: 0.2rem 0.5rem;
+            border-radius: 3px;
+            font-size: 0.75rem;
+        }
+        
+        .finalize-btn {
+            background: linear-gradient(to right, #f39c12, #e67e22);
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 50px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+        
+        .finalize-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(243, 156, 18, 0.4);
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <!-- Cabeçalho -->
+    <header class="header">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-md-8">
+                    <h1>Simulado Completo - Auditor Fiscal de Tributos Municipais</h1>
+                    <p class="subtitle">Prefeitura Municipal de Santos - Estado de São Paulo | Edital nº 23/2023</p>
+                </div>
+                <div class="col-md-4 text-md-end">
+                    <div class="timer">
+                        <i class="fas fa-clock me-2"></i> Duração: 3h30min
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="row">
+            <!-- Conteúdo principal - Questões -->
+            <div class="col-lg-9">
+                <!-- Informações do exame -->
+                <div class="exam-info">
+                    <h3><i class="fas fa-info-circle me-2"></i>Instruções</h3>
+                    <p>Este caderno contém 50 questões objetivas. Responda a todas as questões, marcando a alternativa que você considera correta. A duração da prova é de 3 horas e 30 minutos.</p>
+                    <div class="row mt-3">
+                        <div class="col-md-6">
+                            <p><i class="fas fa-user me-2"></i><strong>Cargo:</strong> 347 – Auditor Fiscal de Tributos Municipais</p>
+                        </div>
+                        <div class="col-md-6">
+                            <p><i class="fas fa-file-alt me-2"></i><strong>Tipo de Prova:</strong> B</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Língua Portuguesa -->
+                <div class="subject-card" id="lingua-portuguesa">
+                    <h2 class="subject-title"><i class="fas fa-language me-2"></i>Língua Portuguesa</h2>
+                    
+                    <!-- Questão 1 -->
+                    <div class="question-card" data-question="1">
+                        <div class="d-flex align-items-center mb-3">
+                            <span class="question-number">1</span>
+                            <h5 class="question-text">A frase do primeiro quadrinho foi redigida em desacordo com a norma culta. Ela está reescrita com as correções necessárias em qual alternativa?</h5>
+                        </div>
+                        <ul class="options-list">
+                            <li class="option-item" data-option="A">
+                                <span class="option-letter">A</span>
+                                Explica-me o porquê você gasta menos do seu tempo em projetos do que os outros engenheiros.
+                            </li>
+                            <li class="option-item" data-option="B">
+                                <span class="option-letter">B</span>
+                                Me explique o por quê de você gastar menos do seu tempo em projetos do que os outros engenheiros.
+                            </li>
+                            <li class="option-item" data-option="C">
+                                <span class="option-letter">C</span>
+                                Explique-me o porquê de você gastar menos do seu tempo em projetos do que os outros engenheiros.
+                            </li>
+                            <li class="option-item" data-option="D">
+                                <span class="option-letter">D</span>
+                                Me explica o por que de você gastar menos do seu tempo em projetos do que os outros engenheiros.
+                            </li>
+                        </ul>
+                    </div>
+
+                    <!-- Questão 2 -->
+                    <div class="question-card" data-question="2">
+                        <div class="d-flex align-items-center mb-3">
+                            <span class="question-number">2</span>
+                            <h5 class="question-text">Da leitura do primeiro quadrinho depreendemos que o quesito "honestidade":</h5>
+                        </div>
+                        <ul class="options-list">
+                            <li class="option-item" data-option="A">
+                                <span class="option-letter">A</span>
+                                faz parte da política da empresa em que estão inseridos os personagens da tira.
+                            </li>
+                            <li class="option-item" data-option="B">
+                                <span class="option-letter">B</span>
+                                motiva os funcionários da historieta a apresentarem maior quantidades de projetos.
+                            </li>
+                            <li class="option-item" data-option="C">
+                                <span class="option-letter">C</span>
+                                foi uma sugestão brilhante apresentada pelo chefe da empresa aos funcionários para melhor executarem seus projetos.
+                            </li>
+                            <li class="option-item" data-option="D">
+                                <span class="option-letter">D</span>
+                                é o fato ensejador de o personagem Dilbert (o que usa óculos) apresentar menos projetos do que os outros engenheiros.
+                            </li>
+                        </ul>
+                    </div>
+                    
+                    <!-- Questão 3 -->
+                    <div class="question-card" data-question="3">
+                        <div class="d-flex align-items-center mb-3">
+                            <span class="question-number">3</span>
+                            <h5 class="question-text">Leia os trechos a seguir. I. "O mercado de barcos de luxo chega com atraso ao debate". II. "pesquisas e testes para viabilizar tecnologias". Os elementos sublinhados, no contexto em que estão inseridos denotam, respectivamente:</h5>
+                        </div>
+                        <ul class="options-list">
+                            <li class="option-item" data-option="A">
+                                <span class="option-letter">A</span>
+                                I - modo; II - finalidade.
+                            </li>
+                            <li class="option-item" data-option="B">
+                                <span class="option-letter">B</span>
+                                I - instrumento; II - direção.
+                            </li>
+                            <li class="option-item" data-option="C">
+                                <span class="option-letter">C</span>
+                                I - causa; II - explicação.
+                            </li>
+                            <li class="option-item" data-option="D">
+                                <span class="option-letter">D</span>
+                                I - finalidade; II - consequência.
+                            </li>
+                        </ul>
+                    </div>
+
+                    <!-- Questão 4 -->
+                    <div class="question-card" data-question="4">
+                        <div class="d-flex align-items-center mb-3">
+                            <span class="question-number">4</span>
+                            <h5 class="question-text">"O segmento náutico começa a fazer pesquisas e testes para viabilizar tecnologias de motor híbrido" – a substituição dos segmentos sublinhados pelos pronomes oblíquos correspondentes deu-se em conformidade com a norma culta em qual alternativa?</h5>
+                        </div>
+                        <ul class="options-list">
+                            <li class="option-item" data-option="A">
+                                <span class="option-letter">A</span>
+                                O segmento náutico começa a lhes fazer para as viabilizar.
+                            </li>
+                            <li class="option-item" data-option="B">
+                                <span class="option-letter">B</span>
+                                O segmento náutico começa a fazê-los para viabilizá-las.
+                            </li>
+                            <li class="option-item" data-option="C">
+                                <span class="option-letter">C</span>
+                                O segmento náutico começa a fazer-lhes para viabilizar-lhes.
+                            </li>
+                            <li class="option-item" data-option="D">
+                                <span class="option-letter">D</span>
+                                O segmento náutico começa a fazê-las para viabilizá-las.
+                            </li>
+                        </ul>
+                    </div>
+
+                    <!-- Questão 5 -->
+                    <div class="question-card" data-question="5">
+                        <div class="d-flex align-items-center mb-3">
+                            <span class="question-number">5</span>
+                            <h5 class="question-text">"demandam motores mais potentes" – o sentido do excerto só não seria mantido se substituíssemos o verbo ali presente por:</h5>
+                        </div>
+                        <ul class="options-list">
+                            <li class="option-item" data-option="A">
+                                <span class="option-letter">A</span>
+                                requerem.
+                            </li>
+                            <li class="option-item" data-option="B">
+                                <span class="option-letter">B</span>
+                                carecem de.
+                            </li>
+                            <li class="option-item" data-option="C">
+                                <span class="option-letter">C</span>
+                                exigem.
+                            </li>
+                            <li class="option-item" data-option="D">
+                                <span class="option-letter">D</span>
+                                prescindem de.
+                            </li>
+                        </ul>
+                    </div>
+
+                    <!-- Questão 6 -->
+                    <div class="question-card" data-question="6">
+                        <div class="d-flex align-items-center mb-3">
+                            <span class="question-number">6</span>
+                            <h5 class="question-text">Opiniões controversas – primeiro parágrafo – são aquelas que:</h5>
+                        </div>
+                        <ul class="options-list">
+                            <li class="option-item" data-option="A">
+                                <span class="option-letter">A</span>
+                                convergem entre si.
+                            </li>
+                            <li class="option-item" data-option="B">
+                                <span class="option-letter">B</span>
+                                complementam-se, a despeito de dispares.
+                            </li>
+                            <li class="option-item" data-option="C">
+                                <span class="option-letter">C</span>
+                                têm por predicado o fato de serem contestáveis.
+                            </li>
+                            <li class="option-item" data-option="D">
+                                <span class="option-letter">D</span>
+                                invariavelmente são contrárias ao senso comum.
+                            </li>
+                        </ul>
+                    </div>
+
+                    <!-- Questão 7 -->
+                    <div class="question-card" data-question="7">
+                        <div class="d-flex align-items-center mb-3">
+                            <span class="question-number">7</span>
+                            <h5 class="question-text">Da leitura do texto deduzimos não ser possível relação de causa e consequência entre uma portaria inteligente e:</h5>
+                        </div>
+                        <ul class="options-list">
+                            <li class="option-item" data-option="A">
+                                <span class="option-letter">A</span>
+                                demissões em massa.
+                            </li>
+                            <li class="option-item" data-option="B">
+                                <span class="option-letter">B</span>
+                                incremento do número de funcionários similares a porteiros.
+                            </li>
+                            <li class="option-item" data-option="C">
+                                <span class="option-letter">C</span>
+                                monitoração a longa distância.
+                            </li>
+                            <li class="option-item" data-option="D">
+                                <span class="option-letter">D</span>
+                                redução de custos.
+                            </li>
+                        </ul>
+                    </div>
+
+                    <!-- Questão 8 -->
+                    <div class="question-card" data-question="8">
+                        <div class="d-flex align-items-center mb-3">
+                            <span class="question-number">8</span>
+                            <h5 class="question-text">Para o autor, o fato de na China existir um número enorme de pessoas sem grande formação, realizando pequenos trabalhos:</h5>
+                        </div>
+                        <ul class="options-list">
+                            <li class="option-item" data-option="A">
+                                <span class="option-letter">A</span>
+                                é uma forma de garantir a dignidade e a atividade das pessoas inseridas na chamada ordem espontânea e expandida.
+                            </li>
+                            <li class="option-item" data-option="B">
+                                <span class="option-letter">B</span>
+                                possibilitou a criação da ordem espontânea e expandida posteriormente adotada como parâmetro moral, social e político pelo economista liberal Friedrich Hayek.
+                            </li>
+                            <li class="option-item" data-option="C">
+                                <span class="option-letter">C</span>
+                                potencializa uma economia cega na qual prevalece o despreparo dos trabalhadores frente a um mercado cada vez mais competitivo.
+                            </li>
+                            <li class="option-item" data-option="D">
+                                <span class="option-letter">D</span>
+                                permite um Estado mais centralizador que controla preços e empregos e, por consequência, erradica a pobreza.
+                            </li>
+                        </ul>
+                    </div>
+
+                    <!-- Questão 9 -->
+                    <div class="question-card" data-question="9">
+                        <div class="d-flex align-items-center mb-3">
+                            <span class="question-number">9</span>
+                            <h5 class="question-text">"o liberal inteligentinho" - o uso do diminutivo no segmento:</h5>
+                        </div>
+                        <ul class="options-list">
+                            <li class="option-item" data-option="A">
+                                <span class="option-letter">A</span>
+                                ressalta a característica "inteligência" dos liberais.
+                            </li>
+                            <li class="option-item" data-option="B">
+                                <span class="option-letter">B</span>
+                                foi empregado afetivamente.
+                            </li>
+                            <li class="option-item" data-option="C">
+                                <span class="option-letter">C</span>
+                                evidencia opinião desabonadora do autor sobre o liberal.
+                            </li>
+                            <li class="option-item" data-option="D">
+                                <span class="option-letter">D</span>
+                                foi opção linguística do autor que, contudo, não produz qualquer efeito semântico no período.
+                            </li>
+                        </ul>
+                    </div>
+
+                    <!-- Questão 10 -->
+                    <div class="question-card" data-question="10">
+                        <div class="d-flex align-items-center mb-3">
+                            <span class="question-number">10</span>
+                            <h5 class="question-text">Leia as asseverações feitas sobre o texto. I. O autor compactua com o ideário de Adam Smith, filósofo do século 18, no sentido de que a sociedade de mercado deve ser uma entidade meramente econômica. II. Pondé define o "idiota de mercado" como o indivíduo que se opõe à necessária ingerência do Estado como elemento regulador na vida das pessoas. III. Na acepção do autor as portarias inteligentes têm o condão de minar o necessário vínculo de idosos com pessoas que os auxiliem a lidar com o cotidiano, inviabilizando suas vidas nos prédios em que muitos sempre viveram. IV. A analogia da recepção de uma nova faxineira ao processo de tirar vistos para viajar se dá no seguinte sentido: as portarias inteligentes facilitarão a interação entre elementos internos e externos aos condomínios, que passarão a ser mais bem controlados e ao mesmo tempo menos burocráticos. Representa inferência possível de sua leitura o afirmado em:</h5>
+                        </div>
+                        <ul class="options-list">
+                            <li class="option-item" data-option="A">
+                                <span class="option-letter">A</span>
+                                uma proposição apenas.
+                            </li>
+                            <li class="option-item" data-option="B">
+                                <span class="option-letter">B</span>
+                                duas proposições apenas.
+                            </li>
+                            <li class="option-item" data-option="C">
+                                <span class="option-letter">C</span>
+                                três proposições apenas.
+                            </li>
+                            <li class="option-item" data-option="D">
+                                <span class="option-letter">D</span>
+                                todas as proposições apresentadas.
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Legislação Municipal -->
+                <div class="subject-card" id="legislacao">
+                    <h2 class="subject-title"><i class="fas fa-gavel me-2"></i>Conhecimentos Básicos de Legislação Municipal</h2>
+                    
+                    <!-- Questão 11 -->
+                    <div class="question-card" data-question="11">
+                        <div class="d-flex align-items-center mb-3">
+                            <span class="question-number">11</span>
+                            <h5 class="question-text">No sistema operacional Windows 10, o usuário pode ajustar o tamanho e a posição de uma janela para que ela ocupe a metade esquerda ou direita da tela. Para isso, ele deve selecionar a barra de título da janela desejada e:</h5>
+                        </div>
+                        <ul class="options-list">
+                            <li class="option-item" data-option="A">
+                                <span class="option-letter">A</span>
+                                pressionar o atalho de teclado Ctrl+A ou Ctrl+S, respectivamente.
+                            </li>
+                            <li class="option-item" data-option="B">
+                                <span class="option-letter">B</span>
+                                clicar duas vezes sobre a barra de título.
+                            </li>
+                            <li class="option-item" data-option="C">
+                                <span class="option-letter">C</span>
+                                arrastar a janela até a borda da tela do lado desejado.
+                            </li>
+                            <li class="option-item" data-option="D">
+                                <span class="option-letter">D</span>
+                                mover a janela sobre o menu Iniciar.
+                            </li>
+                        </ul>
+                    </div>
+
+                    <!-- Questão 12 -->
+                    <div class="question-card" data-question="12">
+                        <div class="d-flex align-items-center mb-3">
+                            <span class="question-number">12</span>
+                            <h5 class="question-text">Quando se utiliza dois monitores em um computador executando o sistema operacional Windows 10, o usuário pode alternar entre diferentes formas de exibir a área de trabalho nos monitores como duplicar, estender ou exibir em somente um dos monitores. Para isso, ele pode utilizar o atalho de teclado:</h5>
+                        </div>
+                        <ul class="options-list">
+                            <li class="option-item" data-option="A">
+                                <span class="option-letter">A</span>
+                                Tecla do logotipo do Windows + M
+                            </li>
+                            <li class="option-item" data-option="B">
+                                <span class="option-letter">B</span>
+                                Tecla do logotipo do Windows + P
+                            </li>
+                            <li class="option-item" data-option="C">
+                                <span class="option-letter">C</span>
+                                Ctrl + M
+                            </li>
+                            <li class="option-item" data-option="D">
+                                <span class="option-letter">D</span>
+                                Ctrl + P
+                            </li>
+                        </ul>
+                    </div>
+
+                    <!-- Questão 13 -->
+                    <div class="question-card" data-question="13">
+                        <div class="d-flex align-items-center mb-3">
+                            <span class="question-number">13</span>
+                            <h5 class="question-text">O Microsoft Word 2016 possui um conjunto de ferramentas para a criação de documentos de mala direta, como o comando Envelopes e o comando Etiquetas, os quais fazem parte da Faixa de Opções, na guia:</h5>
+                        </div>
+                        <ul class="options-list">
+                            <li class="option-item" data-option="A">
+                                <span class="option-letter">A</span>
+                                Design.
+                            </li>
+                            <li class="option-item" data-option="B">
+                                <span class="option-letter">B</span>
+                                Página Inicial.
+                            </li>
+                            <li class="option-item" data-option="C">
+                                <span class="option-letter">C</span>
+                                Exibir.
+                            </li>
+                            <li class="option-item" data-option="D">
+                                <span class="option-letter">D</span>
+                                Correspondências.
+                            </li>
+                        </ul>
+                    </div>
+
+                    <!-- Questão 14 -->
+                    <div class="question-card" data-question="14">
+                        <div class="d-flex align-items-center mb-3">
+                            <span class="question-number">14</span>
+                            <h5 class="question-text">No Microsoft Word 2016, o usuário pode centralizar rapidamente o texto que está editando por meio do atalho de teclado:</h5>
+                        </div>
+                        <ul class="options-list">
+                            <li class="option-item" data-option="A">
+                                <span class="option-letter">A</span>
+                                Ctrl + C
+                            </li>
+                            <li class="option-item" data-option="B">
+                                <span class="option-letter">B</span>
+                                Ctrl + E
+                            </li>
+                            <li class="option-item" data-option="C">
+                                <span class="option-letter">C</span>
+                                Ctrl + T
+                            </li>
+                            <li class="option-item" data-option="D">
+                                <span class="option-letter">D</span>
+                                Ctrl + W
+                            </li>
+                        </ul>
+                    </div>
+
+                    <!-- Questão 15 -->
+                    <div class="question-card" data-question="15">
+                        <div class="d-flex align-items-center mb-3">
+                            <span class="question-number">15</span>
+                            <h5 class="question-text">Para formatar rapidamente um documento do Microsoft Word 2016, aplicando um conjunto de regras de formatação consistente nos elementos do documento, como títulos, subtítulos, citações e referências, pode-se utilizar na Faixa de Opções, guia Página Inicial, as opções de formatação existentes na ferramenta:</h5>
+                        </div>
+                        <ul class="options-list">
+                            <li class="option-item" data-option="A">
+                                <span class="option-letter">A</span>
+                                Galeria de Estilos.
+                            </li>
+                            <li class="option-item" data-option="B">
+                                <span class="option-letter">B</span>
+                                Cabeçalhos e Rodapés.
+                            </li>
+                            <li class="option-item" data-option="C">
+                                <span class="option-letter">C</span>
+                                Layout.
+                            </li>
+                            <li class="option-item" data-option="D">
+                                <span class="option-letter">D</span>
+                                Sumário.
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Raciocínio Lógico -->
+                <div class="subject-card" id="raciocinio">
+                    <h2 class="subject-title"><i class="fas fa-brain me-2"></i>Raciocínio Lógico</h2>
+                    
+                    <!-- Questão 16 -->
+                    <div class="question-card" data-question="16">
+                        <div class="d-flex align-items-center mb-3">
+                            <span class="question-number">16</span>
+                            <h5 class="question-text">Em uma planilha do Microsoft Excel 2016 são armazenados na coluna A os nomes de uma série de municípios em ordem crescente, e na coluna B o número de habitantes de cada município, sendo um município em cada linha da planilha. Para criar uma fórmula em que dado o nome de um município seja retornado o número de habitantes desse município, o usuário pode utilizar a função:</h5>
+                        </div>
+                        <ul class="options-list">
+                            <li class="option-item" data-option="A">
+                                <span class="option-letter">A</span>
+                                CONT.SE
+                            </li>
+                            <li class="option-item" data-option="B">
+                                <span class="option-letter">B</span>
+                                SOMA
+                            </li>
+                            <li class="option-item" data-option="C">
+                                <span class="option-letter">C</span>
+                                REF.CRUZADA
+                            </li>
+                            <li class="option-item" data-option="D">
+                                <span class="option-letter">D</span>
+                                PROCV
+                            </li>
+                        </ul>
+                    </div>
+
+                    <!-- Questão 17 -->
+                    <div class="question-card" data-question="17">
+                        <div class="d-flex align-items-center mb-3">
+                            <span class="question-number">17</span>
+                            <h5 class="question-text">Sobre a função VF do Microsoft Excel 2016, é correto afirmar que tem por objetivo:</h5>
+                        </div>
+                        <ul class="options-list">
+                            <li class="option-item" data-option="A">
+                                <span class="option-letter">A</span>
+                                calcular o valor futuro de um investimento com base em pagamentos periódicos e constantes e uma taxa de juros constante.
+                            </li>
+                            <li class="option-item" data-option="B">
+                                <span class="option-letter">B</span>
+                                verificar se o valor de uma célula atende a uma condição determinada pelo usuário.
+                            </li>
+                            <li class="option-item" data-option="C">
+                                <span class="option-letter">C</span>
+                                inverter verticalmente os dados de uma matriz ou intervalo de células.
+                            </li>
+                            <li class="option-item" data-option="D">
+                                <span class="option-letter">D</span>
+                                calcular a taxa de juros efetiva dada a taxa de juros nominal e o número de períodos compostos por ano.
+                            </li>
+                        </ul>
+                    </div>
+
+                    <!-- Questão 18 -->
+                    <div class="question-card" data-question="18">
+                        <div class="d-flex align-items-center mb-3">
+                            <span class="question-number">18</span>
+                            <h5 class="question-text">No Microsoft Excel 2016, a fórmula ≡ MENOR(A1:B10;5) tem por objetivo:</h5>
+                        </div>
+                        <ul class="options-list">
+                            <li class="option-item" data-option="A">
+                                <span class="option-letter">A</span>
+                                retornar os cinco menores valores no intervalo de células entre A1 e B10.
+                            </li>
+                            <li class="option-item" data-option="B">
+                                <span class="option-letter">B</span>
+                                retornar todos os valores menores do que cinco no intervalo de células entre A1 e B10.
+                            </li>
+                            <li class="option-item" data-option="C">
+                                <span class="option-letter">C</span>
+                                retornar o quinto menor valor no intervalo de células entre A1 e B10.
+                            </li>
+                            <li class="option-item" data-option="D">
+                                <span class="option-letter">D</span>
+                                retornar uma matriz com as cinco primeiras linhas do intervalo de células entre A1 e B10.
+                            </li>
+                        </ul>
+                    </div>
+
+                    <!-- Questão 19 -->
+                    <div class="question-card" data-question="19">
+                        <div class="d-flex align-items-center mb-3">
+                            <span class="question-number">19</span>
+                            <h5 class="question-text">A respeito dos princípios básicos da administração pública, assinale a alternativa incorreta.</h5>
+                        </div>
+                        <ul class="options-list">
+                            <li class="option-item" data-option="A">
+                                <span class="option-letter">A</span>
+                                O princípio da moralidade administrativa - enquanto valor constitucional revestido de caráter ético-jurídico - condiciona a legitimidade e a validade dos atos estatais.
+                            </li>
+                            <li class="option-item" data-option="B">
+                                <span class="option-letter">B</span>
+                                A administração pública submete-se ao princípio da legalidade, sobrepondo-se ao regulamento a lei em sentido formal e material.
+                            </li>
+                            <li class="option-item" data-option="C">
+                                <span class="option-letter">C</span>
+                                O princípio da impessoalidade vincula a publicidade ao caráter educativo, informativo ou de orientação social é incompatível com a menção de nomes, símbolos ou imagens que caracterizem promoção pessoal ou de servidores públicos.
+                            </li>
+                            <li class="option-item" data-option="D">
+                                <span class="option-letter">D</span>
+                                A mera publicação do ato administrativo no diário oficial não garante, por si só, a autenticidade e a integridade da informação, necessárias para dar eficácia ao princípio da publicidade.
+                            </li>
+                        </ul>
+                    </div>
+
+                    <!-- Questão 20 -->
+                    <div class="question-card" data-question="20">
+                        <div class="d-flex align-items-center mb-3">
+                            <span class="question-number">20</span>
+                            <h5 class="question-text">A propósito da sistemática de controle administrativo, legislativo e judiciário dos atos administrativos, não é correto afirmar que:</h5>
+                        </div>
+                        <ul class="options-list">
+                            <li class="option-item" data-option="A">
+                                <span class="option-letter">A</span>
+                                o exame prévio da validade dos editais de licitação e contratos administrativos celebrados pelo poder público se insere dentre as competências atribuídas aos Tribunais de Contas.
+                            </li>
+                            <li class="option-item" data-option="B">
+                                <span class="option-letter">B</span>
+                                a Controladoria-Geral da União (CGU) pode fiscalizar a aplicação de verbas federais onde quer que elas estejam sendo aplicadas, mesmo que em outro ente federado às quais foram destinadas.
+                            </li>
+                            <li class="option-item" data-option="C">
+                                <span class="option-letter">C</span>
+                                a fiscalização do Município será exercida pelo Poder Legislativo Municipal, mediante controle externo, e pelos sistemas de controle interno do Poder Executivo Municipal, na forma da lei.
+                            </li>
+                            <li class="option-item" data-option="D">
+                                <span class="option-letter">D</span>
+                                o parecer técnico elaborado pelo tribunal de contas tem natureza meramente opinativa, competindo exclusivamente à câmara de vereadores o julgamento das contas anuais do chefe do Poder Executivo local.
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Conhecimentos Específicos -->
+                <div class="subject-card" id="especificos">
+                    <h2 class="subject-title"><i class="fas fa-book me-2"></i>Conhecimentos Específicos</h2>
+                    
+                    <!-- Questão 21 -->
+                    <div class="question-card" data-question="21">
+                        <div class="d-flex align-items-center mb-3">
+                            <span class="question-number">21</span>
+                            <h5 class="question-text">A propósito da anulação dos atos administrativos não é correto afirmar que:</h5>
+                        </div>
+                        <ul class="options-list">
+                            <li class="option-item" data-option="A">
+                                <span class="option-letter">A</span>
+                                produz efeitos ex nunc.
+                            </li>
+                            <li class="option-item" data-option="B">
+                                <span class="option-letter">B</span>
+                                somente pode ocorrer por motivo de ilegalidade.
+                            </li>
+                            <li class="option-item" data-option="C">
+                                <span class="option-letter">C</span>
+                                alcança atos vinculados e discricionários.
+                            </li>
+                            <li class="option-item" data-option="D">
+                                <span class="option-letter">D</span>
+                                trata-se de decisão vinculada.
+                            </li>
+                        </ul>
+                    </div>
+
+                    <!-- Questão 22 -->
+                    <div class="question-card" data-question="22">
+                        <div class="d-flex align-items-center mb-3">
+                            <span class="question-number">22</span>
+                            <h5 class="question-text">Acerca das sociedades de economia mista que executam atividades em regime de concorrência, não é correto afirmar que:</h5>
+                        </div>
+                        <ul class="options-list">
+                            <li class="option-item" data-option="A">
+                                <span class="option-letter">A</span>
+                                não gozam dos privilégios da Fazenda Pública em Juízo.
+                            </li>
+                            <li class="option-item" data-option="B">
+                                <span class="option-letter">B</span>
+                                não se sujeitam a fiscalização e controle do Tribunal de Contas.
+                            </li>
+                            <li class="option-item" data-option="C">
+                                <span class="option-letter">C</span>
+                                encontram-se sujeitas ao regime jurídico próprio das empresas privadas.
+                            </li>
+                            <li class="option-item" data-option="D">
+                                <span class="option-letter">D</span>
+                                não gozam de privilégios fiscais não extensivos aos do setor privado.
+                            </li>
+                        </ul>
+                    </div>
+
+                    <!-- Questão 23 -->
+                    <div class="question-card" data-question="23">
+                        <div class="d-flex align-items-center mb-3">
+                            <span class="question-number">23</span>
+                            <h5 class="question-text">Nos termos da Lei n° 8.666/93, poderá ser adotada a modalidade concorrência ou leilão para alienação de bens imóveis cuja aquisição haja derivado de:</h5>
+                        </div>
+                        <ul class="options-list">
+                            <li class="option-item" data-option="A">
+                                <span class="option-letter">A</span>
+                                doação sem encargo.
+                            </li>
+                            <li class="option-item" data-option="B">
+                                <span class="option-letter">B</span>
+                                processo de loteamento.
+                            </li>
+                            <li class="option-item" data-option="C">
+                                <span class="option-letter">C</span>
+                                doação em pagamento.
+                            </li>
+                            <li class="option-item" data-option="D">
+                                <span class="option-letter">D</span>
+                                desapropriação amigável.
+                            </li>
+                        </ul>
+                    </div>
+
+                    <!-- Questão 24 -->
+                    <div class="question-card" data-question="24">
+                        <div class="d-flex align-items-center mb-3">
+                            <span class="question-number">24</span>
+                            <h5 class="question-text">A propósito dos contratos administrativos, não é correto afirmar que:</h5>
+                        </div>
+                        <ul class="options-list">
+                            <li class="option-item" data-option="A">
+                                <span class="option-letter">A</span>
+                                aplicam-se-lhes, supletivamente, os princípios da teoria geral dos contratos e as disposições de direito privado.
+                            </li>
+                            <li class="option-item" data-option="B">
+                                <span class="option-letter">B</span>
+                                em regra, a sua duração encontra-se adstrita à vigência do respectivo crédito orçamentário.
+                            </li>
+                            <li class="option-item" data-option="C">
+                                <span class="option-letter">C</span>
+                                a publicação resumida do instrumento de contrato na imprensa oficial é condição indispensável para sua eficácia.
+                            </li>
+                            <li class="option-item" data-option="D">
+                                <span class="option-letter">D</span>
+                                pode ser alterado, unilateralmente, com as devidas justificativas, quando necessária a modificação do regime de execução do serviço.
+                            </li>
+                        </ul>
+                    </div>
+
+                    <!-- Questão 25 -->
+                    <div class="question-card" data-question="25">
+                        <div class="d-flex align-items-center mb-3">
+                            <span class="question-number">25</span>
+                            <h5 class="question-text">Indique, dentre as alternativas abaixo, aquela que contempla parte legítima para propor mandado de segurança coletivo.</h5>
+                        </div>
+                        <ul class="options-list">
+                            <li class="option-item" data-option="A">
+                                <span class="option-letter">A</span>
+                                Ministério Público.
+                            </li>
+                            <li class="option-item" data-option="B">
+                                <span class="option-letter">B</span>
+                                Qualquer cidadão.
+                            </li>
+                            <li class="option-item" data-option="C">
+                                <span class="option-letter">C</span>
+                                Partido político com representação no Congresso Nacional.
+                            </li>
+                            <li class="option-item" data-option="D">
+                                <span class="option-letter">D</span>
+                                Defensoria Pública.
+                            </li>
+                        </ul>
+                    </div>
+
+                    <!-- Questão 26 -->
+                    <div class="question-card" data-question="26">
+                        <div class="d-flex align-items-center mb-3">
+                            <span class="question-number">26</span>
+                            <h5 class="question-text">Quanto aos atos vinculados e discricionários, não é correto afirmar que ambos:</h5>
+                        </div>
+                        <ul class="options-list">
+                            <li class="option-item" data-option="A">
+                                <span class="option-letter">A</span>
+                                podem ser objeto de anulação pela Administração e pelo Judiciário.
+                            </li>
+                            <li class="option-item" data-option="B">
+                                <span class="option-letter">B</span>
+                                se sujeitam ao controle judicial quanto ao motivo e objeto.
+                            </li>
+                            <li class="option-item" data-option="C">
+                                <span class="option-letter">C</span>
+                                podem ser objeto de convalidação pela Administração.
+                            </li>
+                            <li class="option-item" data-option="D">
+                                <span class="option-letter">D</span>
+                                podem ser objeto de revogação pela Administração.
+                            </li>
+                        </ul>
+                    </div>
+
+                    <!-- Questão 27 -->
+                    <div class="question-card" data-question="27">
+                        <div class="d-flex align-items-center mb-3">
+                            <span class="question-number">27</span>
+                            <h5 class="question-text">A propósito do conjunto de normas aplicáveis aos servidores públicos, assinale a alternativa incorreta.</h5>
+                        </div>
+                        <ul class="options-list">
+                            <li class="option-item" data-option="A">
+                                <span class="option-letter">A</span>
+                                Legislação infraconstitucional pode dispor sobre vantagem ou garantia não vedada ou não disciplinada pela Constituição da República.
+                            </li>
+                            <li class="option-item" data-option="B">
+                                <span class="option-letter">B</span>
+                                A normatização de direitos dos servidores públicos em lei orgânica do Município é de todo inconstitucional.
+                            </li>
+                            <li class="option-item" data-option="C">
+                                <span class="option-letter">C</span>
+                                O vencimento do servidor público não pode ser inferior a um salário mínimo.
+                            </li>
+                            <li class="option-item" data-option="D">
+                                <span class="option-letter">D</span>
+                                A fixação de vencimento dos servidores públicos não pode ser objeto de convenção coletiva.
+                            </li>
+                        </ul>
+                    </div>
+
+                    <!-- Questão 28 -->
+                    <div class="question-card" data-question="28">
+                        <div class="d-flex align-items-center mb-3">
+                            <span class="question-number">28</span>
+                            <h5 class="question-text">De acordo com a Constituição Federal à responsabilidade civil das pessoas jurídicas de direito público e as de direito privado prestadoras de serviços públicos é objetiva com base na teoria:</h5>
+                        </div>
+                        <ul class="options-list">
+                            <li class="option-item" data-option="A">
+                                <span class="option-letter">A</span>
+                                do risco integral.
+                            </li>
+                            <li class="option-item" data-option="B">
+                                <span class="option-letter">B</span>
+                                do risco administrativo.
+                            </li>
+                            <li class="option-item" data-option="C">
+                                <span class="option-letter">C</span>
+                                da culpa exclusiva.
+                            </li>
+                            <li class="option-item" data-option="D">
+                                <span class="option-letter">D</span>
+                                da culpa administrativa.
+                            </li>
+                        </ul>
+                    </div>
+
+                    <!-- Questão 29 -->
+                    <div class="question-card" data-question="29">
+                        <div class="d-flex align-items-center mb-3">
+                            <span class="question-number">29</span>
+                            <h5 class="question-text">De acordo com as normas que regem as sociedades em conta de participação, não é correto afirmar que:</h5>
+                        </div>
+                        <ul class="options-list">
+                            <li class="option-item" data-option="A">
+                                <span class="option-letter">A</span>
+                                salvo disposição em contrário, o sócio ostensivo não pode admitir novo sócio sem o consentimento expresso dos demais.
+                            </li>
+                            <li class="option-item" data-option="B">
+                                <span class="option-letter">B</span>
+                                a falência do sócio ostensivo acarreta a dissolução da sociedade e a liquidação da respectiva conta, cujo saldo constituirá crédito quirografário.
+                            </li>
+                            <li class="option-item" data-option="C">
+                                <span class="option-letter">C</span>
+                                obriga-se perante terceiro tão-somente o sócio ostensivo; e, exclusivamente perante este, o sócio participante, nos termos do contrato social.
+                            </li>
+                            <li class="option-item" data-option="D">
+                                <span class="option-letter">D</span>
+                                aplica-se à sociedade em conta de participação, subsidiariamente e no que com ela for compatível, o disposto para a sociedade limitada.
+                            </li>
+                        </ul>
+                    </div>
+
+                    <!-- Questão 30 -->
+                    <div class="question-card" data-question="30">
+                        <div class="d-flex align-items-center mb-3">
+                            <span class="question-number">30</span>
+                            <h5 class="question-text">De acordo com as normas que regem as sociedades limitadas, assinale a alternativa incorreta.</h5>
+                        </div>
+                        <ul class="options-list">
+                            <li class="option-item" data-option="A">
+                                <span class="option-letter">A</span>
+                                A responsabilidade de cada sócio é restrita ao valor de suas quotas, mas todos respondem solidariamente pela integralização do capital social.
+                            </li>
+                            <li class="option-item" data-option="B">
+                                <span class="option-letter">B</span>
+                                O contrato social poderá prever a regência supletiva da sociedade limitada pelas normas da sociedade anônima.
+                            </li>
+                            <li class="option-item" data-option="C">
+                                <span class="option-letter">C</span>
+                                A incorporação, fusão e dissolução da sociedade obrigatoriamente dependem de deliberação em reunião ou assembleia dos sócios.
+                            </li>
+                            <li class="option-item" data-option="D">
+                                <span class="option-letter">D</span>
+                                A sociedade limitada pode ser constituída por 1 (uma) ou mais pessoas.
+                            </li>
+                        </ul>
+                    </div>
+
+                    <!-- Questão 31 -->
+                    <div class="question-card" data-question="31">
+                        <div class="d-flex align-items-center mb-3">
+                            <span class="question-number">31</span>
+                            <h5 class="question-text">A propósito do contrato de franquia, não é correto afirmar que:</h5>
+                        </div>
+                        <ul class="options-list">
+                            <li class="option-item" data-option="A">
+                                <span class="option-letter">A</span>
+                                tem validade independentemente de ser levado a registro perante cartório ou órgão público.
+                            </li>
+                            <li class="option-item" data-option="B">
+                                <span class="option-letter">B</span>
+                                o termo franqueador, quando utilizado em qualquer de seus dispositivos, serve também para designar o subfranqueador.
+                            </li>
+                            <li class="option-item" data-option="C">
+                                <span class="option-letter">C</span>
+                                é um contrato de adesão tutelado pelo Código de Defesa do Consumidor.
+                            </li>
+                            <li class="option-item" data-option="D">
+                                <span class="option-letter">D</span>
+                                exige forma escrita, devendo ser assinado na presença de 2 (duas) testemunhas.
+                            </li>
+                        </ul>
+                    </div>
+
+                    <!-- Questão 32 -->
+                    <div class="question-card" data-question="32">
+                        <div class="d-flex align-items-center mb-3">
+                            <span class="question-number">32</span>
+                            <h5 class="question-text">É correto afirmar que o direito de recesso, um dos instrumentos de proteção dos acionistas minoritários nas sociedades anônimas, consiste:</h5>
+                        </div>
+                        <ul class="options-list">
+                            <li class="option-item" data-option="A">
+                                <span class="option-letter">A</span>
+                                no equilíbrio das ações com e sem direito a voto, determinando que o número de ações preferenciais sem direito a voto, ou sujeitas à restrição no exercício desse direito, não ultrapasse 50% do total das ações emitidas.
+                            </li>
+                            <li class="option-item" data-option="B">
+                                <span class="option-letter">B</span>
+                                na proteção do minoritário no caso de fechamento do capital de companhia aberta.
+                            </li>
+                            <li class="option-item" data-option="C">
+                                <span class="option-letter">C</span>
+                                na faculdade conferida aos acionistas minoritários de participar na composição do conselho de administração da companhia por meio de eleição de um conselheiro.
+                            </li>
+                            <li class="option-item" data-option="D">
+                                <span class="option-letter">D</span>
+                                na faculdade de o acionista retirar-se da sociedade em circunstâncias legalmente previstas, recebendo o valor de suas ações.
+                            </li>
+                        </ul>
+                    </div>
+
+                    <!-- Questão 33 -->
+                    <div class="question-card" data-question="33">
+                        <div class="d-flex align-items-center mb-3">
+                            <span class="question-number">33</span>
+                            <h5 class="question-text">A propósito da fusão, cisão e incorporação das sociedades anônimas, não é correto afirmar que:</h5>
+                        </div>
+                        <ul class="options-list">
+                            <li class="option-item" data-option="A">
+                                <span class="option-letter">A</span>
+                                a fusão é a operação pela qual se unem duas ou mais sociedades para formar sociedade nova, que lhes sucederá em todos os direitos e obrigações.
+                            </li>
+                            <li class="option-item" data-option="B">
+                                <span class="option-letter">B</span>
+                                efetivada a cisão com extinção da companhia cindida, caberá aos administradores das sociedades que tiverem absorvido parcelas do seu patrimônio promover o arquivamento e publicação dos atos da operação.
+                            </li>
+                            <li class="option-item" data-option="C">
+                                <span class="option-letter">C</span>
+                                a cisão é a operação pela qual uma ou mais sociedades são absorvidas por outra, que lhes sucede em todos os direitos e obrigações.
+                            </li>
+                            <li class="option-item" data-option="D">
+                                <span class="option-letter">D</span>
+                                na incorporação, desaparecem as sociedades incorporadas, em contraposição à sociedade incorporadora que permanece inalterada em termos de personalidade jurídica.
+                            </li>
+                        </ul>
+                    </div>
+
+                    <!-- Questão 34 -->
+                    <div class="question-card" data-question="34">
+                        <div class="d-flex align-items-center mb-3">
+                            <span class="question-number">34</span>
+                            <h5 class="question-text">A propósito do instituto do aval, não é correto afirmar que:</h5>
+                        </div>
+                        <ul class="options-list">
+                            <li class="option-item" data-option="A">
+                                <span class="option-letter">A</span>
+                                no aval a garantia dada tem caráter pessoal.
+                            </li>
+                            <li class="option-item" data-option="B">
+                                <span class="option-letter">B</span>
+                                aval é uma garantia dada por um terceiro em título de crédito ou contrato de compra e venda mercantil.
+                            </li>
+                            <li class="option-item" data-option="C">
+                                <span class="option-letter">C</span>
+                                subsiste a responsabilidade do avalista, ainda que nula a obrigação daquele a quem se equipara, a menos que a nulidade decorra de vício de forma.
+                            </li>
+                            <li class="option-item" data-option="D">
+                                <span class="option-letter">D</span>
+                                no aval o garantidor não é protegido pelo benefício de ordem.
+                            </li>
+                        </ul>
+                    </div>
+
+                    <!-- Questão 35 -->
+                    <div class="question-card" data-question="35">
+                        <div class="d-flex align-items-center mb-3">
+                            <span class="question-number">35</span>
+                            <h5 class="question-text">A propósito do instituto do protesto, assinale a alternativa incorreta.</h5>
+                        </div>
+                        <ul class="options-list">
+                            <li class="option-item" data-option="A">
+                                <span class="option-letter">A</span>
+                                O protesto indevido de título cambial e documentos de dívida não enseja responsabilização por danos morais à pessoa jurídica.
+                            </li>
+                            <li class="option-item" data-option="B">
+                                <span class="option-letter">B</span>
+                                A Fazenda Pública possui interesse e pode efetivar o protesto da Certidão de Dívida Ativa.
+                            </li>
+                            <li class="option-item" data-option="C">
+                                <span class="option-letter">C</span>
+                                O endossatário de título de crédito por endosso-mandato só responde por danos decorrentes de protesto indevido se extrapolar os poderes de mandatário.
+                            </li>
+                            <li class="option-item" data-option="D">
+                                <span class="option-letter">D</span>
+                                É ato formal e solene pelo qual se prova a inadimplência e o descumprimento de obrigação originada em títulos e outros documentos de dívida.
+                            </li>
+                        </ul>
+                    </div>
+
+                    <!-- Questão 36 -->
+                    <div class="question-card" data-question="36">
+                        <div class="d-flex align-items-center mb-3">
+                            <span class="question-number">36</span>
+                            <h5 class="question-text">A propósito do instituto do endosso, não é correto afirmar que:</h5>
+                        </div>
+                        <ul class="options-list">
+                            <li class="option-item" data-option="A">
+                                <span class="option-letter">A</span>
+                                assumindo responsabilidade pelo pagamento, o endossante se torna devedor solidário.
+                            </li>
+                            <li class="option-item" data-option="B">
+                                <span class="option-letter">B</span>
+                                pode ser total ou parcial.
+                            </li>
+                            <li class="option-item" data-option="C">
+                                <span class="option-letter">C</span>
+                                a transferência por endosso completa-se com a tradição do título.
+                            </li>
+                            <li class="option-item" data-option="D">
+                                <span class="option-letter">D</span>
+                                considera-se não escrita no endosso qualquer condição a que o subordine o endossante.
+                            </li>
+                        </ul>
+                    </div>
+
+                    <!-- Questão 37 -->
+                    <div class="question-card" data-question="37">
+                        <div class="d-flex align-items-center mb-3">
+                            <span class="question-number">37</span>
+                            <h5 class="question-text">A propósito das normas que regulam o cheque, não é correto afirmar que:</h5>
+                        </div>
+                        <ul class="options-list">
+                            <li class="option-item" data-option="A">
+                                <span class="option-letter">A</span>
+                                o cheque pagável a pessoa nomeada, com cláusula expressa "à ordem", não é transmissível por via de endosso.
+                            </li>
+                            <li class="option-item" data-option="B">
+                                <span class="option-letter">B</span>
+                                as obrigações contraídas no cheque são autônomas e independentes.
+                            </li>
+                            <li class="option-item" data-option="C">
+                                <span class="option-letter">C</span>
+                                o cheque apresentado para pagamento antes do dia indicado como data de emissão é pagável no dia da apresentação.
+                            </li>
+                            <li class="option-item" data-option="D">
+                                <span class="option-letter">D</span>
+                                o cheque não admite aceite considerando-se não escrita qualquer declaração com esse sentido.
+                            </li>
+                        </ul>
+                    </div>
+
+                    <!-- Questão 38 -->
+                    <div class="question-card" data-question="38">
+                        <div class="d-flex align-items-center mb-3">
+                            <span class="question-number">38</span>
+                            <h5 class="question-text">O abuso da personalidade jurídica, a ensejar a sua desconsideração pelo Judiciário para que os efeitos de certas e determinadas relações de obrigações sejam estendidos aos bens particulares de administradores ou de sócios da pessoa jurídica beneficiados direta ou indiretamente pelo abuso, pode restar caracterizado pelo desvio de finalidade assim entendido como:</h5>
+                        </div>
+                        <ul class="options-list">
+                            <li class="option-item" data-option="A">
+                                <span class="option-letter">A</span>
+                                transferência de ativos ou de passivos sem efetivas contraprestações, exceto os de valor proporcionalmente insignificante.
+                            </li>
+                            <li class="option-item" data-option="B">
+                                <span class="option-letter">B</span>
+                                cumprimento repetitivo pela sociedade de obrigações do sócio ou do administrador ou vice-versa.
+                            </li>
+                            <li class="option-item" data-option="C">
+                                <span class="option-letter">C</span>
+                                utilização da pessoa jurídica com o propósito de lesar credores e para a prática de atos ilícitos de qualquer natureza.
+                            </li>
+                            <li class="option-item" data-option="D">
+                                <span class="option-letter">D</span>
+                                ausência de separação de fato entre os patrimônios.
+                            </li>
+                        </ul>
+                    </div>
+
+                    <!-- Questão 39 -->
+                    <div class="question-card" data-question="39">
+                        <div class="d-flex align-items-center mb-3">
+                            <span class="question-number">39</span>
+                            <h5 class="question-text">Exigir, para si ou para outrem, direta ou indiretamente, ainda que fora da função ou antes de assumi-la, mas em razão dela, vantagem indevida, corresponde a qual tipo penal arrolado abaixo?</h5>
+                        </div>
+                        <ul class="options-list">
+                            <li class="option-item" data-option="A">
+                                <span class="option-letter">A</span>
+                                Prevaricação.
+                            </li>
+                            <li class="option-item" data-option="B">
+                                <span class="option-letter">B</span>
+                                Excesso de Exação.
+                            </li>
+                            <li class="option-item" data-option="C">
+                                <span class="option-letter">C</span>
+                                Concussão.
+                            </li>
+                            <li class="option-item" data-option="D">
+                                <span class="option-letter">D</span>
+                                Corrupção passiva.
+                            </li>
+                        </ul>
+                    </div>
+
+                    <!-- Questão 40 -->
+                    <div class="question-card" data-question="40">
+                        <div class="d-flex align-items-center mb-3">
+                            <span class="question-number">40</span>
+                            <h5 class="question-text">A propósito do crime de peculato, não é correto afirmar que:</h5>
+                        </div>
+                        <ul class="options-list">
+                            <li class="option-item" data-option="A">
+                                <span class="option-letter">A</span>
+                                é um crime formal.
+                            </li>
+                            <li class="option-item" data-option="B">
+                                <span class="option-letter">B</span>
+                                admite-se o concurso de pessoa estranha ao serviço público.
+                            </li>
+                            <li class="option-item" data-option="C">
+                                <span class="option-letter">C</span>
+                                não há impedimento para que o autor do crime seja responsabilizado por improbidade administrativa pelo mesmo fato.
+                            </li>
+                            <li class="option-item" data-option="D">
+                                <span class="option-letter">D</span>
+                                somente pode ser praticado por servidor público efetivo ou comissionado.
+                            </li>
+                        </ul>
+                    </div>
+
+                    <!-- Questão 41 -->
+                    <div class="question-card" data-question="41">
+                        <div class="d-flex align-items-center mb-3">
+                            <span class="question-number">41</span>
+                            <h5 class="question-text">A propósito das regras de aplicação, interpretação e integração da legislação tributária constantes do Código Tributário Nacional, assinale a alternativa incorreta.</h5>
+                        </div>
+                        <ul class="options-list">
+                            <li class="option-item" data-option="A">
+                                <span class="option-letter">A</span>
+                                O emprego da analogia não poderá resultar na exigência de tributo não previsto em lei.
+                            </li>
+                            <li class="option-item" data-option="B">
+                                <span class="option-letter">B</span>
+                                Interpreta-se literalmente a legislação tributária que disponha sobre suspensão ou exclusão do crédito tributário, outorga de isenção e dispensa do cumprimento de obrigações tributárias acessórias.
+                            </li>
+                            <li class="option-item" data-option="C">
+                                <span class="option-letter">C</span>
+                                Utilizam-se os princípios gerais de direito privado para pesquisa da definição do conteúdo dos seus institutos e dos respectivos efeitos tributários.
+                            </li>
+                            <li class="option-item" data-option="D">
+                                <span class="option-letter">D</span>
+                                O emprego da equidade não poderá resultar na dispensa do pagamento de tributo devido.
+                            </li>
+                        </ul>
+                    </div>
+
+                    <!-- Questão 42 -->
+                    <div class="question-card" data-question="42">
+                        <div class="d-flex align-items-center mb-3">
+                            <span class="question-number">42</span>
+                            <h5 class="question-text">De acordo com as normas gerais de direito tributário a respeito da solidariedade tributária, não é correto afirmar que salvo disposição de lei em contrário:</h5>
+                        </div>
+                        <ul class="options-list">
+                            <li class="option-item" data-option="A">
+                                <span class="option-letter">A</span>
+                                não comporta benefício de ordem.
+                            </li>
+                            <li class="option-item" data-option="B">
+                                <span class="option-letter">B</span>
+                                o pagamento efetuado por um dos obrigados aproveita aos demais.
+                            </li>
+                            <li class="option-item" data-option="C">
+                                <span class="option-letter">C</span>
+                                a interrupção da prescrição, em favor ou contra um dos obrigados, favorece ou prejudica aos demais.
+                            </li>
+                            <li class="option-item" data-option="D">
+                                <span class="option-letter">D</span>
+                                a remissão de crédito exonera todos os obrigados, salvo se outorgada pessoalmente a um deles, subsistindo, nesse caso, a solidariedade quanto aos demais pelo saldo.
+                            </li>
+                        </ul>
+                    </div>
+
+                    <!-- Questão 43 -->
+                    <div class="question-card" data-question="43">
+                        <div class="d-flex align-items-center mb-3">
+                            <span class="question-number">43</span>
+                            <h5 class="question-text">Indique, dentre as alternativas abaixo, aquela que não contempla hipótese de extinção do crédito tributário.</h5>
+                        </div>
+                        <ul class="options-list">
+                            <li class="option-item" data-option="A">
+                                <span class="option-letter">A</span>
+                                Transação.
+                            </li>
+                            <li class="option-item" data-option="B">
+                                <span class="option-letter">B</span>
+                                Prescrição.
+                            </li>
+                            <li class="option-item" data-option="C">
+                                <span class="option-letter">C</span>
+                                Anistia.
+                            </li>
+                            <li class="option-item" data-option="D">
+                                <span class="option-letter">D</span>
+                                Remissão.
+                            </li>
+                        </ul>
+                    </div>
+
+                    <!-- Questão 44 -->
+                    <div class="question-card" data-question="44">
+                        <div class="d-flex align-items-center mb-3">
+                            <span class="question-number">44</span>
+                            <h5 class="question-text">De acordo com a doutrina majoritária, a elisão fiscal ocorre:</h5>
+                        </div>
+                        <ul class="options-list">
+                            <li class="option-item" data-option="A">
+                                <span class="option-letter">A</span>
+                                quando o contribuinte simula um negócio jurídico para fugir da tributação.
+                            </li>
+                            <li class="option-item" data-option="B">
+                                <span class="option-letter">B</span>
+                                quando o contribuinte se utiliza de meios lícitos para não pagar ou pagar menos tributo.
+                            </li>
+                            <li class="option-item" data-option="C">
+                                <span class="option-letter">C</span>
+                                antes ou após o lançamento do fato gerador.
+                            </li>
+                            <li class="option-item" data-option="D">
+                                <span class="option-letter">D</span>
+                                quando o contribuinte pratica atos que visam evitar o conhecimento do nascimento da obrigação tributária pela autoridade fiscal.
+                            </li>
+                        </ul>
+                    </div>
+
+                    <!-- Questão 45 -->
+                    <div class="question-card" data-question="45">
+                        <div class="d-flex align-items-center mb-3">
+                            <span class="question-number">45</span>
+                            <h5 class="question-text">De acordo com as normas gerais de direito tributário, a respeito do lançamento tributário, não é correto afirmar que:</h5>
+                        </div>
+                        <ul class="options-list">
+                            <li class="option-item" data-option="A">
+                                <span class="option-letter">A</span>
+                                a atividade administrativa de lançamento é vinculada e obrigatória, sob pena de responsabilidade funcional.
+                            </li>
+                            <li class="option-item" data-option="B">
+                                <span class="option-letter">B</span>
+                                a revisão do lançamento só pode ser iniciada enquanto não extinto o direito da Fazenda Pública.
+                            </li>
+                            <li class="option-item" data-option="C">
+                                <span class="option-letter">C</span>
+                                não se aplica ao lançamento a legislação que, posteriormente à ocorrência do fato gerador da obrigação, tenha instituído novos critérios de apuração.
+                            </li>
+                            <li class="option-item" data-option="D">
+                                <span class="option-letter">D</span>
+                                o lançamento reporta-se à data da ocorrência do fato gerador da obrigação e rege-se pela lei então vigente, ainda que posteriormente modificada ou revogada.
+                            </li>
+                        </ul>
+                    </div>
+
+                    <!-- Questão 46 -->
+                    <div class="question-card" data-question="46">
+                        <div class="d-flex align-items-center mb-3">
+                            <span class="question-number">46</span>
+                            <h5 class="question-text">De acordo com o regramento estabelecido na Lei n° 4.320/64, as dotações destinadas a constituição ou aumento do capital de entidades ou empresas que visem a objetivos comerciais ou financeiros, inclusive operações bancárias ou de seguros, classificam-se como:</h5>
+                        </div>
+                        <ul class="options-list">
+                            <li class="option-item" data-option="A">
+                                <span class="option-letter">A</span>
+                                inversões financeiras.
+                            </li>
+                            <li class="option-item" data-option="B">
+                                <span class="option-letter">B</span>
+                                transferências de capital.
+                            </li>
+                            <li class="option-item" data-option="C">
+                                <span class="option-letter">C</span>
+                                investimentos.
+                            </li>
+                            <li class="option-item" data-option="D">
+                                <span class="option-letter">D</span>
+                                transferências correntes.
+                            </li>
+                        </ul>
+                    </div>
+
+                    <!-- Questão 47 -->
+                    <div class="question-card" data-question="47">
+                        <div class="d-flex align-items-center mb-3">
+                            <span class="question-number">47</span>
+                            <h5 class="question-text">De acordo com o regramento estabelecido na Lei n° 4.320/64, os créditos destinados a despesas para as quais não haja dotação orçamentária específica, são considerados créditos:</h5>
+                        </div>
+                        <ul class="options-list">
+                            <li class="option-item" data-option="A">
+                                <span class="option-letter">A</span>
+                                extraordinários.
+                            </li>
+                            <li class="option-item" data-option="B">
+                                <span class="option-letter">B</span>
+                                especiais.
+                            </li>
+                            <li class="option-item" data-option="C">
+                                <span class="option-letter">C</span>
+                                suplementares.
+                            </li>
+                            <li class="option-item" data-option="D">
+                                <span class="option-letter">D</span>
+                                extravagantes.
+                            </li>
+                        </ul>
+                    </div>
+
+                    <!-- Questão 48 -->
+                    <div class="question-card" data-question="48">
+                        <div class="d-flex align-items-center mb-3">
+                            <span class="question-number">48</span>
+                            <h5 class="question-text">Assinale, dentre as alternativas abaixo, taxa que não encontra previsão no vigente Código Tributário do Município de Santos, Lei n° 3.750/71 e alterações subsequentes.</h5>
+                        </div>
+                        <ul class="options-list">
+                            <li class="option-item" data-option="A">
+                                <span class="option-letter">A</span>
+                                De licença para negociantes ambulantes.
+                            </li>
+                            <li class="option-item" data-option="B">
+                                <span class="option-letter">B</span>
+                                De remoção de lixo domiciliar.
+                            </li>
+                            <li class="option-item" data-option="C">
+                                <span class="option-letter">C</span>
+                                De expediente.
+                            </li>
+                            <li class="option-item" data-option="D">
+                                <span class="option-letter">D</span>
+                                De conservação e limpeza de logradouros públicos.
+                            </li>
+                        </ul>
+                    </div>
+
+                    <!-- Questão 49 -->
+                    <div class="question-card" data-question="49">
+                        <div class="d-flex align-items-center mb-3">
+                            <span class="question-number">49</span>
+                            <h5 class="question-text">De acordo com o que estabelece o Código Tributário do Município de Santos, Lei n° 3.750/71, assinale, dentre as alternativas abaixo, aquela que contempla matéria de competência decisória da Junta de Recursos Fiscais.</h5>
+                        </div>
+                        <ul class="options-list">
+                            <li class="option-item" data-option="A">
+                                <span class="option-letter">A</span>
+                                Remissão de débitos fiscais.
+                            </li>
+                            <li class="option-item" data-option="B">
+                                <span class="option-letter">B</span>
+                                Prescrição.
+                            </li>
+                            <li class="option-item" data-option="C">
+                                <span class="option-letter">C</span>
+                                Imunidade tributária.
+                            </li>
+                            <li class="option-item" data-option="D">
+                                <span class="option-letter">D</span>
+                                Restituição de indébitos.
+                            </li>
+                        </ul>
+                    </div>
+
+                    <!-- Questão 50 -->
+                    <div class="question-card" data-question="50">
+                        <div class="d-flex align-items-center mb-3">
+                            <span class="question-number">50</span>
+                            <h5 class="question-text">De acordo com o que estabelece a Lei n° 634/89 do Município de Santos, que dispõe sobre o imposto incidente na transmissão onerosa, entre vivos, de bens imóveis ou de direitos a eles relativos, não é correto afirmar que, em regra, não estão compreendidos na incidência do imposto o ato oneroso, entre vivos, de:</h5>
+                        </div>
+                        <ul class="options-list">
+                            <li class="option-item" data-option="A">
+                                <span class="option-letter">A</span>
+                                usufruto.
+                            </li>
+                            <li class="option-item" data-option="B">
+                                <span class="option-letter">B</span>
+                                adjudicação.
+                            </li>
+                            <li class="option-item" data-option="C">
+                                <span class="option-letter">C</span>
+                                remição.
+                            </li>
+                            <li class="option-item" data-option="D">
+                                <span class="option-letter">D</span>
+                                retrovenda.
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Seção de Resultados -->
+                <div class="results-section" id="results-section">
+                    <h3><i class="fas fa-chart-line me-2"></i>Resultados da Prova</h3>
+                    <div class="alert alert-info">
+                        <i class="fas fa-info-circle me-2"></i>Resultados comparados com o gabarito oficial. Questões anuladas são marcadas e não contam para a pontuação.
+                    </div>
+                    
+                    <div class="table-container">
+                        <table class="table table-bordered results-table">
+                            <thead>
+                                <tr>
+                                    <th>Questão</th>
+                                    <th>Resposta Selecionada</th>
+                                    <th>Resposta do Gabarito</th>
+                                    <th>Situação</th>
+                                    <th>Situação do Gabarito</th>
+                                </tr>
+                            </thead>
+                            <tbody id="results-table-body">
+                                <!-- Os resultados serão inseridos aqui via JavaScript -->
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                    <div class="row mt-4">
+                        <div class="col-md-6">
+                            <div class="response-summary">
+                                <h6>Resumo do Resultado:</h6>
+                                <div id="results-summary-content">
+                                    <div class="response-summary-item">
+                                        <span>Total de questões:</span>
+                                        <span id="results-total-questions">50</span>
+                                    </div>
+                                    <div class="response-summary-item">
+                                        <span>Questões respondidas:</span>
+                                        <span id="results-answered">0</span>
+                                    </div>
+                                    <div class="response-summary-item">
+                                        <span>Questões não respondidas:</span>
+                                        <span id="results-unanswered">0</span>
+                                    </div>
+                                    <div class="response-summary-item">
+                                        <span>Questões corretas:</span>
+                                        <span id="results-correct" class="correct-answer">0</span>
+                                    </div>
+                                    <div class="response-summary-item">
+                                        <span>Questões incorretas:</span>
+                                        <span id="results-incorrect" class="incorrect-answer">0</span>
+                                    </div>
+                                    <div class="response-summary-item">
+                                        <span>Questões anuladas:</span>
+                                        <span id="results-anuladas">0</span>
+                                    </div>
+                                    <div class="response-summary-item">
+                                        <span>Pontuação final:</span>
+                                        <span id="results-score" class="fw-bold">0/50</span>
+                                    </div>
+                                    <div class="response-summary-item">
+                                        <span>Porcentagem de acerto:</span>
+                                        <span id="results-percentage" class="fw-bold">0%</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="response-summary">
+                                <h6>Desempenho por Matéria:</h6>
+                                <div id="results-by-subject">
+                                    <!-- O desempenho por matéria será inserido aqui via JavaScript -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Seção de Exportação -->
+                <div class="export-section" id="export-section">
+                    <h3><i class="fas fa-file-export me-2"></i>Exportar Respostas</h3>
+                    <p>Após responder às questões, você pode exportar suas respostas para um arquivo CSV. Este arquivo conterá a comparação com o gabarito oficial.</p>
+                    
+                    <div class="response-summary">
+                        <h6>Resumo das Respostas:</h6>
+                        <div id="response-summary-content">
+                            <div class="response-summary-item">
+                                <span>Total de questões:</span>
+                                <span id="total-questions">50</span>
+                            </div>
+                            <div class="response-summary-item">
+                                <span>Questões respondidas:</span>
+                                <span id="answered-questions">0</span>
+                            </div>
+                            <div class="response-summary-item">
+                                <span>Questões não respondidas:</span>
+                                <span id="unanswered-questions">50</span>
+                            </div>
+                            <div class="response-summary-item">
+                                <span>Porcentagem de conclusão:</span>
+                                <span id="completion-percentage">0%</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="mt-4">
+                        <button class="btn export-btn w-100 mb-3" id="export-csv">
+                            <i class="fas fa-file-csv me-2"></i>Exportar Respostas para CSV
+                        </button>
+                        <div id="success-message" class="success-message" style="display: none;">
+                            <i class="fas fa-check-circle me-2"></i> Arquivo CSV exportado com sucesso!
+                        </div>
+                        <p class="text-muted mt-2 small"><i class="fas fa-info-circle me-1"></i>O arquivo CSV conterá todas as 50 questões com suas respectivas respostas selecionadas, comparação com o gabarito e situação de cada questão.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Barra lateral de navegação -->
+            <div class="col-lg-3">
+                <div class="navigation">
+                    <h5 class="nav-title"><i class="fas fa-list me-2"></i>Navegação</h5>
+                    <ul class="nav-list">
+                        <li class="nav-item">
+                            <a href="#lingua-portuguesa" class="nav-link">
+                                <i class="fas fa-language"></i> Língua Portuguesa (1-10)
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="#legislacao" class="nav-link">
+                                <i class="fas fa-gavel"></i> Legislação Municipal (11-15)
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="#raciocinio" class="nav-link">
+                                <i class="fas fa-brain"></i> Raciocínio Lógico (16-20)
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="#especificos" class="nav-link">
+                                <i class="fas fa-book"></i> Conhecimentos Específicos (21-50)
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="#results-section" class="nav-link">
+                                <i class="fas fa-chart-line"></i> Resultados
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="#export-section" class="nav-link">
+                                <i class="fas fa-file-export"></i> Exportar Respostas
+                            </a>
+                        </li>
+                    </ul>
+                    
+                    <h5 class="nav-title mt-4"><i class="fas fa-chart-bar me-2"></i>Progresso</h5>
+                    <div class="progress" style="height: 10px;">
+                        <div class="progress-bar" role="progressbar" style="width: 0%;" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+                    </div>
+                    <div class="progress-text mt-2" id="progress-text">0 de 50 questões respondidas</div>
+                    
+                    <div class="mt-4">
+                        <button class="btn finalize-btn w-100 mb-2" id="finalize-prova">
+                            <i class="fas fa-clipboard-check me-2"></i>Responder
+                        </button>
+                        <button class="btn btn-outline-secondary w-100" id="reset-all">
+                            <i class="fas fa-redo me-2"></i>Limpar todas as respostas
+                        </button>
+                    </div>
+                    
+                    <div class="mt-4">
+                        <h6 class="nav-title"><i class="fas fa-clock me-2"></i>Tempo Restante</h6>
+                        <div class="text-center">
+                            <div id="timer-display" class="fs-4 fw-bold text-primary">03:30:00</div>
+                            <button class="btn btn-sm btn-outline-primary mt-2 w-100" id="start-timer">
+                                <i class="fas fa-play me-1"></i> Iniciar Cronômetro
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Barra de progresso fixa -->
+    <div class="progress-container d-lg-none">
+        <div class="container">
+            <div class="d-flex justify-content-between align-items-center">
+                <div>
+                    <div class="progress-text" id="mobile-progress-text">Progresso: 0%</div>
+                    <div class="progress" style="height: 6px; width: 200px;">
+                        <div class="progress-bar" role="progressbar" style="width: 0%;" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+                    </div>
+                </div>
+                <div>
+                    <a href="#" class="btn btn-sm btn-outline-primary">
+                        <i class="fas fa-arrow-up"></i> Topo
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Rodapé -->
+    <footer class="footer">
+        <div class="container">
+            <p>Simulado completo para o cargo de <strong>Auditor Fiscal de Tributos Municipais</strong></p>
+            <p>Prefeitura Municipal de Santos - Estado de São Paulo | Edital nº 23/2023</p>
+            <p class="mt-3"><small>Clique nas alternativas para selecionar suas respostas, depois clique em "Finalizar Prova" para ver seus resultados.</small></p>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Objeto para armazenar as respostas
+        let userResponses = {};
+        const totalQuestions = 50;
+
+        // Gabarito oficial atualizado
+        const gabaritoOficial = {
+            1: { gabarito: "C", situacao: "Válida" },
+            2: { gabarito: "D", situacao: "Válida" },
+            3: { gabarito: "A", situacao: "Válida" },
+            4: { gabarito: "B", situacao: "Válida" },
+            5: { gabarito: "D", situacao: "Válida" },
+            6: { gabarito: "C", situacao: "Válida" },
+            7: { gabarito: "B", situacao: "Válida" },
+            8: { gabarito: "A", situacao: "Válida" },
+            9: { gabarito: "C", situacao: "Válida" },
+            10: { gabarito: "A", situacao: "Válida" },
+            11: { gabarito: "C", situacao: "Válida" },
+            12: { gabarito: "B", situacao: "Válida" },
+            13: { gabarito: "D", situacao: "Válida" },
+            14: { gabarito: "B", situacao: "Válida" },
+            15: { gabarito: "A", situacao: "Válida" },
+            16: { gabarito: "D", situacao: "Válida" },
+            17: { gabarito: "A", situacao: "Válida" },
+            18: { gabarito: "C", situacao: "Válida" },
+            19: { gabarito: "D", situacao: "Válida" },
+            20: { gabarito: "A", situacao: "Válida" },
+            21: { gabarito: "A", situacao: "Válida" },
+            22: { gabarito: "B", situacao: "Válida" },
+            23: { gabarito: "C", situacao: "Válida" },
+            24: { gabarito: "D", situacao: "Válida" },
+            25: { gabarito: "C", situacao: "Válida" },
+            26: { gabarito: "D", situacao: "Válida" },
+            27: { gabarito: "C", situacao: "Válida" },
+            28: { gabarito: "B", situacao: "Válida" },
+            29: { gabarito: "D", situacao: "Válida" },
+            30: { gabarito: "C", situacao: "Válida" },
+            31: { gabarito: "C", situacao: "Válida" },
+            32: { gabarito: "D", situacao: "Válida" },
+            33: { gabarito: "C", situacao: "Válida" },
+            34: { gabarito: "B", situacao: "Válida" },
+            35: { gabarito: "A", situacao: "Válida" },
+            36: { gabarito: "B", situacao: "Válida" },
+            37: { gabarito: "A", situacao: "Válida" },
+            38: { gabarito: "C", situacao: "Válida" },
+            39: { gabarito: "C", situacao: "Válida" },
+            40: { gabarito: "D", situacao: "Válida" },
+            41: { gabarito: "C", situacao: "Válida" },
+            42: { gabarito: "A", situacao: "Válida" },
+            43: { gabarito: "C", situacao: "Válida" },
+            44: { gabarito: "B", situacao: "Válida" },
+            45: { gabarito: "C", situacao: "Válida" },
+            46: { gabarito: "A", situacao: "Válida" },
+            47: { gabarito: "B", situacao: "Válida" },
+            48: { gabarito: "D", situacao: "Válida" },
+            49: { gabarito: "C", situacao: "Válida" },
+            50: { gabarito: "D", situacao: "Válida" }
+        };
+
+        // Inicializar objeto de respostas
+        for (let i = 1; i <= totalQuestions; i++) {
+            userResponses[i] = null;
+        }
+
+        // Adicionar interatividade às opções
+        document.querySelectorAll('.option-item').forEach(item => {
+            item.addEventListener('click', function() {
+                const questionCard = this.closest('.question-card');
+                const questionNumber = parseInt(questionCard.getAttribute('data-question'));
+                const selectedOption = this.getAttribute('data-option');
+                
+                // Remover seleção de outras opções na mesma questão
+                questionCard.querySelectorAll('.option-item').forEach(option => {
+                    option.classList.remove('selected');
+                });
+                
+                // Marcar a opção selecionada
+                this.classList.add('selected');
+                
+                // Armazenar a resposta
+                userResponses[questionNumber] = selectedOption;
+                
+                // Atualizar contagem de questões respondidas
+                updateProgress();
+            });
+        });
+
+        // Função para atualizar o progresso
+        function updateProgress() {
+            const answeredQuestions = Object.values(userResponses).filter(response => response !== null).length;
+            const unansweredQuestions = totalQuestions - answeredQuestions;
+            const completionPercentage = Math.round((answeredQuestions / totalQuestions) * 100);
+            
+            // Atualizar barras de progresso
+            document.querySelectorAll('.progress-bar').forEach(bar => {
+                bar.style.width = `${completionPercentage}%`;
+                bar.setAttribute('aria-valuenow', completionPercentage);
+            });
+            
+            // Atualizar textos de progresso
+            document.querySelectorAll('#progress-text, #mobile-progress-text').forEach(text => {
+                text.textContent = `${answeredQuestions} de ${totalQuestions} questões respondidas`;
+            });
+            
+            // Atualizar resumo na seção de exportação
+            document.getElementById('answered-questions').textContent = answeredQuestions;
+            document.getElementById('unanswered-questions').textContent = unansweredQuestions;
+            document.getElementById('completion-percentage').textContent = `${completionPercentage}%`;
+            
+            // Atualizar título da barra de progresso móvel
+            document.querySelector('.progress-container .progress-text').textContent = `Progresso: ${completionPercentage}%`;
+        }
+
+        // Botão para finalizar a prova
+        document.getElementById('finalize-prova').addEventListener('click', function() {
+            // Verificar se todas as questões foram respondidas
+            const answeredQuestions = Object.values(userResponses).filter(response => response !== null).length;
+            
+            if (answeredQuestions === 0) {
+                alert("Nenhuma resposta foi selecionada. Selecione pelo menos uma resposta antes de finalizar a prova.");
+                return;
+            }
+            
+            // Calcular resultados
+            calculateResults();
+            
+            // Mostrar a seção de resultados
+            document.getElementById('results-section').style.display = 'block';
+            
+            // Rolar até a seção de resultados
+            document.getElementById('results-section').scrollIntoView({ behavior: 'smooth' });
+        });
+
+        // Função para calcular os resultados
+        function calculateResults() {
+            let correctCount = 0;
+            let incorrectCount = 0;
+            let unansweredCount = 0;
+            let anuladasCount = 0;
+            
+            // Limpar estilos anteriores
+            document.querySelectorAll('.option-item').forEach(item => {
+                item.classList.remove('correct', 'incorrect');
+            });
+            
+            // Calcular resultados para cada questão
+            for (let i = 1; i <= totalQuestions; i++) {
+                const userAnswer = userResponses[i];
+                const correctAnswer = gabaritoOficial[i].gabarito;
+                const situacao = gabaritoOficial[i].situacao;
+                
+                // Se a questão está anulada, marcar como tal
+                if (situacao === "Anulada") {
+                    anuladasCount++;
+                }
+                
+                // Se o usuário não respondeu
+                if (userAnswer === null) {
+                    unansweredCount++;
+                    continue;
+                }
+                
+                // Encontrar o elemento da questão
+                const questionCard = document.querySelector(`.question-card[data-question="${i}"]`);
+                
+                // Marcar a resposta do usuário
+                const userOption = questionCard.querySelector(`.option-item[data-option="${userAnswer}"]`);
+                
+                // Marcar a resposta correta
+                const correctOption = questionCard.querySelector(`.option-item[data-option="${correctAnswer}"]`);
+                
+                // Se a questão não está anulada, verificar se está correta
+                if (situacao === "Válida") {
+                    if (userAnswer === correctAnswer) {
+                        correctCount++;
+                        if (userOption) userOption.classList.add('correct');
+                    } else {
+                        incorrectCount++;
+                        if (userOption) userOption.classList.add('incorrect');
+                        if (correctOption) correctOption.classList.add('correct');
+                    }
+                } else {
+                    // Questão anulada - marcar como correta independente da resposta
+                    if (userOption) userOption.classList.add('correct');
+                }
+            }
+            
+            // Atualizar a tabela de resultados
+            updateResultsTable(correctCount, incorrectCount, unansweredCount, anuladasCount);
+        }
+
+        // Função para atualizar a tabela de resultados
+        function updateResultsTable(correctCount, incorrectCount, unansweredCount, anuladasCount) {
+            const tableBody = document.getElementById('results-table-body');
+            tableBody.innerHTML = '';
+            
+            // Contadores por matéria
+            const subjectStats = {
+                'portugues': { total: 0, correct: 0, anuladas: 0 },
+                'legislacao': { total: 0, correct: 0, anuladas: 0 },
+                'raciocinio': { total: 0, correct: 0, anuladas: 0 },
+                'especificos': { total: 0, correct: 0, anuladas: 0 }
+            };
+            
+            for (let i = 1; i <= totalQuestions; i++) {
+                const userAnswer = userResponses[i];
+                const correctAnswer = gabaritoOficial[i].gabarito;
+                const situacao = gabaritoOficial[i].situacao;
+                
+                // Determinar situação da resposta do usuário
+                let situacaoResposta = "Não respondida";
+                let situacaoClass = "";
+                
+                if (userAnswer !== null) {
+                    if (situacao === "Anulada") {
+                        situacaoResposta = "Anulada";
+                        situacaoClass = "anulada-badge";
+                    } else if (userAnswer === correctAnswer) {
+                        situacaoResposta = "Correta";
+                        situacaoClass = "correct-answer";
+                    } else {
+                        situacaoResposta = "Incorreta";
+                        situacaoClass = "incorrect-answer";
+                    }
+                }
+                
+                // Determinar matéria
+                let materia = '';
+                if (i >= 1 && i <= 10) {
+                    materia = 'portugues';
+                    subjectStats.portugues.total++;
+                    if (situacaoResposta === "Correta") subjectStats.portugues.correct++;
+                    if (situacao === "Anulada") subjectStats.portugues.anuladas++;
+                } else if (i >= 11 && i <= 15) {
+                    materia = 'legislacao';
+                    subjectStats.legislacao.total++;
+                    if (situacaoResposta === "Correta") subjectStats.legislacao.correct++;
+                    if (situacao === "Anulada") subjectStats.legislacao.anuladas++;
+                } else if (i >= 16 && i <= 20) {
+                    materia = 'raciocinio';
+                    subjectStats.raciocinio.total++;
+                    if (situacaoResposta === "Correta") subjectStats.raciocinio.correct++;
+                    if (situacao === "Anulada") subjectStats.raciocinio.anuladas++;
+                } else if (i >= 21 && i <= 50) {
+                    materia = 'especificos';
+                    subjectStats.especificos.total++;
+                    if (situacaoResposta === "Correta") subjectStats.especificos.correct++;
+                    if (situacao === "Anulada") subjectStats.especificos.anuladas++;
+                }
+                
+                // Adicionar linha à tabela
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${i}</td>
+                    <td>${userAnswer || "Não respondida"}</td>
+                    <td>${correctAnswer}</td>
+                    <td><span class="${situacaoClass}">${situacaoResposta}</span></td>
+                    <td>${situacao === "Anulada" ? '<span class="anulada-badge">Anulada</span>' : situacao}</td>
+                `;
+                tableBody.appendChild(row);
+            }
+            
+            // Atualizar resumo
+            const answeredQuestions = totalQuestions - unansweredCount;
+            const validQuestions = totalQuestions - anuladasCount;
+            const score = correctCount;
+            const percentage = validQuestions > 0 ? Math.round((correctCount / validQuestions) * 100) : 0;
+            
+            document.getElementById('results-total-questions').textContent = totalQuestions;
+            document.getElementById('results-answered').textContent = answeredQuestions;
+            document.getElementById('results-unanswered').textContent = unansweredCount;
+            document.getElementById('results-correct').textContent = correctCount;
+            document.getElementById('results-incorrect').textContent = incorrectCount;
+            document.getElementById('results-anuladas').textContent = anuladasCount;
+            document.getElementById('results-score').textContent = `${score}/${validQuestions}`;
+            document.getElementById('results-percentage').textContent = `${percentage}%`;
+            
+            // Atualizar desempenho por matéria
+            const resultsBySubject = document.getElementById('results-by-subject');
+            resultsBySubject.innerHTML = '';
+            
+            for (const [materia, stats] of Object.entries(subjectStats)) {
+                const materiaName = {
+                    'portugues': 'Língua Portuguesa',
+                    'legislacao': 'Legislação Municipal',
+                    'raciocinio': 'Raciocínio Lógico',
+                    'especificos': 'Conhecimentos Específicos'
+                }[materia];
+                
+                const validQuestionsMateria = stats.total - stats.anuladas;
+                const percentageMateria = validQuestionsMateria > 0 ? Math.round((stats.correct / validQuestionsMateria) * 100) : 0;
+                
+                const subjectDiv = document.createElement('div');
+                subjectDiv.className = 'response-summary-item';
+                subjectDiv.innerHTML = `
+                    <span>${materiaName}:</span>
+                    <span>${stats.correct}/${validQuestionsMateria} (${percentageMateria}%)</span>
+                `;
+                resultsBySubject.appendChild(subjectDiv);
+            }
+        }
+
+        // Botão para limpar todas as respostas
+        document.getElementById('reset-all').addEventListener('click', function() {
+            if (confirm("Tem certeza que deseja limpar todas as respostas? Esta ação não pode ser desfeita.")) {
+                document.querySelectorAll('.option-item').forEach(option => {
+                    option.classList.remove('selected', 'correct', 'incorrect');
+                });
+                
+                // Limpar todas as respostas
+                for (let i = 1; i <= totalQuestions; i++) {
+                    userResponses[i] = null;
+                }
+                
+                // Ocultar seção de resultados
+                document.getElementById('results-section').style.display = 'none';
+                
+                updateProgress();
+            }
+        });
+
+        // Função para exportar para CSV
+        function exportToCSV() {
+            // Verificar se há respostas
+            const answeredQuestions = Object.values(userResponses).filter(response => response !== null).length;
+            
+            if (answeredQuestions === 0) {
+                alert("Nenhuma resposta foi selecionada. Selecione pelo menos uma resposta antes de exportar.");
+                return;
+            }
+            
+            // Calcular resultados para incluir no CSV
+            let correctCount = 0;
+            let incorrectCount = 0;
+            let unansweredCount = 0;
+            let anuladasCount = 0;
+            
+            // Cabeçalho do CSV
+            let csvContent = "Numero da questao,Situacao da questao,Resposta selecionada,Resposta do gabarito,Situacao do gabarito\n";
+            
+            // Adicionar dados das respostas
+            for (let i = 1; i <= totalQuestions; i++) {
+                const userAnswer = userResponses[i] || "Não respondida";
+                const correctAnswer = gabaritoOficial[i].gabarito;
+                const situacaoGabarito = gabaritoOficial[i].situacao;
+                
+                // Determinar situação da questão (Correta/Incorreta/Não respondida/Anulada)
+                let situacaoQuestao = "Não respondida";
+                
+                if (userAnswer !== "Não respondida") {
+                    if (situacaoGabarito === "Anulada") {
+                        situacaoQuestao = "Anulada";
+                        anuladasCount++;
+                    } else if (userAnswer === correctAnswer) {
+                        situacaoQuestao = "Correta";
+                        correctCount++;
+                    } else {
+                        situacaoQuestao = "Incorreta";
+                        incorrectCount++;
+                    }
+                } else {
+                    unansweredCount++;
+                }
+                
+                csvContent += `${i},${situacaoQuestao},${userAnswer},${correctAnswer},${situacaoGabarito}\n`;
+            }
+            
+            // Adicionar resumo no final do CSV
+            const totalValidQuestions = totalQuestions - anuladasCount;
+            const porcentagemAcerto = totalValidQuestions > 0 ? Math.round((correctCount / totalValidQuestions) * 100) : 0;
+            const now = new Date();
+            
+            csvContent += "\n";
+            csvContent += "RESUMO\n";
+            csvContent += `Total de questões,${totalQuestions}\n`;
+            csvContent += `Questões respondidas,${answeredQuestions}\n`;
+            csvContent += `Questões não respondidas,${unansweredCount}\n`;
+            csvContent += `Questões corretas,${correctCount}\n`;
+            csvContent += `Questões incorretas,${incorrectCount}\n`;
+            csvContent += `Questões anuladas,${anuladasCount}\n`;
+            csvContent += `Porcentagem de acerto,${porcentagemAcerto}%\n`;
+            csvContent += `Data da exportação,${now.toLocaleDateString('pt-BR')}\n`;
+            csvContent += `Hora da exportação,${now.toLocaleTimeString('pt-BR')}\n`;
+            
+            // Criar blob e link de download
+            const blob = new Blob(["\uFEFF" + csvContent], { type: 'text/csv;charset=utf-8;' });
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            
+            // Configurar o link de download
+            const timestamp = new Date().toISOString().slice(0, 19).replace(/[:]/g, '-');
+            link.setAttribute('href', url);
+            link.setAttribute('download', `resultados_auditor_fiscal_${timestamp}.csv`);
+            link.style.visibility = 'hidden';
+            
+            // Adicionar ao documento e clicar
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            
+            // Mostrar mensagem de sucesso
+            const successMessage = document.getElementById('success-message');
+            successMessage.style.display = 'block';
+            
+            // Esconder mensagem após 5 segundos
+            setTimeout(() => {
+                successMessage.style.display = 'none';
+            }, 5000);
+        }
+
+        // Botão para exportar CSV
+        document.getElementById('export-csv').addEventListener('click', exportToCSV);
+
+        // Cronômetro
+        let timerInterval;
+        let totalSeconds = 3 * 60 * 60 + 30 * 60; // 3 horas e 30 minutos em segundos
+        let timerRunning = false;
+        
+        function formatTime(seconds) {
+            const hrs = Math.floor(seconds / 3600);
+            const mins = Math.floor((seconds % 3600) / 60);
+            const secs = seconds % 60;
+            
+            return `${hrs.toString().padStart(2, '0')}:${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+        }
+        
+        function updateTimerDisplay() {
+            document.getElementById('timer-display').textContent = formatTime(totalSeconds);
+        }
+        
+        function startTimer() {
+            if (timerRunning) return;
+            
+            timerRunning = true;
+            document.getElementById('start-timer').innerHTML = '<i class="fas fa-pause me-1"></i> Pausar';
+            document.getElementById('start-timer').classList.remove('btn-outline-primary');
+            document.getElementById('start-timer').classList.add('btn-warning');
+            
+            timerInterval = setInterval(() => {
+                if (totalSeconds <= 0) {
+                    clearInterval(timerInterval);
+                    alert('Tempo esgotado! A prova foi finalizada automaticamente.');
+                    document.getElementById('start-timer').innerHTML = '<i class="fas fa-play me-1"></i> Tempo Esgotado';
+                    document.getElementById('start-timer').classList.remove('btn-warning');
+                    document.getElementById('start-timer').classList.add('btn-danger');
+                    document.getElementById('start-timer').disabled = true;
+                    
+                    // Finalizar automaticamente a prova
+                    calculateResults();
+                    document.getElementById('results-section').style.display = 'block';
+                    document.getElementById('results-section').scrollIntoView({ behavior: 'smooth' });
+                    return;
+                }
+                
+                totalSeconds--;
+                updateTimerDisplay();
+                
+                // Avisos de tempo
+                if (totalSeconds === 60 * 60) {
+                    alert('Atenção: Resta 1 hora para o término da prova.');
+                } else if (totalSeconds === 30 * 60) {
+                    alert('Atenção: Restam 30 minutos para o término da prova.');
+                } else if (totalSeconds === 10 * 60) {
+                    alert('Atenção: Restam 10 minutos para o término da prova.');
+                } else if (totalSeconds === 5 * 60) {
+                    alert('Atenção: Restam 5 minutos para o término da prova. Faça a revisão das questões.');
+                }
+            }, 1000);
+        }
+        
+        function pauseTimer() {
+            if (!timerRunning) return;
+            
+            timerRunning = false;
+            clearInterval(timerInterval);
+            document.getElementById('start-timer').innerHTML = '<i class="fas fa-play me-1"></i> Continuar';
+            document.getElementById('start-timer').classList.remove('btn-warning');
+            document.getElementById('start-timer').classList.add('btn-outline-primary');
+        }
+        
+        document.getElementById('start-timer').addEventListener('click', function() {
+            if (timerRunning) {
+                pauseTimer();
+            } else {
+                startTimer();
+            }
+        });
+        
+        // Inicializar o display do timer
+        updateTimerDisplay();
+
+        // Atualizar progresso ao rolar
+        window.addEventListener('scroll', function() {
+            const scrollTop = document.documentElement.scrollTop || document.body.scrollTop;
+            const scrollHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            const scrollPercent = scrollTop / scrollHeight;
+            
+            // Atualizar apenas a barra de progresso fixa (visualização)
+            const fixedProgress = document.querySelector('.progress-container .progress-bar');
+            if (fixedProgress) {
+                const visualProgress = 40 + (scrollPercent * 60);
+                fixedProgress.style.width = `${Math.min(100, visualProgress)}%`;
+            }
+        });
+
+        // Inicializar o progresso
+        updateProgress();
+    </script>
+</body>
+</html>
