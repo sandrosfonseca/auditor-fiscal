@@ -716,9 +716,9 @@
                     </div>
                 </div>
 
-                <!-- Legislação Municipal -->
-                <div class="subject-card" id="legislacao">
-                    <h2 class="subject-title"><i class="fas fa-gavel me-2"></i>Conhecimentos Básicos de Legislação Municipal</h2>
+                <!-- Informática -->
+                <div class="subject-card" id="informatica">
+                    <h2 class="subject-title"><i class="fas fa-gavel me-2"></i>Conhecimentos Básicos de Informática</h2>
                     
                     <!-- Questão 11 -->
                     <div class="question-card" data-question="11">
@@ -849,11 +849,6 @@
                             </li>
                         </ul>
                     </div>
-                </div>
-
-                <!-- Raciocínio Lógico -->
-                <div class="subject-card" id="raciocinio">
-                    <h2 class="subject-title"><i class="fas fa-brain me-2"></i>Raciocínio Lógico</h2>
                     
                     <!-- Questão 16 -->
                     <div class="question-card" data-question="16">
@@ -931,7 +926,12 @@
                                 retornar uma matriz com as cinco primeiras linhas do intervalo de células entre A1 e B10.
                             </li>
                         </ul>
-                    </div>
+                    </div>          
+                </div>
+
+                <!-- Conhecimentos Específicos -->
+                <div class="subject-card" id="especificos">
+                    <h2 class="subject-title"><i class="fas fa-book me-2"></i>Conhecimentos Específicos</h2>
 
                     <!-- Questão 19 -->
                     <div class="question-card" data-question="19">
@@ -984,12 +984,7 @@
                             </li>
                         </ul>
                     </div>
-                </div>
 
-                <!-- Conhecimentos Específicos -->
-                <div class="subject-card" id="especificos">
-                    <h2 class="subject-title"><i class="fas fa-book me-2"></i>Conhecimentos Específicos</h2>
-                    
                     <!-- Questão 21 -->
                     <div class="question-card" data-question="21">
                         <div class="d-flex align-items-center mb-3">
@@ -1896,18 +1891,13 @@
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="#legislacao" class="nav-link">
-                                <i class="fas fa-gavel"></i> Legislação Municipal (11-15)
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="#raciocinio" class="nav-link">
-                                <i class="fas fa-brain"></i> Raciocínio Lógico (16-20)
+                            <a href="#informatica" class="nav-link">
+                                <i class="fas fa-gavel"></i> Informática (11-18)
                             </a>
                         </li>
                         <li class="nav-item">
                             <a href="#especificos" class="nav-link">
-                                <i class="fas fa-book"></i> Conhecimentos Específicos (21-50)
+                                <i class="fas fa-book"></i> Conhecimentos Específicos (19-50)
                             </a>
                         </li>
                         <li class="nav-item">
@@ -1975,7 +1965,7 @@
         <div class="container">
             <p>Simulado completo para o cargo de <strong>Auditor Fiscal de Tributos Municipais</strong></p>
             <p>Prefeitura Municipal de Santos - Estado de São Paulo | Edital nº 08/2020</p>
-            <p class="mt-3"><small>Clique nas alternativas para selecionar suas respostas, depois clique em "Finalizar Prova" para ver seus resultados.</small></p>
+            <p class="mt-3"><small>Clique nas alternativas para selecionar suas respostas, depois clique em "Responder" para ver seus resultados.</small></p>
         </div>
     </footer>
 
@@ -2179,8 +2169,7 @@
             // Contadores por matéria
             const subjectStats = {
                 'portugues': { total: 0, correct: 0, anuladas: 0 },
-                'legislacao': { total: 0, correct: 0, anuladas: 0 },
-                'raciocinio': { total: 0, correct: 0, anuladas: 0 },
+                'informatica': { total: 0, correct: 0, anuladas: 0 },
                 'especificos': { total: 0, correct: 0, anuladas: 0 }
             };
             
@@ -2213,17 +2202,12 @@
                     subjectStats.portugues.total++;
                     if (situacaoResposta === "Correta") subjectStats.portugues.correct++;
                     if (situacao === "Anulada") subjectStats.portugues.anuladas++;
-                } else if (i >= 11 && i <= 15) {
-                    materia = 'legislacao';
-                    subjectStats.legislacao.total++;
-                    if (situacaoResposta === "Correta") subjectStats.legislacao.correct++;
-                    if (situacao === "Anulada") subjectStats.legislacao.anuladas++;
-                } else if (i >= 16 && i <= 20) {
-                    materia = 'raciocinio';
-                    subjectStats.raciocinio.total++;
-                    if (situacaoResposta === "Correta") subjectStats.raciocinio.correct++;
-                    if (situacao === "Anulada") subjectStats.raciocinio.anuladas++;
-                } else if (i >= 21 && i <= 50) {
+                } else if (i >= 11 && i <= 18) {
+                    materia = 'informatica';
+                    subjectStats.informatica.total++;
+                    if (situacaoResposta === "Correta") subjectStats.informatica.correct++;
+                    if (situacao === "Anulada") subjectStats.informatica.anuladas++;
+                } else if (i >= 19 && i <= 50) {
                     materia = 'especificos';
                     subjectStats.especificos.total++;
                     if (situacaoResposta === "Correta") subjectStats.especificos.correct++;
@@ -2264,8 +2248,7 @@
             for (const [materia, stats] of Object.entries(subjectStats)) {
                 const materiaName = {
                     'portugues': 'Língua Portuguesa',
-                    'legislacao': 'Legislação Municipal',
-                    'raciocinio': 'Raciocínio Lógico',
+                    'informatica': 'Informática',
                     'especificos': 'Conhecimentos Específicos'
                 }[materia];
                 
