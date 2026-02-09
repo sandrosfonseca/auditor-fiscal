@@ -1,0 +1,2961 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Planejador Completo - Concursos Públicos</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #1a237e;
+            --secondary-color: #303f9f;
+            --accent-color: #00bcd4;
+            --success-color: #4CAF50;
+            --warning-color: #FF9800;
+            --danger-color: #f44336;
+            --light-color: #f5f7fa;
+            --dark-color: #333;
+            --shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            --transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #f5f7fa 0%, #e4e8f0 100%);
+            color: var(--dark-color);
+            line-height: 1.6;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1600px;
+            margin: 0 auto;
+        }
+
+        /* Header */
+        .header {
+            background: linear-gradient(90deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+            color: white;
+            border-radius: 15px;
+            padding: 25px 30px;
+            margin-bottom: 30px;
+            box-shadow: var(--shadow);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 100%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 1px, transparent 1px);
+            background-size: 20px 20px;
+            opacity: 0.1;
+            z-index: 0;
+        }
+
+        .header-content {
+            position: relative;
+            z-index: 1;
+        }
+
+        h1 {
+            font-size: 2.8rem;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .subtitle {
+            font-size: 1.1rem;
+            opacity: 0.9;
+            max-width: 800px;
+            margin-bottom: 15px;
+        }
+
+        /* Dashboard Stats */
+        .stats-dashboard {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: var(--shadow);
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            transition: var(--transition);
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+        }
+
+        .stat-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8rem;
+            color: white;
+        }
+
+        .stat-icon.blue { background: linear-gradient(135deg, #1a237e 0%, #303f9f 100%); }
+        .stat-icon.green { background: linear-gradient(135deg, #4CAF50 0%, #8BC34A 100%); }
+        .stat-icon.orange { background: linear-gradient(135deg, #FF9800 0%, #FFB74D 100%); }
+        .stat-icon.purple { background: linear-gradient(135deg, #7B1FA2 0%, #9C27B0 100%); }
+        .stat-icon.red { background: linear-gradient(135deg, #f44336 0%, #ef5350 100%); }
+        .stat-icon.teal { background: linear-gradient(135deg, #009688 0%, #4db6ac 100%); }
+
+        .stat-info h3 {
+            font-size: 2.2rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            margin-bottom: 5px;
+        }
+
+        .stat-info p {
+            color: #666;
+            font-size: 0.95rem;
+        }
+
+        /* Main Content Area */
+        .main-content {
+            display: grid;
+            grid-template-columns: 320px 1fr;
+            gap: 30px;
+        }
+
+        @media (max-width: 1100px) {
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Sidebar */
+        .sidebar {
+            background: white;
+            border-radius: 15px;
+            box-shadow: var(--shadow);
+            padding: 25px;
+            height: fit-content;
+            position: sticky;
+            top: 20px;
+        }
+
+        .sidebar-section {
+            margin-bottom: 30px;
+        }
+
+        .sidebar-section h3 {
+            color: var(--primary-color);
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #f0f0f0;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .concurso-selector {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .concurso-btn {
+            padding: 15px;
+            border: none;
+            background: #f5f5f5;
+            border-radius: 8px;
+            text-align: left;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            position: relative;
+        }
+
+        .concurso-btn:hover {
+            background: #e8eaf6;
+            transform: translateX(5px);
+        }
+
+        .concurso-btn.active {
+            background: linear-gradient(90deg, #e8eaf6 0%, #c5cae9 100%);
+            color: var(--primary-color);
+            border-left: 4px solid var(--primary-color);
+        }
+
+        .concurso-badge {
+            position: absolute;
+            right: 10px;
+            background: var(--accent-color);
+            color: white;
+            padding: 2px 8px;
+            border-radius: 10px;
+            font-size: 0.8rem;
+        }
+
+        .filter-options {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .filter-option {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+        }
+
+        .filter-option input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            accent-color: var(--primary-color);
+            cursor: pointer;
+        }
+
+        .filter-option span {
+            cursor: pointer;
+        }
+
+        .progress-controls {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .progress-btn {
+            padding: 12px;
+            border: none;
+            border-radius: 8px;
+            background: #f5f5f5;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 500;
+        }
+
+        .progress-btn:hover {
+            background: #e0e0e0;
+        }
+
+        .progress-btn.reset {
+            color: var(--danger-color);
+        }
+
+        .progress-btn.export {
+            color: var(--primary-color);
+        }
+
+        .stats-summary {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .stat-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .stat-row:last-child {
+            border-bottom: none;
+        }
+
+        /* Content Area */
+        .content-area {
+            background: white;
+            border-radius: 15px;
+            box-shadow: var(--shadow);
+            overflow: hidden;
+            min-height: 600px;
+        }
+
+        .content-header {
+            background: linear-gradient(90deg, #f9f9f9 0%, #f0f0f0 100%);
+            padding: 20px 25px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .content-header h2 {
+            color: var(--primary-color);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .concurso-info {
+            margin-top: 10px;
+            color: #666;
+            font-size: 0.95rem;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .concurso-date {
+            background: var(--accent-color);
+            color: white;
+            padding: 3px 10px;
+            border-radius: 12px;
+            font-size: 0.9rem;
+        }
+
+        /* Disciplinas Grid */
+        .disciplinas-grid {
+            padding: 25px;
+            max-height: 700px;
+            overflow-y: auto;
+        }
+
+        .area-section {
+            margin-bottom: 30px;
+        }
+
+        .area-title {
+            background: linear-gradient(90deg, #e8eaf6 0%, #c5cae9 100%);
+            padding: 15px 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            color: var(--primary-color);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.2rem;
+            font-weight: 600;
+        }
+
+        .disciplina-card {
+            background: #f9f9f9;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            overflow: hidden;
+            border: 1px solid #eee;
+            transition: var(--transition);
+        }
+
+        .disciplina-card:hover {
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .disciplina-header {
+            padding: 18px 20px;
+            background: linear-gradient(90deg, #f5f5f5 0%, #f0f0f0 100%);
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #eee;
+        }
+
+        .disciplina-header h3 {
+            color: var(--primary-color);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.1rem;
+        }
+
+        .disciplina-stats {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .disciplina-progress {
+            width: 120px;
+            height: 8px;
+            background: #e0e0e0;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .disciplina-progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--success-color) 0%, #8BC34A 100%);
+            transition: width 0.5s ease;
+        }
+
+        .topics-container {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.5s ease;
+        }
+
+        .disciplina-card.open .topics-container {
+            max-height: 1000px;
+        }
+
+        .topic-list {
+            padding: 20px;
+        }
+
+        .topic-item {
+            padding: 12px 15px;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            transition: var(--transition);
+        }
+
+        .topic-item:hover {
+            background: #f5f5f5;
+        }
+
+        .topic-item.subtopic {
+            padding-left: 30px;
+            background: #fafafa;
+        }
+
+        .topic-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            flex: 1;
+        }
+
+        .topic-checkbox {
+            width: 20px;
+            height: 20px;
+            accent-color: var(--success-color);
+            cursor: pointer;
+        }
+
+        .topic-text {
+            font-weight: 500;
+            flex: 1;
+        }
+
+        .topic-actions {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .topic-btn {
+            width: 32px;
+            height: 32px;
+            border-radius: 6px;
+            border: none;
+            background: #f0f0f0;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: var(--transition);
+        }
+
+        .topic-btn:hover {
+            background: #e0e0e0;
+            transform: scale(1.1);
+        }
+
+        .topic-btn.mark-reviewed {
+            color: var(--warning-color);
+        }
+
+        .topic-btn.add-questions {
+            color: var(--primary-color);
+        }
+
+        .topic-btn.add-note {
+            color: var(--accent-color);
+        }
+
+        .topic-btn.mark-important {
+            color: var(--danger-color);
+        }
+
+        .topic-count {
+            font-size: 0.85rem;
+            color: #666;
+            background: #f0f0f0;
+            padding: 2px 8px;
+            border-radius: 10px;
+        }
+
+        /* Planilha View */
+        .planilha-container {
+            padding: 25px;
+            overflow-x: auto;
+            max-height: 700px;
+            overflow-y: auto;
+        }
+
+        .planilha-table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 1200px;
+        }
+
+        .planilha-table th {
+            background: linear-gradient(90deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+            color: white;
+            padding: 15px;
+            text-align: left;
+            font-weight: 600;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+
+        .planilha-table td {
+            padding: 12px 15px;
+            border-bottom: 1px solid #eee;
+            vertical-align: top;
+        }
+
+        .planilha-table tr:hover {
+            background: #f9f9f9;
+        }
+
+        .planilha-table input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
+        }
+
+        .planilha-table input[type="number"] {
+            width: 80px;
+            padding: 5px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+
+        .planilha-table input[type="text"] {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            min-width: 200px;
+        }
+
+        .planilha-table select {
+            padding: 5px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+
+        /* Study Timeline */
+        .timeline-container {
+            padding: 25px;
+            max-height: 700px;
+            overflow-y: auto;
+        }
+
+        .timeline {
+            position: relative;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .timeline::after {
+            content: '';
+            position: absolute;
+            width: 6px;
+            background: linear-gradient(to bottom, var(--primary-color), var(--accent-color));
+            top: 0;
+            bottom: 0;
+            left: 50%;
+            margin-left: -3px;
+            border-radius: 3px;
+        }
+
+        .timeline-item {
+            padding: 10px 40px;
+            position: relative;
+            width: 50%;
+            box-sizing: border-box;
+            margin-bottom: 30px;
+        }
+
+        .timeline-item:nth-child(odd) {
+            left: 0;
+        }
+
+        .timeline-item:nth-child(even) {
+            left: 50%;
+        }
+
+        .timeline-content {
+            padding: 20px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: var(--shadow);
+            position: relative;
+        }
+
+        .timeline-item:nth-child(odd) .timeline-content::after {
+            content: '';
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            right: -10px;
+            background: white;
+            top: 20px;
+            transform: rotate(45deg);
+            box-shadow: 3px -3px 5px rgba(0, 0, 0, 0.05);
+        }
+
+        .timeline-item:nth-child(even) .timeline-content::after {
+            content: '';
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            left: -10px;
+            background: white;
+            top: 20px;
+            transform: rotate(45deg);
+            box-shadow: -3px 3px 5px rgba(0, 0, 0, 0.05);
+        }
+
+        .timeline-date {
+            font-weight: 700;
+            color: var(--primary-color);
+            margin-bottom: 5px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .timeline-title {
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: #333;
+        }
+
+        .timeline-progress {
+            height: 6px;
+            background: #e0e0e0;
+            border-radius: 3px;
+            margin-top: 10px;
+            overflow: hidden;
+        }
+
+        .timeline-progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--success-color) 0%, #8BC34A 100%);
+            width: 0%;
+            transition: width 1s ease;
+        }
+
+        /* Footer */
+        .footer {
+            text-align: center;
+            margin-top: 40px;
+            padding: 20px;
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 15px;
+            width: 90%;
+            max-width: 500px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            animation: modalAppear 0.3s ease;
+        }
+
+        @keyframes modalAppear {
+            from { opacity: 0; transform: scale(0.9); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .modal-header h3 {
+            color: var(--primary-color);
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #666;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+
+        .form-group input, .form-group textarea, .form-group select {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 1rem;
+        }
+
+        .form-group textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+
+        .modal-actions {
+            display: flex;
+            gap: 10px;
+            justify-content: flex-end;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(90deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(26, 35, 126, 0.3);
+        }
+
+        .btn-secondary {
+            background: #f0f0f0;
+            color: #333;
+        }
+
+        .btn-secondary:hover {
+            background: #e0e0e0;
+        }
+
+        /* Progress Indicators */
+        .progress-indicator {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 0.9rem;
+            padding: 3px 8px;
+            border-radius: 10px;
+            background: #f0f0f0;
+        }
+
+        .progress-indicator.complete {
+            background: #e8f5e9;
+            color: #2e7d32;
+        }
+
+        .progress-indicator.in-progress {
+            background: #fff8e1;
+            color: #f57c00;
+        }
+
+        .progress-indicator.not-started {
+            background: #ffebee;
+            color: #c62828;
+        }
+
+        /* Responsividade */
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2rem;
+            }
+            
+            .stats-dashboard {
+                grid-template-columns: 1fr;
+            }
+            
+            .timeline::after {
+                left: 31px;
+            }
+            
+            .timeline-item {
+                width: 100%;
+                padding-left: 70px;
+                padding-right: 25px;
+            }
+            
+            .timeline-item:nth-child(even) {
+                left: 0;
+            }
+            
+            .timeline-item:nth-child(odd) .timeline-content::after,
+            .timeline-item:nth-child(even) .timeline-content::after {
+                left: -10px;
+                right: auto;
+            }
+            
+            .topic-actions {
+                flex-wrap: wrap;
+                justify-content: flex-end;
+            }
+            
+            .topic-btn {
+                width: 28px;
+                height: 28px;
+            }
+        }
+
+        /* Scrollbar personalizada */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--primary-color);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--secondary-color);
+        }
+
+        /* Badges */
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            padding: 3px 8px;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .badge-primary {
+            background: #e8eaf6;
+            color: var(--primary-color);
+        }
+
+        .badge-success {
+            background: #e8f5e9;
+            color: #2e7d32;
+        }
+
+        .badge-warning {
+            background: #fff8e1;
+            color: #f57c00;
+        }
+
+        /* Quick Actions */
+        .quick-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+            flex-wrap: wrap;
+        }
+
+        .action-btn {
+            padding: 8px 15px;
+            border: none;
+            border-radius: 6px;
+            background: #f0f0f0;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 0.9rem;
+        }
+
+        .action-btn:hover {
+            background: #e0e0e0;
+            transform: translateY(-2px);
+        }
+
+        /* Search Bar */
+        .search-container {
+            margin-bottom: 20px;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 1rem;
+            background: white url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='%23333' viewBox='0 0 16 16'%3E%3Cpath d='M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z'/%3E%3C/svg%3E") no-repeat 15px center;
+            background-size: 16px;
+            padding-left: 40px;
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 2px rgba(26, 35, 126, 0.1);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-content">
+                <h1><i class="fas fa-graduation-cap"></i> Planejador Completo de Estudos</h1>
+                <p class="subtitle">Organize seus estudos para concursos públicos de forma inteligente com todas as matérias completas dos concursos 23/2023 e 08/2020.</p>
+                <div class="quick-actions">
+                    <button class="action-btn" id="addStudyGoal">
+                        <i class="fas fa-bullseye"></i> Meta de Estudos
+                    </button>
+                    <button class="action-btn" id="generateSchedule">
+                        <i class="fas fa-calendar-alt"></i> Gerar Cronograma
+                    </button>
+                    <button class="action-btn" id="exportAll">
+                        <i class="fas fa-file-export"></i> Exportar Tudo
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <!-- Dashboard Stats -->
+        <div class="stats-dashboard">
+            <div class="stat-card">
+                <div class="stat-icon blue">
+                    <i class="fas fa-book"></i>
+                </div>
+                <div class="stat-info">
+                    <h3 id="totalTopics">0</h3>
+                    <p>Tópicos Totais</p>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon green">
+                    <i class="fas fa-check-circle"></i>
+                </div>
+                <div class="stat-info">
+                    <h3 id="studiedTopics">0</h3>
+                    <p>Tópicos Estudados</p>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon orange">
+                    <i class="fas fa-chart-line"></i>
+                </div>
+                <div class="stat-info">
+                    <h3 id="progressPercentage">0%</h3>
+                    <p>Progresso Geral</p>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon purple">
+                    <i class="fas fa-question-circle"></i>
+                </div>
+                <div class="stat-info">
+                    <h3 id="questionsDone">0</h3>
+                    <p>Questões Resolvidas</p>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon red">
+                    <i class="fas fa-clock"></i>
+                </div>
+                <div class="stat-info">
+                    <h3 id="studyTime">0h</h3>
+                    <p>Tempo de Estudo</p>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon teal">
+                    <i class="fas fa-calendar-check"></i>
+                </div>
+                <div class="stat-info">
+                    <h3 id="daysLeft">-</h3>
+                    <p>Dias Restantes</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <!-- Sidebar -->
+            <aside class="sidebar">
+                <div class="sidebar-section">
+                    <h3><i class="fas fa-folder-open"></i> Concursos</h3>
+                    <div class="concurso-selector">
+                        <button class="concurso-btn active" data-concurso="23-2023">
+                            <i class="fas fa-file-alt"></i> Concurso 23/2023
+                            <span class="concurso-badge">Completo</span>
+                        </button>
+                        <button class="concurso-btn" data-concurso="08-2020">
+                            <i class="fas fa-file-alt"></i> Concurso 08/2020
+                            <span class="concurso-badge">Completo</span>
+                        </button>
+                        <button class="concurso-btn" data-view="planilha">
+                            <i class="fas fa-table"></i> Planilha Completa
+                        </button>
+                        <button class="concurso-btn" data-view="timeline">
+                            <i class="fas fa-calendar-alt"></i> Cronograma
+                        </button>
+                    </div>
+                </div>
+
+                <div class="sidebar-section">
+                    <h3><i class="fas fa-filter"></i> Filtros</h3>
+                    <div class="filter-options">
+                        <label class="filter-option">
+                            <input type="checkbox" id="filter-studied" checked>
+                            <span>Mostrar estudados</span>
+                        </label>
+                        <label class="filter-option">
+                            <input type="checkbox" id="filter-pending" checked>
+                            <span>Mostrar pendentes</span>
+                        </label>
+                        <label class="filter-option">
+                            <input type="checkbox" id="filter-reviewed">
+                            <span>Apenas revisados</span>
+                        </label>
+                        <label class="filter-option">
+                            <input type="checkbox" id="filter-important">
+                            <span>Destacar importantes</span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="sidebar-section">
+                    <h3><i class="fas fa-search"></i> Buscar</h3>
+                    <div class="search-container">
+                        <input type="text" class="search-input" id="searchTopics" placeholder="Buscar tópicos...">
+                    </div>
+                </div>
+
+                <div class="sidebar-section">
+                    <h3><i class="fas fa-tasks"></i> Controles</h3>
+                    <div class="progress-controls">
+                        <button class="progress-btn" id="markAllStudied">
+                            <i class="fas fa-check-double"></i> Marcar tudo como estudado
+                        </button>
+                        <button class="progress-btn" id="markAllReviewed">
+                            <i class="fas fa-sync-alt"></i> Marcar tudo como revisado
+                        </button>
+                        <button class="progress-btn reset" id="resetProgress">
+                            <i class="fas fa-redo"></i> Reiniciar progresso
+                        </button>
+                        <button class="progress-btn export" id="exportData">
+                            <i class="fas fa-download"></i> Exportar dados
+                        </button>
+                    </div>
+                </div>
+
+                <div class="sidebar-section">
+                    <h3><i class="fas fa-chart-pie"></i> Estatísticas</h3>
+                    <div class="stats-summary">
+                        <div class="stat-row">
+                            <span>Próxima revisão:</span>
+                            <span id="nextReview">-</span>
+                        </div>
+                        <div class="stat-row">
+                            <span>Média diária:</span>
+                            <span id="dailyAverage">0 tópicos</span>
+                        </div>
+                        <div class="stat-row">
+                            <span>Taxa de conclusão:</span>
+                            <span id="completionRate">0%</span>
+                        </div>
+                        <div class="stat-row">
+                            <span>Tempo estimado:</span>
+                            <span id="estimatedTime">-</span>
+                        </div>
+                    </div>
+                </div>
+            </aside>
+
+            <!-- Content Area -->
+            <main class="content-area">
+                <div class="content-header">
+                    <h2><i class="fas fa-book-open"></i> <span id="concursoTitle">Concurso 23/2023 - Prefeitura Municipal</span></h2>
+                    <p class="concurso-info">
+                        <span class="concurso-date">Edital: 2023</span>
+                        <span id="concursoDescription">Concurso com conhecimentos básicos e específicos para diversas áreas. Organize seus estudos por disciplina.</span>
+                    </p>
+                </div>
+
+                <!-- Disciplinas View -->
+                <div class="disciplinas-grid" id="disciplinasView">
+                    <!-- Disciplinas serão carregadas aqui via JavaScript -->
+                </div>
+
+                <!-- Planilha View -->
+                <div class="planilha-container" id="planilhaView" style="display: none;">
+                    <table class="planilha-table">
+                        <thead>
+                            <tr>
+                                <th>Disciplina</th>
+                                <th>Tópico</th>
+                                <th>Subtópico</th>
+                                <th>Estudado?</th>
+                                <th>Revisado?</th>
+                                <th>Questões</th>
+                                <th>Importante</th>
+                                <th>Observações</th>
+                            </tr>
+                        </thead>
+                        <tbody id="planilhaBody">
+                            <!-- Conteúdo da planilha será inserido aqui -->
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Timeline View -->
+                <div class="timeline-container" id="timelineView" style="display: none;">
+                    <div class="timeline" id="studyTimeline">
+                        <!-- Cronograma será gerado aqui -->
+                    </div>
+                </div>
+            </main>
+        </div>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <p>Planejador Completo de Estudos para Concursos Públicos © 2023</p>
+            <p>Todas as matérias dos concursos 23/2023 e 08/2020 organizadas para seu estudo eficiente!</p>
+        </footer>
+    </div>
+
+    <!-- Modal para adicionar meta -->
+    <div class="modal" id="goalModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3><i class="fas fa-bullseye"></i> Definir Meta de Estudos</h3>
+                <button class="modal-close" id="closeGoalModal">&times;</button>
+            </div>
+            <form id="goalForm">
+                <div class="form-group">
+                    <label for="goalName">Nome da Meta</label>
+                    <input type="text" id="goalName" placeholder="Ex: Completar Língua Portuguesa" required>
+                </div>
+                <div class="form-group">
+                    <label for="goalDeadline">Data Limite</label>
+                    <input type="date" id="goalDeadline" required>
+                </div>
+                <div class="form-group">
+                    <label for="goalHours">Horas de estudo por dia</label>
+                    <input type="number" id="goalHours" min="1" max="10" value="3" required>
+                </div>
+                <div class="form-group">
+                    <label for="goalPriority">Prioridade</label>
+                    <select id="goalPriority">
+                        <option value="alta">Alta Prioridade</option>
+                        <option value="media" selected>Média Prioridade</option>
+                        <option value="baixa">Baixa Prioridade</option>
+                    </select>
+                </div>
+                <div class="modal-actions">
+                    <button type="button" class="btn btn-secondary" id="cancelGoal">Cancelar</button>
+                    <button type="submit" class="btn btn-primary">Salvar Meta</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal para adicionar observações -->
+    <div class="modal" id="noteModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3><i class="fas fa-sticky-note"></i> Adicionar Observação</h3>
+                <button class="modal-close" id="closeNoteModal">&times;</button>
+            </div>
+            <form id="noteForm">
+                <div class="form-group">
+                    <label for="noteTopic">Tópico</label>
+                    <input type="text" id="noteTopic" readonly>
+                </div>
+                <div class="form-group">
+                    <label for="noteContent">Observação</label>
+                    <textarea id="noteContent" placeholder="Digite suas observações sobre este tópico..." required></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="notePriority">Prioridade da Observação</label>
+                    <select id="notePriority">
+                        <option value="baixa">Baixa</option>
+                        <option value="media" selected>Média</option>
+                        <option value="alta">Alta</option>
+                    </select>
+                </div>
+                <div class="modal-actions">
+                    <button type="button" class="btn btn-secondary" id="cancelNote">Cancelar</button>
+                    <button type="submit" class="btn btn-primary">Salvar Observação</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Dados COMPLETOS dos concursos
+        const concursosData = {
+            "23-2023": {
+                nome: "Concurso 23/2023 - Prefeitura Municipal",
+                descricao: "Concurso com conhecimentos básicos e específicos para diversas áreas. Todas as matérias completas.",
+                edital: "2023",
+                areas: {
+                    "Conhecimentos Básicos": {
+                        "Língua Portuguesa": [
+                            { id: "lp-1", nome: "Leitura e interpretação de textos", subtopicos: [
+                                "Textos literários", "Textos não literários"
+                            ]},
+                            { id: "lp-2", nome: "Vocabulário", subtopicos: [
+                                "Sinônimos", "Antônimos", "Sentido próprio das palavras", "Sentido figurado das palavras"
+                            ]},
+                            { id: "lp-3", nome: "Pontuação", subtopicos: [] },
+                            { id: "lp-4", nome: "Classes de palavras", subtopicos: [
+                                "Substantivo", "Adjetivo", "Numeral", "Pronome", "Verbo", "Advérbio", "Preposição", "Conjunção",
+                                "Cargo e sentido que imprimem às relações que estabelecem"
+                            ]},
+                            { id: "lp-5", nome: "Concordância", subtopicos: [
+                                "Concordância verbal", "Concordância nominal"
+                            ]},
+                            { id: "lp-6", nome: "Regência", subtopicos: [
+                                "Regência verbal", "Regência nominal"
+                            ]},
+                            { id: "lp-7", nome: "Colocação pronominal", subtopicos: [] },
+                            { id: "lp-8", nome: "Crase", subtopicos: [] }
+                        ],
+                        "Raciocínio Lógico": [
+                            { id: "rl-1", nome: "Estruturas lógicas", subtopicos: [] },
+                            { id: "rl-2", nome: "Lógica de argumentação", subtopicos: [
+                                "Analogias", "Inferências", "Deduções", "Conclusões"
+                            ]},
+                            { id: "rl-3", nome: "Lógica sentencial (proposicional)", subtopicos: [
+                                "Proposições simples", "Proposições compostas", "Tabelas verdade", "Equivalências", "Leis de Morgan", "Diagramas lógicos"
+                            ]},
+                            { id: "rl-4", nome: "Lógica de primeira ordem", subtopicos: [] },
+                            { id: "rl-5", nome: "Princípios de contagem", subtopicos: [] },
+                            { id: "rl-6", nome: "Probabilidades", subtopicos: [] },
+                            { id: "rl-7", nome: "Raciocínio lógico envolvendo problemas", subtopicos: [] }
+                        ],
+                        "Conhecimentos Básicos de Legislação Municipal": [
+                            { id: "lm-1", nome: "Lei Orgânica do Município de Santos", subtopicos: [
+                                "Texto atualizado e/ou alterado"
+                            ]},
+                            { id: "lm-2", nome: "Estatuto dos Funcionários Públicos Municipais de Santos", subtopicos: [
+                                "Texto atualizado e/ou alterado"
+                            ]}
+                        ]
+                    },
+                    "Conhecimentos Específicos": {
+                        "Contabilidade Geral": [
+                            { id: "cg-1", nome: "Contabilidade: aspectos gerais", subtopicos: [
+                                "Conceituação", "Objetivos", "Campo de atuação", "Usuários da informação contábil"
+                            ]},
+                            { id: "cg-2", nome: "Princípios e normas contábeis brasileiras", subtopicos: [
+                                "Normas emanadas pelo CFC (Conselho Federal de Contabilidade)"
+                            ]},
+                            { id: "cg-3", nome: "Componentes do patrimônio", subtopicos: [
+                                "Ativo: Conceitos, Forma de avaliação, Forma de evidenciação",
+                                "Passivo: Conceitos, Forma de avaliação, Forma de evidenciação",
+                                "Patrimônio líquido: Conceitos, Forma de avaliação, Forma de evidenciação"
+                            ]},
+                            { id: "cg-4", nome: "Variação do patrimônio líquido", subtopicos: [
+                                "Receita", "Despesa", "Ganhos", "Perdas", "Apuração dos resultados",
+                                "Conceitos, forma de avaliação e evidenciação"
+                            ]},
+                            { id: "cg-5", nome: "Escrituração contábil", subtopicos: [
+                                "Método das partidas dobradas", "Contas patrimoniais", "Contas de resultado",
+                                "Lançamentos contábeis", "Estornos", "Livros contábeis obrigatórios", "Documentação contábil"
+                            ]},
+                            { id: "cg-6", nome: "Balanço patrimonial", subtopicos: [
+                                "Estrutura", "Forma de evidenciação", "Critérios de elaboração", "Principais grupamentos"
+                            ]},
+                            { id: "cg-7", nome: "Ativo circulante", subtopicos: [
+                                "Estrutura", "Evidenciação", "Conceitos", "Formas de avaliação", "Métodos de avaliação",
+                                "Tratamento contábil das provisões incidentes"
+                            ]},
+                            { id: "cg-8", nome: "Ativo realizável a longo prazo", subtopicos: [
+                                "Composição", "Classificação das contas", "Critérios de avaliação",
+                                "Aderência aos princípios e normas contábeis", "Tratamento das provisões"
+                            ]},
+                            { id: "cg-9", nome: "Ativo permanente – investimento", subtopicos: [
+                                "Formação", "Classificação das contas", "Métodos de avaliação",
+                                "Tratamento contábil específico das participações societárias", "Conceitos envolvidos",
+                                "Provisões atinentes", "Critérios e métodos para companhias fechadas",
+                                "Critérios e métodos para companhias abertas"
+                            ]},
+                            { id: "cg-10", nome: "Ativo permanente – imobilizado", subtopicos: [
+                                "Itens componentes", "Métodos de avaliação", "Tratamento contábil", "Processo de reavaliação",
+                                "Controles patrimoniais", "Processo de provisionamento", "Tratamento das baixas",
+                                "Tratamento das alienações"
+                            ]},
+                            { id: "cg-11", nome: "Ativo permanente – diferido", subtopicos: [
+                                "Tratamento contábil", "Itens componentes", "Critérios de avaliação"
+                            ]},
+                            { id: "cg-12", nome: "Passivo circulante", subtopicos: [
+                                "Composição", "Classificação das contas", "Critérios de avaliação",
+                                "Aderência aos princípios e normas contábeis", "Tratamento das provisões"
+                            ]},
+                            { id: "cg-13", nome: "Passivo exigível a longo prazo", subtopicos: [
+                                "Estrutura", "Evidenciação", "Conceitos", "Formas de avaliação", "Métodos de avaliação",
+                                "Tratamento contábil das provisões"
+                            ]},
+                            { id: "cg-14", nome: "Resultados de exercícios futuros", subtopicos: [
+                                "Conceito", "Contas passíveis de classificação em resultados de exercícios futuros",
+                                "Critérios de contabilização", "Critérios de apresentação"
+                            ]},
+                            { id: "cg-15", nome: "Patrimônio líquido", subtopicos: [
+                                "Itens componentes", "Evidenciação", "Métodos de avaliação", "Tratamento contábil",
+                                "Classificação", "Formas de evidenciação", "Distribuição dos resultados",
+                                "Constituição de reservas", "Reversões de reservas", "Ações em tesouraria",
+                                "Alterações do capital social", "Formação do capital social"
+                            ]},
+                            { id: "cg-16", nome: "Demonstração do resultado do exercício (DRE)", subtopicos: [
+                                "Conteúdo", "Forma de apresentação", "Apuração do resultado do exercício",
+                                "Procedimentos contábeis para identificação do resultado"
+                            ]},
+                            { id: "cg-17", nome: "Custos", subtopicos: [
+                                "Custo dos produtos vendidos", "Custo dos serviços prestados", "Sistemas de custeio"
+                            ]},
+                            { id: "cg-18", nome: "Resultados operacionais e não operacionais", subtopicos: [
+                                "Tratamento contábil", "Apuração dos resultados", "Resultado bruto", "Resultado líquido"
+                            ]},
+                            { id: "cg-19", nome: "Demonstração de lucros ou prejuízos acumulados (DLPA)", subtopicos: [
+                                "Conteúdo", "Forma de preparação", "Forma de apresentação",
+                                "Destinação do resultado do exercício", "Distribuição do resultado do exercício"
+                            ]},
+                            { id: "cg-20", nome: "Demonstração das mutações do patrimônio líquido (DMPL)", subtopicos: [
+                                "Conteúdo", "Itens evidenciáveis", "Forma de apresentação"
+                            ]},
+                            { id: "cg-21", nome: "Demonstração de origens e aplicações de recursos (DOAR)", subtopicos: [
+                                "Conceitos envolvidos", "Itens componentes", "Forma de evidenciação",
+                                "Conceito de Capital Circulante Líquido", "Apuração do resultado ajustado"
+                            ]},
+                            { id: "cg-22", nome: "Notas explicativas", subtopicos: [
+                                "Conteúdo", "Exigências legais de informações", "Forma de apresentação"
+                            ]},
+                            { id: "cg-23", nome: "Consolidação das demonstrações contábeis", subtopicos: [
+                                "Conceitos", "Objetivos da consolidação", "Critérios de consolidação", "Obrigatoriedade",
+                                "Tratamento dos resultados não realizados", "Tratamento das participações dos minoritários",
+                                "Procedimentos contábeis para elaboração"
+                            ]},
+                            { id: "cg-24", nome: "Demonstração do fluxo de caixa (DFC)", subtopicos: [
+                                "Conceitos", "Principais componentes", "Formas de apresentação", "Critérios de elaboração",
+                                "Métodos de elaboração", "Interligação com o conjunto das demonstrações contábeis obrigatórias"
+                            ]},
+                            { id: "cg-25", nome: "Reorganização e reestruturação de empresas", subtopicos: [
+                                "Processos de incorporação", "Processos de fusão", "Processos de cisão", "Extinção de empresas",
+                                "Aspectos contábeis da reestruturação social", "Aspectos fiscais da reestruturação social",
+                                "Aspectos legais da reestruturação social"
+                            ]},
+                            { id: "cg-26", nome: "Conformidade com normas atualizadas", subtopicos: [
+                                "Normas exaradas pelo CFC", "Normas exaradas pela CVM", "Legislação societária aplicável"
+                            ]}
+                        ],
+                        "Administração Geral": [
+                            { id: "ag-1", nome: "Planejamento", subtopicos: [
+                                "Planejamento estratégico", "Planejamento baseado em cenários"
+                            ]},
+                            { id: "ag-2", nome: "Processo decisório", subtopicos: [
+                                "Técnicas de análise e solução de problemas", "Fatores que afetam a decisão", "Tipos de decisões"
+                            ]},
+                            { id: "ag-3", nome: "Gestão de pessoas", subtopicos: [
+                                "Estilos de liderança", "Gestão por competências", "Avaliação de desempenho",
+                                "Trabalho em equipe", "Motivação"
+                            ]},
+                            { id: "ag-4", nome: "Gestão", subtopicos: [
+                                "Gerenciamento de projetos", "Gerenciamento de processos", "Governança corporativa"
+                            ]},
+                            { id: "ag-5", nome: "Controle administrativo", subtopicos: [
+                                "Indicadores de desempenho", "Conceito de eficiência", "Conceito de eficácia",
+                                "Conceito de efetividade"
+                            ]},
+                            { id: "ag-6", nome: "Comunicação organizacional", subtopicos: [
+                                "Habilidades de comunicação", "Elementos da comunicação"
+                            ]}
+                        ],
+                        "Administração Pública": [
+                            { id: "ap-1", nome: "Organização do Estado e da Administração Pública", subtopicos: [] },
+                            { id: "ap-2", nome: "Modelos teóricos de Administração Pública", subtopicos: [
+                                "Modelo patrimonialista", "Modelo burocrático", "Modelo gerencial"
+                            ]},
+                            { id: "ap-3", nome: "Reformas administrativas", subtopicos: [
+                                "Experiências de reformas administrativas", "Processo de modernização da Administração Pública"
+                            ]},
+                            { id: "ap-4", nome: "Evolução dos modelos/paradigmas de gestão", subtopicos: [
+                                "Nova gestão pública"
+                            ]},
+                            { id: "ap-5", nome: "Governabilidade, governança e accountability", subtopicos: [] },
+                            { id: "ap-6", nome: "Governo eletrônico e transparência", subtopicos: [] },
+                            { id: "ap-7", nome: "Qualidade na Administração Pública", subtopicos: [] },
+                            { id: "ap-8", nome: "Novas tecnologias gerenciais e organizacionais", subtopicos: [
+                                "Aplicações na Administração Pública"
+                            ]},
+                            { id: "ap-9", nome: "Gestão Pública empreendedora", subtopicos: [] },
+                            { id: "ap-10", nome: "Ciclo de Gestão do Governo Federal", subtopicos: [] },
+                            { id: "ap-11", nome: "Controle da Administração Pública", subtopicos: [] },
+                            { id: "ap-12", nome: "Ética no exercício da função pública", subtopicos: [] },
+                            { id: "ap-13", nome: "Orçamento público e política fiscal", subtopicos: [
+                                "Orçamento público e parâmetros da política fiscal", "Ciclo orçamentário"
+                            ]},
+                            { id: "ap-14", nome: "Orçamento e gestão das organizações do setor público", subtopicos: [
+                                "Características básicas de sistemas orçamentários modernos", "Estrutura programática",
+                                "Estrutura econômica", "Estrutura organizacional para alocação de recursos",
+                                "Mensuração de desempenho", "Controle orçamentário"
+                            ]},
+                            { id: "ap-15", nome: "PPA – Plano Plurianual", subtopicos: [
+                                "Elaboração anual", "Gestão do PPA", "Avaliação anual do PPA", "Modelo de gestão do PPA"
+                            ]}
+                        ],
+                        "Auditoria": [
+                            { id: "au-1", nome: "Normas de auditoria independente", subtopicos: [
+                                "Normas vigentes emanadas pelo CFC"
+                            ]},
+                            { id: "au-2", nome: "Conceitos de auditoria", subtopicos: [
+                                "Conceito de auditoria", "Conceito sobre a pessoa do auditor"
+                            ]},
+                            { id: "au-3", nome: "Responsabilidade legal do auditor", subtopicos: [] },
+                            { id: "au-4", nome: "Ética profissional", subtopicos: [] },
+                            { id: "au-5", nome: "Objetivos gerais do auditor independente", subtopicos: [] },
+                            { id: "au-6", nome: "Concordância com os termos do trabalho de auditoria independente", subtopicos: [] },
+                            { id: "au-7", nome: "Documentação de auditoria", subtopicos: [] },
+                            { id: "au-8", nome: "Controle de qualidade da auditoria de demonstrações contábeis", subtopicos: [] },
+                            { id: "au-9", nome: "Fraudes e responsabilidade do auditor", subtopicos: [] },
+                            { id: "au-10", nome: "Planejamento da auditoria", subtopicos: [] },
+                            { id: "au-11", nome: "Avaliação das distorções identificadas", subtopicos: [] },
+                            { id: "au-12", nome: "Execução dos trabalhos de auditoria", subtopicos: [] },
+                            { id: "au-13", nome: "Materialidade e relevância", subtopicos: [
+                                "No planejamento dos trabalhos", "Na execução dos trabalhos"
+                            ]},
+                            { id: "au-14", nome: "Auditoria de estimativas contábeis", subtopicos: [] },
+                            { id: "au-15", nome: "Evidenciação em auditoria", subtopicos: [] },
+                            { id: "au-16", nome: "Amostragem em auditoria", subtopicos: [] },
+                            { id: "au-17", nome: "Utilização de trabalhos da auditoria interna", subtopicos: [] },
+                            { id: "au-18", nome: "Independência nos trabalhos de auditoria", subtopicos: [] },
+                            { id: "au-19", nome: "Relatórios de auditoria", subtopicos: [] },
+                            { id: "au-20", nome: "Eventos subsequentes", subtopicos: [] },
+                            { id: "au-21", nome: "Normas e procedimentos de auditoria emitidos pelo IBRACON", subtopicos: [
+                                "Instituto dos Auditores Independentes do Brasil"
+                            ]},
+                            { id: "au-22", nome: "Auditoria no Setor Público Federal", subtopicos: [
+                                "Finalidades da auditoria governamental", "Objetivos da auditoria governamental",
+                                "Abrangência de atuação", "Formas e tipos de auditoria governamental",
+                                "Normas relativas à execução dos trabalhos"
+                            ]}
+                        ],
+                        "Legislação Tributária Municipal Específica": [
+                            { id: "lt-1", nome: "Código Tributário do Município de Santos", subtopicos: [
+                                "Texto atualizado e/ou alterado"
+                            ]},
+                            { id: "lt-2", nome: "Lei Complementar n.º 734/2011", subtopicos: [
+                                "Texto atualizado e/ou alterado"
+                            ]}
+                        ]
+                    }
+                }
+            },
+            "08-2020": {
+                nome: "Concurso 08/2020 - Prefeitura Municipal",
+                descricao: "Concurso anterior com foco em diversas áreas. Todas as matérias completas para estudo.",
+                edital: "2020",
+                areas: {
+                    "Conhecimentos Básicos": {
+                        "Língua Portuguesa": [
+                            { id: "lp-1", nome: "Interpretação de textos", subtopicos: [
+                                "Questões de interpretação de texto", "Avaliação da capacidade de compreensão global e inferencial"
+                            ]},
+                            { id: "lp-2", nome: "Norma culta na modalidade escrita", subtopicos: [
+                                "Uso adequado da norma culta", "Emprego formal do idioma"
+                            ]},
+                            { id: "lp-3", nome: "Ortografia oficial", subtopicos: [] },
+                            { id: "lp-4", nome: "Acentuação gráfica", subtopicos: [] },
+                            { id: "lp-5", nome: "Pontuação", subtopicos: [] },
+                            { id: "lp-6", nome: "Classes gramaticais", subtopicos: [] },
+                            { id: "lp-7", nome: "Concordância", subtopicos: [
+                                "Concordância verbal", "Concordância nominal"
+                            ]},
+                            { id: "lp-8", nome: "Pronomes", subtopicos: [
+                                "Emprego dos pronomes", "Colocação pronominal"
+                            ]},
+                            { id: "lp-9", nome: "Regência", subtopicos: [
+                                "Regência nominal", "Regência verbal"
+                            ]}
+                        ],
+                        "Conhecimentos de Informática": [
+                            { id: "ci-1", nome: "Sistema operacional Microsoft Windows", subtopicos: [] },
+                            { id: "ci-2", nome: "Microsoft Office – Word", subtopicos: [
+                                "Editor de textos Word"
+                            ]},
+                            { id: "ci-3", nome: "Microsoft Office – Excel", subtopicos: [
+                                "Planilha Excel"
+                            ]},
+                            { id: "ci-4", nome: "Internet", subtopicos: [] },
+                            { id: "ci-5", nome: "Ferramentas Microsoft Office", subtopicos: [
+                                "Versão 2010", "Versão 2013", "Versão 2016"
+                            ]}
+                        ]
+                    },
+                    "Conhecimentos Específicos": {
+                        "Direito Administrativo": [
+                            { id: "da-1", nome: "Conceito de Direito Administrativo", subtopicos: [] },
+                            { id: "da-2", nome: "Princípios informativos do Direito Administrativo", subtopicos: [] },
+                            { id: "da-3", nome: "Administração Pública", subtopicos: [
+                                "Conceito", "Órgãos públicos", "Agentes públicos"
+                            ]},
+                            { id: "da-4", nome: "Atividade administrativa", subtopicos: [] },
+                            { id: "da-5", nome: "Princípios básicos da Administração Pública", subtopicos: [
+                                "Princípios informativos do regime jurídico administrativo"
+                            ]},
+                            { id: "da-6", nome: "Poderes Administrativos", subtopicos: [] },
+                            { id: "da-7", nome: "Atos administrativos", subtopicos: [
+                                "Conceito", "Requisitos", "Atributos", "Atos vinculados", "Atos discricionários"
+                            ]},
+                            { id: "da-8", nome: "Poder de Polícia", subtopicos: [] },
+                            { id: "da-9", nome: "Invalidação dos atos administrativos", subtopicos: [
+                                "Anulação", "Revogação"
+                            ]},
+                            { id: "da-10", nome: "Organização administrativa brasileira", subtopicos: [
+                                "Administração descentralizada", "Fundação", "Sociedade de Economia Mista",
+                                "Empresa Pública", "Autarquia"
+                            ]},
+                            { id: "da-11", nome: "Serviços públicos", subtopicos: [
+                                "Considerações gerais"
+                            ]},
+                            { id: "da-12", nome: "Licitação", subtopicos: [
+                                "Conceito", "Finalidade", "Princípios", "Anulação", "Revogação", "Modalidades"
+                            ]},
+                            { id: "da-13", nome: "Contratos administrativos", subtopicos: [
+                                "Considerações gerais"
+                            ]},
+                            { id: "da-14", nome: "Domínio público", subtopicos: [
+                                "Classificação geral", "Considerações gerais", "Terras públicas", "Terrenos de marinha",
+                                "Terras devolutas", "Ação discriminatória"
+                            ]},
+                            { id: "da-15", nome: "Responsabilidade civil da Administração", subtopicos: [
+                                "Reparação do dano"
+                            ]},
+                            { id: "da-16", nome: "Controle da Administração Pública", subtopicos: [
+                                "Controle administrativo", "Controle legislativo", "Controle judiciário"
+                            ]},
+                            { id: "da-17", nome: "Remédios constitucionais", subtopicos: [
+                                "Mandado de Segurança", "Ação Popular", "Mandado de Segurança Coletivo",
+                                "Mandado de Injunção", "Habeas data"
+                            ]},
+                            { id: "da-18", nome: "Intervenção na propriedade e no domínio econômico", subtopicos: [
+                                "Considerações gerais", "Desapropriação", "Limitações administrativas"
+                            ]},
+                            { id: "da-19", nome: "Servidores públicos", subtopicos: [
+                                "Regime único", "Considerações gerais"
+                            ]}
+                        ],
+                        "Direito Comercial": [
+                            { id: "dc-1", nome: "Teoria da Empresa", subtopicos: [] },
+                            { id: "dc-2", nome: "Institutos fundamentais do direito empresarial", subtopicos: [
+                                "Atividade empresarial", "Empresário individual", "Sociedade empresária", "Estabelecimento empresarial"
+                            ]},
+                            { id: "dc-3", nome: "Direito societário – teoria geral das sociedades", subtopicos: [
+                                "Conceito de sociedade", "Sociedade simples", "Sociedade empresária", "Sociedade personificada",
+                                "Sociedade não personificada", "Sociedade em comum", "Sociedade em conta de participação"
+                            ]},
+                            { id: "dc-4", nome: "Tipos societários incomuns", subtopicos: [
+                                "Sociedade em nome coletivo", "Sociedade em comandita simples", "Sociedade em comandita por ações"
+                            ]},
+                            { id: "dc-5", nome: "Outras sociedades", subtopicos: [
+                                "Sociedade simples", "Sociedade cooperativa"
+                            ]},
+                            { id: "dc-6", nome: "Sociedade limitada", subtopicos: [
+                                "Constituição", "Contrato social", "Direitos e deveres dos sócios", "Administração",
+                                "Deliberações sociais", "Resolução", "Dissolução", "Liquidação"
+                            ]},
+                            { id: "dc-7", nome: "Sociedade anônima", subtopicos: [
+                                "Constituição", "Objeto", "Capital social e ações", "Acionistas",
+                                "Administração e demais órgãos sociais", "Dissolução", "Liquidação",
+                                "Extinção das sociedades anônimas", "Direitos dos acionistas minoritários"
+                            ]},
+                            { id: "dc-8", nome: "Operações de reorganização societária", subtopicos: [
+                                "Transformação", "Incorporação", "Fusão", "Cisão"
+                            ]},
+                            { id: "dc-9", nome: "Grupos societários", subtopicos: [
+                                "Sociedades controladoras", "Sociedades controladas", "Sociedades coligadas", "Subsidiária integral"
+                            ]},
+                            { id: "dc-10", nome: "Poder de controle na sociedade anônima", subtopicos: [
+                                "Acordo de acionistas", "Abuso do poder de controle"
+                            ]},
+                            { id: "dc-11", nome: "Desconsideração da personalidade jurídica", subtopicos: [] },
+                            { id: "dc-12", nome: "Contratos no direito empresarial", subtopicos: [
+                                "Contratos de troca: Compra e venda mercantil, Alienação fiduciária em garantia, Arrendamento mercantil",
+                                "Contratos de colaboração: Sociedade, Representação comercial, Comissão mercantil, Distribuição, Concessão comercial, Franquia, Faturização"
+                            ]},
+                            { id: "dc-13", nome: "Títulos de crédito", subtopicos: [
+                                "Princípios", "Modalidades", "Características", "Aceite", "Aval", "Protesto", "Endosso"
+                            ]},
+                            { id: "dc-14", nome: "Espécies de títulos de crédito", subtopicos: [
+                                "Letra de câmbio", "Nota promissória", "Cheque", "Duplicata", "Cédula de Crédito Bancário",
+                                "Títulos de crédito imobiliário"
+                            ]},
+                            { id: "dc-15", nome: "Títulos de financiamento da atividade econômica", subtopicos: [
+                                "Notas e cédulas de crédito rural", "Notas e cédulas de crédito industrial",
+                                "Notas e cédulas de crédito comercial", "Notas e cédulas de crédito à exportação",
+                                "Conhecimento de depósito", "Warrant", "Cédula de produto rural"
+                            ]},
+                            { id: "dc-16", nome: "Títulos societários", subtopicos: [
+                                "Ações", "Debêntures", "Bônus de subscrição", "Partes beneficiárias"
+                            ]},
+                            { id: "dc-17", nome: "Recuperação de empresa e falência", subtopicos: [] },
+                            { id: "dc-18", nome: "Responsabilidade civil", subtopicos: [
+                                "Responsabilidade civil das sociedades em geral",
+                                "Responsabilidade das instituições financeiras",
+                                "Responsabilidade especial dos administradores de instituição financeira",
+                                "Responsabilidade especial dos controladores de instituição financeira"
+                            ]}
+                        ],
+                        "Direito Penal": [
+                            { id: "dp-1", nome: "Crimes praticados por servidor público", subtopicos: [
+                                "Peculato", "Peculato culposo", "Concussão", "Excesso de exação",
+                                "Corrupção passiva", "Prevaricação"
+                            ]}
+                        ],
+                        "Economia": [
+                            { id: "ec-1", nome: "Valor e preço", subtopicos: [] },
+                            { id: "ec-2", nome: "Escassez", subtopicos: [] },
+                            { id: "ec-3", nome: "Oferta, demanda e equilíbrio", subtopicos: [] },
+                            { id: "ec-4", nome: "Produtividade marginal dos meios de produção", subtopicos: [] },
+                            { id: "ec-5", nome: "Moeda e inflação", subtopicos: [] },
+                            { id: "ec-6", nome: "Determinação do nível de renda", subtopicos: [] },
+                            { id: "ec-7", nome: "Política fiscal", subtopicos: [
+                                "Papel do governo na economia capitalista"
+                            ]},
+                            { id: "ec-8", nome: "Câmbio", subtopicos: [] },
+                            { id: "ec-9", nome: "Balança de pagamentos", subtopicos: [] },
+                            { id: "ec-10", nome: "Agregados macroeconômicos", subtopicos: [] },
+                            { id: "ec-11", nome: "Contas nacionais", subtopicos: [] }
+                        ],
+                        "Matemática Financeira": [
+                            { id: "mf-1", nome: "Razões e proporções", subtopicos: [] },
+                            { id: "mf-2", nome: "Divisão proporcional", subtopicos: [
+                                "Regras da sociedade", "Médias"
+                            ]},
+                            { id: "mf-3", nome: "Porcentagem", subtopicos: [] },
+                            { id: "mf-4", nome: "Juros e descontos simples", subtopicos: [
+                                "Juro simples", "Desconto simples"
+                            ]},
+                            { id: "mf-5", nome: "Juros e descontos compostos", subtopicos: [
+                                "Juro composto", "Desconto composto"
+                            ]},
+                            { id: "mf-6", nome: "Financiamento", subtopicos: [
+                                "Sistema Price"
+                            ]},
+                            { id: "mf-7", nome: "Amortização", subtopicos: [] },
+                            { id: "mf-8", nome: "Investimentos e aplicações", subtopicos: [] }
+                        ],
+                        "Contabilidade": [
+                            { id: "ct-1", nome: "Princípios e normas brasileiras de contabilidade", subtopicos: [
+                                "Normas emanadas pelo CFC – Conselho Federal de Contabilidade"
+                            ]},
+                            { id: "ct-2", nome: "Procedimentos contábeis básicos", subtopicos: [
+                                "Método das partidas dobradas"
+                            ]},
+                            { id: "ct-3", nome: "Estatística patrimonial e variações do patrimônio líquido", subtopicos: [] },
+                            { id: "ct-4", nome: "Fatos contábeis", subtopicos: [] },
+                            { id: "ct-5", nome: "Operações com mercadorias", subtopicos: [] },
+                            { id: "ct-6", nome: "Avaliação de estoque", subtopicos: [
+                                "PEPS", "Média móvel"
+                            ]},
+                            { id: "ct-7", nome: "Problemas contábeis diversos", subtopicos: [] },
+                            { id: "ct-8", nome: "Balancetes", subtopicos: [] },
+                            { id: "ct-9", nome: "Demonstrações contábeis", subtopicos: [] },
+                            { id: "ct-10", nome: "Relatórios", subtopicos: [] },
+                            { id: "ct-11", nome: "Análise de demonstrações contábeis (introdução)", subtopicos: [] }
+                        ],
+                        "Direito Tributário": [
+                            { id: "dt-1", nome: "Sistema Constitucional Tributário", subtopicos: [
+                                "O Estado e o poder de tributar", "Princípios constitucionais tributários",
+                                "Limitações ao poder de tributar", "Competência tributária", "Repartição das receitas tributárias"
+                            ]},
+                            { id: "dt-2", nome: "Direito Tributário – aspectos gerais", subtopicos: [
+                                "Conceito", "Princípios básicos", "Fontes reais", "Formas de tributação"
+                            ]},
+                            { id: "dt-3", nome: "Legislação tributária", subtopicos: [
+                                "Vigência", "Aplicação", "Interpretação", "Integração"
+                            ]},
+                            { id: "dt-4", nome: "Obrigação tributária", subtopicos: [
+                                "Conceito", "Espécies", "Natureza", "Elementos"
+                            ]},
+                            { id: "dt-5", nome: "Fato gerador", subtopicos: [
+                                "Conceito", "Espécies", "Efeitos"
+                            ]},
+                            { id: "dt-6", nome: "Sujeito ativo", subtopicos: [
+                                "Competência", "Capacidade"
+                            ]},
+                            { id: "dt-7", nome: "Sujeito passivo", subtopicos: [
+                                "Solidariedade", "Capacidade", "Domicílio", "Responsabilidade tributária"
+                            ]},
+                            { id: "dt-8", nome: "Base de cálculo e alíquota", subtopicos: [
+                                "Conceitos", "Espécies"
+                            ]},
+                            { id: "dt-9", nome: "Crédito tributário", subtopicos: [
+                                "Lançamento – conceito", "Natureza jurídica", "Modalidades", "Efeitos"
+                            ]},
+                            { id: "dt-10", nome: "Suspensão do crédito tributário", subtopicos: [] },
+                            { id: "dt-11", nome: "Exclusão do crédito tributário", subtopicos: [] },
+                            { id: "dt-12", nome: "Extinção do crédito tributário", subtopicos: [] },
+                            { id: "dt-13", nome: "Garantias e privilégios do crédito tributário", subtopicos: [] },
+                            { id: "dt-14", nome: "Tributos", subtopicos: [
+                                "Conceito", "Classificação", "Incidência legal e econômica", "Não incidência",
+                                "Imunidade", "Isenção", "Percussão, repercussão, difusão e absorção"
+                            ]},
+                            { id: "dt-15", nome: "Espécies tributárias", subtopicos: [
+                                "Imposto", "Taxa", "Contribuição de melhoria", "Empréstimo compulsório", "Contribuições parafiscais"
+                            ]},
+                            { id: "dt-16", nome: "Tributos federais, estaduais e municipais", subtopicos: [
+                                "Fato gerador", "Sujeito ativo", "Sujeito passivo", "Base de cálculo", "Alíquota", "Lançamento"
+                            ]},
+                            { id: "dt-17", nome: "Administração tributária", subtopicos: [
+                                "Fiscalização", "Evasão", "Elisão", "Sonegação"
+                            ]},
+                            { id: "dt-18", nome: "Dívida ativa", subtopicos: [
+                                "Certidões negativas"
+                            ]},
+                            { id: "dt-19", nome: "Processo tributário", subtopicos: [
+                                "Processo administrativo tributário – generalidades",
+                                "Processo judicial tributário – generalidades",
+                                "Espécies", "Recursos"
+                            ]},
+                            { id: "dt-20", nome: "Legislação tributária municipal", subtopicos: [
+                                "Código Tributário Municipal – Lei nº 3.750/71 e alterações subsequentes",
+                                "ITBI – Imposto na transmissão onerosa entre vivos de bens e direitos: Lei nº 634/89, Decreto nº 1.070/90"
+                            ]},
+                            { id: "dt-21", nome: "Lei Federal nº 4.320/64", subtopicos: [] }
+                        ]
+                    }
+                }
+            }
+        };
+
+        // Estado da aplicação
+        let appState = {
+            currentConcurso: "23-2023",
+            currentView: "disciplinas",
+            progressData: {},
+            goals: [],
+            notes: {},
+            studyTime: 0,
+            dailyStats: {},
+            importantTopics: [],
+            searchQuery: "",
+            filterStudied: true,
+            filterPending: true,
+            filterReviewed: false,
+            filterImportant: false
+        };
+
+        // Inicializar aplicação
+        function initApp() {
+            loadFromLocalStorage();
+            renderDisciplinas();
+            updateStats();
+            setupEventListeners();
+            setupModals();
+            
+            // Inicializar progresso se for a primeira vez
+            if (Object.keys(appState.progressData).length === 0) {
+                initializeProgressData();
+            }
+            
+            // Configurar busca
+            document.getElementById('searchTopics').addEventListener('input', function(e) {
+                appState.searchQuery = e.target.value.toLowerCase();
+                applyFilters();
+            });
+        }
+
+        // Carregar dados do localStorage
+        function loadFromLocalStorage() {
+            const saved = localStorage.getItem('studyPlannerComplete');
+            if (saved) {
+                const parsed = JSON.parse(saved);
+                appState = { ...appState, ...parsed };
+            }
+        }
+
+        // Salvar dados no localStorage
+        function saveToLocalStorage() {
+            localStorage.setItem('studyPlannerComplete', JSON.stringify(appState));
+        }
+
+        // Inicializar dados de progresso
+        function initializeProgressData() {
+            appState.progressData = {};
+            appState.importantTopics = [];
+            
+            // Para cada concurso
+            for (const [concursoId, concurso] of Object.entries(concursosData)) {
+                appState.progressData[concursoId] = {};
+                
+                // Para cada área
+                for (const [areaName, disciplinas] of Object.entries(concurso.areas)) {
+                    // Para cada disciplina
+                    for (const [disciplina, topicos] of Object.entries(disciplinas)) {
+                        appState.progressData[concursoId][disciplina] = {};
+                        
+                        // Para cada tópico
+                        topicos.forEach(topic => {
+                            appState.progressData[concursoId][disciplina][topic.id] = {
+                                studied: false,
+                                reviewed: false,
+                                questions: 0,
+                                important: Math.random() < 0.2, // 20% são importantes por padrão
+                                lastStudied: null,
+                                timeSpent: 0
+                            };
+                            
+                            if (Math.random() < 0.2) {
+                                appState.importantTopics.push(`${concursoId}-${disciplina}-${topic.id}`);
+                            }
+                            
+                            // Para cada subtópico
+                            topic.subtopicos.forEach((subtopico, index) => {
+                                const subtopicId = `${topic.id}-${index}`;
+                                appState.progressData[concursoId][disciplina][subtopicId] = {
+                                    studied: false,
+                                    reviewed: false,
+                                    questions: 0,
+                                    important: Math.random() < 0.1, // 10% são importantes por padrão
+                                    lastStudied: null,
+                                    timeSpent: 0
+                                };
+                            });
+                        });
+                    }
+                }
+            }
+            
+            saveToLocalStorage();
+        }
+
+        // Renderizar disciplinas
+        function renderDisciplinas() {
+            const container = document.getElementById('disciplinasView');
+            const concurso = concursosData[appState.currentConcurso];
+            
+            container.innerHTML = '';
+            
+            // Atualizar título
+            document.getElementById('concursoTitle').textContent = concurso.nome;
+            document.getElementById('concursoDescription').textContent = concurso.descricao;
+            
+            // Renderizar cada área
+            for (const [areaName, disciplinas] of Object.entries(concurso.areas)) {
+                // Criar seção da área
+                const areaSection = document.createElement('div');
+                areaSection.className = 'area-section';
+                
+                const areaTitle = document.createElement('div');
+                areaTitle.className = 'area-title';
+                areaTitle.innerHTML = `<i class="fas fa-layer-group"></i> ${areaName}`;
+                areaSection.appendChild(areaTitle);
+                
+                // Renderizar disciplinas da área
+                for (const [disciplina, topicos] of Object.entries(disciplinas)) {
+                    // Calcular progresso da disciplina
+                    const progress = calculateDisciplinaProgress(disciplina);
+                    
+                    // Criar card da disciplina
+                    const card = document.createElement('div');
+                    card.className = 'disciplina-card';
+                    card.innerHTML = `
+                        <div class="disciplina-header" onclick="toggleDisciplina(this)">
+                            <h3><i class="fas fa-book"></i> ${disciplina} <span class="topic-count">${topicos.length} tópicos</span></h3>
+                            <div class="disciplina-stats">
+                                <div class="disciplina-progress">
+                                    <div class="disciplina-progress-fill" style="width: ${progress.percentage}%"></div>
+                                </div>
+                                <span>${progress.percentage}%</span>
+                                <i class="fas fa-chevron-down toggle-icon"></i>
+                            </div>
+                        </div>
+                        <div class="topics-container">
+                            <div class="topic-list">
+                                ${topicos.map(topic => renderTopic(disciplina, topic)).join('')}
+                            </div>
+                        </div>
+                    `;
+                    
+                    areaSection.appendChild(card);
+                }
+                
+                container.appendChild(areaSection);
+            }
+            
+            // Adicionar eventos aos botões
+            setupTopicButtons();
+        }
+
+        // Calcular progresso de uma disciplina
+        function calculateDisciplinaProgress(disciplina) {
+            const concursoId = appState.currentConcurso;
+            const concurso = concursosData[concursoId];
+            const topicos = concurso.areas[Object.keys(concurso.areas)[0]][disciplina] || 
+                           concurso.areas[Object.keys(concurso.areas)[1]][disciplina];
+            
+            if (!topicos) return { total: 0, studied: 0, percentage: 0 };
+            
+            let total = 0;
+            let studied = 0;
+            
+            topicos.forEach(topic => {
+                // Tópico principal
+                const topicData = appState.progressData[concursoId]?.[disciplina]?.[topic.id];
+                if (topicData) {
+                    total++;
+                    if (topicData.studied) studied++;
+                }
+                
+                // Subtópicos
+                topic.subtopicos.forEach((subtopico, index) => {
+                    const subtopicId = `${topic.id}-${index}`;
+                    const subtopicData = appState.progressData[concursoId]?.[disciplina]?.[subtopicId];
+                    if (subtopicData) {
+                        total++;
+                        if (subtopicData.studied) studied++;
+                    }
+                });
+            });
+            
+            return {
+                total,
+                studied,
+                percentage: total > 0 ? Math.round((studied / total) * 100) : 0
+            };
+        }
+
+        // Renderizar um tópico
+        function renderTopic(disciplina, topic) {
+            const concursoId = appState.currentConcurso;
+            const topicData = appState.progressData[concursoId]?.[disciplina]?.[topic.id] || {
+                studied: false,
+                reviewed: false,
+                questions: 0,
+                important: false,
+                lastStudied: null,
+                timeSpent: 0
+            };
+            
+            const isImportant = topicData.important;
+            const hasSubtopicos = topic.subtopicos && topic.subtopicos.length > 0;
+            
+            let subtopicosHTML = '';
+            if (hasSubtopicos) {
+                subtopicosHTML = topic.subtopicos.map((subtopico, index) => {
+                    const subtopicId = `${topic.id}-${index}`;
+                    const subtopicData = appState.progressData[concursoId]?.[disciplina]?.[subtopicId] || {
+                        studied: false,
+                        reviewed: false,
+                        questions: 0,
+                        important: false,
+                        lastStudied: null,
+                        timeSpent: 0
+                    };
+                    
+                    const isSubImportant = subtopicData.important;
+                    const subtopicKey = `${concursoId}-${disciplina}-${subtopicId}`;
+                    const isFiltered = shouldShowTopic(disciplina, subtopicId, subtopico, subtopicData);
+                    
+                    return `
+                        <div class="topic-item subtopico ${isSubImportant ? 'important' : ''} ${!isFiltered ? 'hidden' : ''}" 
+                             data-id="${subtopicId}" data-disciplina="${disciplina}">
+                            <div class="topic-info">
+                                <input type="checkbox" class="topic-checkbox" 
+                                       data-id="${subtopicId}"
+                                       data-disciplina="${disciplina}"
+                                       ${subtopicData.studied ? 'checked' : ''}>
+                                <span class="topic-text">${subtopico}</span>
+                                ${isSubImportant ? '<span class="badge badge-warning"><i class="fas fa-star"></i> Importante</span>' : ''}
+                            </div>
+                            <div class="topic-actions">
+                                <button class="topic-btn mark-reviewed" title="Marcar como revisado">
+                                    <i class="fas fa-sync-alt ${subtopicData.reviewed ? 'reviewed' : ''}"></i>
+                                </button>
+                                <button class="topic-btn add-questions" title="Adicionar questões">
+                                    <i class="fas fa-question-circle"></i>
+                                    ${subtopicData.questions > 0 ? `<span class="progress-indicator">${subtopicData.questions}</span>` : ''}
+                                </button>
+                                <button class="topic-btn add-note" title="Adicionar observação">
+                                    <i class="fas fa-sticky-note"></i>
+                                </button>
+                                <button class="topic-btn mark-important" title="${isSubImportant ? 'Remover importância' : 'Marcar como importante'}">
+                                    <i class="fas fa-star ${isSubImportant ? 'important' : ''}"></i>
+                                </button>
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+            }
+            
+            const topicKey = `${concursoId}-${disciplina}-${topic.id}`;
+            const isFiltered = shouldShowTopic(disciplina, topic.id, topic.nome, topicData);
+            
+            return `
+                <div class="topic-item ${isImportant ? 'important' : ''} ${!isFiltered ? 'hidden' : ''}" 
+                     data-id="${topic.id}" data-disciplina="${disciplina}">
+                    <div class="topic-info">
+                        <input type="checkbox" class="topic-checkbox" 
+                               data-id="${topic.id}"
+                               data-disciplina="${disciplina}"
+                               ${topicData.studied ? 'checked' : ''}>
+                        <span class="topic-text">${topic.nome}</span>
+                        ${isImportant ? '<span class="badge badge-warning"><i class="fas fa-star"></i> Importante</span>' : ''}
+                        ${hasSubtopicos ? `<span class="badge badge-primary">${topic.subtopicos.length} subtópicos</span>` : ''}
+                    </div>
+                    <div class="topic-actions">
+                        <button class="topic-btn mark-reviewed" title="Marcar como revisado">
+                            <i class="fas fa-sync-alt ${topicData.reviewed ? 'reviewed' : ''}"></i>
+                        </button>
+                        <button class="topic-btn add-questions" title="Adicionar questões">
+                            <i class="fas fa-question-circle"></i>
+                            ${topicData.questions > 0 ? `<span class="progress-indicator">${topicData.questions}</span>` : ''}
+                        </button>
+                        <button class="topic-btn add-note" title="Adicionar observação">
+                            <i class="fas fa-sticky-note"></i>
+                        </button>
+                        <button class="topic-btn mark-important" title="${isImportant ? 'Remover importância' : 'Marcar como importante'}">
+                            <i class="fas fa-star ${isImportant ? 'important' : ''}"></i>
+                        </button>
+                    </div>
+                </div>
+                ${subtopicosHTML}
+            `;
+        }
+
+        // Verificar se o tópico deve ser mostrado com base nos filtros
+        function shouldShowTopic(disciplina, topicId, topicName, topicData) {
+            const matchesSearch = !appState.searchQuery || 
+                                 topicName.toLowerCase().includes(appState.searchQuery) ||
+                                 disciplina.toLowerCase().includes(appState.searchQuery);
+            
+            const matchesStudied = !appState.filterStudied && topicData.studied ? false : true;
+            const matchesPending = !appState.filterPending && !topicData.studied ? false : true;
+            const matchesReviewed = appState.filterReviewed && !topicData.reviewed ? false : true;
+            const matchesImportant = appState.filterImportant && !topicData.important ? false : true;
+            
+            return matchesSearch && matchesStudied && matchesPending && matchesReviewed && matchesImportant;
+        }
+
+        // Configurar botões dos tópicos
+        function setupTopicButtons() {
+            // Checkboxes de estudo
+            document.querySelectorAll('.topic-checkbox').forEach(checkbox => {
+                checkbox.addEventListener('change', function() {
+                    toggleStudied(this);
+                });
+            });
+            
+            // Botões de revisão
+            document.querySelectorAll('.mark-reviewed').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const topicItem = this.closest('.topic-item');
+                    const topicId = topicItem.getAttribute('data-id');
+                    const disciplina = topicItem.getAttribute('data-disciplina');
+                    markAsReviewed(disciplina, topicId);
+                });
+            });
+            
+            // Botões de questões
+            document.querySelectorAll('.add-questions').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const topicItem = this.closest('.topic-item');
+                    const topicId = topicItem.getAttribute('data-id');
+                    const disciplina = topicItem.getAttribute('data-disciplina');
+                    addQuestions(disciplina, topicId);
+                });
+            });
+            
+            // Botões de observação
+            document.querySelectorAll('.add-note').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const topicItem = this.closest('.topic-item');
+                    const topicId = topicItem.getAttribute('data-id');
+                    const disciplina = topicItem.getAttribute('data-disciplina');
+                    const topicName = topicItem.querySelector('.topic-text').textContent;
+                    openNoteModal(disciplina, topicId, topicName);
+                });
+            });
+            
+            // Botões de importância
+            document.querySelectorAll('.mark-important').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const topicItem = this.closest('.topic-item');
+                    const topicId = topicItem.getAttribute('data-id');
+                    const disciplina = topicItem.getAttribute('data-disciplina');
+                    toggleImportant(disciplina, topicId);
+                });
+            });
+        }
+
+        // Alternar estado "estudado" de um tópico
+        function toggleStudied(checkbox) {
+            const concursoId = appState.currentConcurso;
+            const disciplina = checkbox.getAttribute('data-disciplina');
+            const topicId = checkbox.getAttribute('data-id');
+            
+            if (!appState.progressData[concursoId][disciplina]) {
+                appState.progressData[concursoId][disciplina] = {};
+            }
+            
+            if (!appState.progressData[concursoId][disciplina][topicId]) {
+                appState.progressData[concursoId][disciplina][topicId] = {
+                    studied: false,
+                    reviewed: false,
+                    questions: 0,
+                    important: false,
+                    lastStudied: null,
+                    timeSpent: 0
+                };
+            }
+            
+            const topicData = appState.progressData[concursoId][disciplina][topicId];
+            topicData.studied = checkbox.checked;
+            topicData.lastStudied = new Date().toISOString();
+            
+            // Adicionar tempo de estudo estimado (30 minutos por tópico)
+            if (checkbox.checked && topicData.timeSpent === 0) {
+                topicData.timeSpent = 30; // 30 minutos
+                appState.studyTime += 30;
+            } else if (!checkbox.checked && topicData.timeSpent > 0) {
+                appState.studyTime -= topicData.timeSpent;
+                topicData.timeSpent = 0;
+            }
+            
+            saveToLocalStorage();
+            updateStats();
+            
+            // Atualizar progresso da disciplina
+            const disciplinaCard = checkbox.closest('.disciplina-card');
+            if (disciplinaCard) {
+                const disciplinaName = disciplinaCard.querySelector('h3').textContent.split(' ')[0];
+                const progress = calculateDisciplinaProgress(disciplinaName);
+                const progressFill = disciplinaCard.querySelector('.disciplina-progress-fill');
+                const progressText = disciplinaCard.querySelector('.disciplina-stats span');
+                
+                if (progressFill && progressText) {
+                    progressFill.style.width = `${progress.percentage}%`;
+                    progressText.textContent = `${progress.percentage}%`;
+                }
+            }
+        }
+
+        // Marcar como revisado
+        function markAsReviewed(disciplina, topicId) {
+            const concursoId = appState.currentConcurso;
+            
+            if (!appState.progressData[concursoId][disciplina][topicId]) {
+                appState.progressData[concursoId][disciplina][topicId] = {
+                    studied: false,
+                    reviewed: false,
+                    questions: 0,
+                    important: false,
+                    lastStudied: null,
+                    timeSpent: 0
+                };
+            }
+            
+            appState.progressData[concursoId][disciplina][topicId].reviewed = 
+                !appState.progressData[concursoId][disciplina][topicId].reviewed;
+            
+            saveToLocalStorage();
+            
+            // Atualizar visualmente
+            const topicItem = document.querySelector(`[data-id="${topicId}"][data-disciplina="${disciplina}"]`);
+            if (topicItem) {
+                const icon = topicItem.querySelector('.mark-reviewed i');
+                icon.classList.toggle('reviewed');
+                
+                // Feedback visual
+                const btn = topicItem.querySelector('.mark-reviewed');
+                btn.style.backgroundColor = appState.progressData[concursoId][disciplina][topicId].reviewed ? '#e8f5e9' : '';
+            }
+        }
+
+        // Adicionar questões
+        function addQuestions(disciplina, topicId) {
+            const concursoId = appState.currentConcurso;
+            const currentQuestions = appState.progressData[concursoId]?.[disciplina]?.[topicId]?.questions || 0;
+            
+            const questions = prompt(`Quantas questões você resolveu sobre este tópico? (Atual: ${currentQuestions})`, '10');
+            
+            if (questions !== null) {
+                const numQuestions = parseInt(questions) || 0;
+                
+                if (!appState.progressData[concursoId][disciplina]) {
+                    appState.progressData[concursoId][disciplina] = {};
+                }
+                
+                if (!appState.progressData[concursoId][disciplina][topicId]) {
+                    appState.progressData[concursoId][disciplina][topicId] = {
+                        studied: false,
+                        reviewed: false,
+                        questions: 0,
+                        important: false,
+                        lastStudied: null,
+                        timeSpent: 0
+                    };
+                }
+                
+                appState.progressData[concursoId][disciplina][topicId].questions = numQuestions;
+                
+                // Se adicionou questões e não estava estudado, marcar como estudado
+                if (numQuestions > 0 && !appState.progressData[concursoId][disciplina][topicId].studied) {
+                    appState.progressData[concursoId][disciplina][topicId].studied = true;
+                    appState.progressData[concursoId][disciplina][topicId].lastStudied = new Date().toISOString();
+                    
+                    // Atualizar checkbox se existir
+                    const checkbox = document.querySelector(`[data-id="${topicId}"][data-disciplina="${disciplina}"] .topic-checkbox`);
+                    if (checkbox) {
+                        checkbox.checked = true;
+                    }
+                }
+                
+                saveToLocalStorage();
+                updateStats();
+                
+                // Atualizar visualmente
+                const topicItem = document.querySelector(`[data-id="${topicId}"][data-disciplina="${disciplina}"]`);
+                if (topicItem) {
+                    const questionsBtn = topicItem.querySelector('.add-questions');
+                    const existingIndicator = questionsBtn.querySelector('.progress-indicator');
+                    
+                    if (existingIndicator) {
+                        existingIndicator.textContent = numQuestions;
+                    } else if (numQuestions > 0) {
+                        const indicator = document.createElement('span');
+                        indicator.className = 'progress-indicator';
+                        indicator.textContent = numQuestions;
+                        questionsBtn.appendChild(indicator);
+                    }
+                }
+            }
+        }
+
+        // Alternar importância
+        function toggleImportant(disciplina, topicId) {
+            const concursoId = appState.currentConcurso;
+            
+            if (!appState.progressData[concursoId][disciplina][topicId]) {
+                appState.progressData[concursoId][disciplina][topicId] = {
+                    studied: false,
+                    reviewed: false,
+                    questions: 0,
+                    important: false,
+                    lastStudied: null,
+                    timeSpent: 0
+                };
+            }
+            
+            appState.progressData[concursoId][disciplina][topicId].important = 
+                !appState.progressData[concursoId][disciplina][topicId].important;
+            
+            saveToLocalStorage();
+            
+            // Atualizar visualmente
+            const topicItem = document.querySelector(`[data-id="${topicId}"][data-disciplina="${disciplina}"]`);
+            if (topicItem) {
+                const icon = topicItem.querySelector('.mark-important i');
+                icon.classList.toggle('important');
+                
+                // Adicionar/remover badge de importante
+                let badge = topicItem.querySelector('.badge-warning');
+                if (appState.progressData[concursoId][disciplina][topicId].important && !badge) {
+                    badge = document.createElement('span');
+                    badge.className = 'badge badge-warning';
+                    badge.innerHTML = '<i class="fas fa-star"></i> Importante';
+                    topicItem.querySelector('.topic-info').appendChild(badge);
+                } else if (!appState.progressData[concursoId][disciplina][topicId].important && badge) {
+                    badge.remove();
+                }
+                
+                // Adicionar/remover classe important no item
+                topicItem.classList.toggle('important');
+            }
+        }
+
+        // Atualizar estatísticas
+        function updateStats() {
+            let totalTopics = 0;
+            let studiedTopics = 0;
+            let totalQuestions = 0;
+            let totalTime = 0;
+            
+            const concursoId = appState.currentConcurso;
+            const concurso = concursosData[concursoId];
+            
+            for (const [areaName, disciplinas] of Object.entries(concurso.areas)) {
+                for (const [disciplina, topicos] of Object.entries(disciplinas)) {
+                    topicos.forEach(topic => {
+                        // Tópico principal
+                        const topicData = appState.progressData[concursoId]?.[disciplina]?.[topic.id];
+                        if (topicData) {
+                            totalTopics++;
+                            if (topicData.studied) studiedTopics++;
+                            totalQuestions += topicData.questions || 0;
+                            totalTime += topicData.timeSpent || 0;
+                        }
+                        
+                        // Subtópicos
+                        topic.subtopicos.forEach((subtopico, index) => {
+                            const subtopicId = `${topic.id}-${index}`;
+                            const subtopicData = appState.progressData[concursoId]?.[disciplina]?.[subtopicId];
+                            if (subtopicData) {
+                                totalTopics++;
+                                if (subtopicData.studied) studiedTopics++;
+                                totalQuestions += subtopicData.questions || 0;
+                                totalTime += subtopicData.timeSpent || 0;
+                            }
+                        });
+                    });
+                }
+            }
+            
+            const progressPercentage = totalTopics > 0 ? Math.round((studiedTopics / totalTopics) * 100) : 0;
+            const studyHours = Math.round(totalTime / 60);
+            
+            // Atualizar elementos DOM
+            document.getElementById('totalTopics').textContent = totalTopics;
+            document.getElementById('studiedTopics').textContent = studiedTopics;
+            document.getElementById('progressPercentage').textContent = `${progressPercentage}%`;
+            document.getElementById('questionsDone').textContent = totalQuestions;
+            document.getElementById('studyTime').textContent = `${studyHours}h`;
+            
+            // Calcular média diária
+            const today = new Date().toDateString();
+            if (!appState.dailyStats[today]) {
+                appState.dailyStats[today] = 0;
+            }
+            const dailyAverage = appState.dailyStats[today];
+            document.getElementById('dailyAverage').textContent = `${dailyAverage} tópicos/dia`;
+            
+            // Taxa de conclusão
+            document.getElementById('completionRate').textContent = `${progressPercentage}%`;
+            
+            // Tempo estimado restante
+            const remainingTopics = totalTopics - studiedTopics;
+            const estimatedTime = Math.round((remainingTopics * 30) / 60); // 30 minutos por tópico
+            document.getElementById('estimatedTime').textContent = estimatedTime > 0 ? `${estimatedTime}h restantes` : 'Concluído!';
+            
+            // Dias restantes (baseado em 3 horas/dia)
+            const hoursPerDay = 3;
+            const daysLeft = Math.ceil(estimatedTime / hoursPerDay);
+            document.getElementById('daysLeft').textContent = daysLeft > 0 ? `${daysLeft} dias` : '0';
+            
+            // Próxima revisão (amanhã se estudou hoje)
+            const nextReview = new Date();
+            nextReview.setDate(nextReview.getDate() + 1);
+            document.getElementById('nextReview').textContent = nextReview.toLocaleDateString('pt-BR');
+            
+            saveToLocalStorage();
+        }
+
+        // Alternar visualização
+        function switchView(view) {
+            appState.currentView = view;
+            
+            // Esconder todas as views
+            document.getElementById('disciplinasView').style.display = 'none';
+            document.getElementById('planilhaView').style.display = 'none';
+            document.getElementById('timelineView').style.display = 'none';
+            
+            // Mostrar view selecionada
+            if (view === 'disciplinas') {
+                document.getElementById('disciplinasView').style.display = 'block';
+                renderDisciplinas();
+            } else if (view === 'planilha') {
+                document.getElementById('planilhaView').style.display = 'block';
+                renderPlanilha();
+            } else if (view === 'timeline') {
+                document.getElementById('timelineView').style.display = 'block';
+                renderTimeline();
+            }
+        }
+
+        // Renderizar planilha
+        function renderPlanilha() {
+            const tbody = document.getElementById('planilhaBody');
+            const concursoId = appState.currentConcurso;
+            const concurso = concursosData[concursoId];
+            
+            tbody.innerHTML = '';
+            
+            for (const [areaName, disciplinas] of Object.entries(concurso.areas)) {
+                for (const [disciplina, topicos] of Object.entries(disciplinas)) {
+                    topicos.forEach(topic => {
+                        // Tópico principal
+                        const topicData = appState.progressData[concursoId]?.[disciplina]?.[topic.id] || {
+                            studied: false,
+                            reviewed: false,
+                            questions: 0,
+                            important: false,
+                            lastStudied: null,
+                            timeSpent: 0
+                        };
+                        
+                        const noteKey = `${concursoId}-${disciplina}-${topic.id}`;
+                        const note = appState.notes[noteKey] || '';
+                        
+                        const row = document.createElement('tr');
+                        row.innerHTML = `
+                            <td>${disciplina}</td>
+                            <td>${topic.nome}</td>
+                            <td>-</td>
+                            <td><input type="checkbox" ${topicData.studied ? 'checked' : ''} 
+                                       onchange="updatePlanilhaData('${disciplina}', '${topic.id}', 'studied', this.checked)"></td>
+                            <td><input type="checkbox" ${topicData.reviewed ? 'checked' : ''}
+                                       onchange="updatePlanilhaData('${disciplina}', '${topic.id}', 'reviewed', this.checked)"></td>
+                            <td><input type="number" value="${topicData.questions || 0}" min="0"
+                                       onchange="updatePlanilhaData('${disciplina}', '${topic.id}', 'questions', this.value)"></td>
+                            <td><input type="checkbox" ${topicData.important ? 'checked' : ''}
+                                       onchange="updatePlanilhaData('${disciplina}', '${topic.id}', 'important', this.checked)"></td>
+                            <td><input type="text" placeholder="Observações..." 
+                                       value="${note}"
+                                       onchange="saveNote('${disciplina}', '${topic.id}', this.value)"></td>
+                        `;
+                        tbody.appendChild(row);
+                        
+                        // Subtópicos
+                        topic.subtopicos.forEach((subtopico, index) => {
+                            const subtopicId = `${topic.id}-${index}`;
+                            const subtopicData = appState.progressData[concursoId]?.[disciplina]?.[subtopicId] || {
+                                studied: false,
+                                reviewed: false,
+                                questions: 0,
+                                important: false,
+                                lastStudied: null,
+                                timeSpent: 0
+                            };
+                            
+                            const subtopicNoteKey = `${concursoId}-${disciplina}-${subtopicId}`;
+                            const subtopicNote = appState.notes[subtopicNoteKey] || '';
+                            
+                            const subRow = document.createElement('tr');
+                            subRow.innerHTML = `
+                                <td>${disciplina}</td>
+                                <td>${topic.nome}</td>
+                                <td>${subtopico}</td>
+                                <td><input type="checkbox" ${subtopicData.studied ? 'checked' : ''}
+                                           onchange="updatePlanilhaData('${disciplina}', '${subtopicId}', 'studied', this.checked)"></td>
+                                <td><input type="checkbox" ${subtopicData.reviewed ? 'checked' : ''}
+                                           onchange="updatePlanilhaData('${disciplina}', '${subtopicId}', 'reviewed', this.checked)"></td>
+                                <td><input type="number" value="${subtopicData.questions || 0}" min="0"
+                                           onchange="updatePlanilhaData('${disciplina}', '${subtopicId}', 'questions', this.value)"></td>
+                                <td><input type="checkbox" ${subtopicData.important ? 'checked' : ''}
+                                           onchange="updatePlanilhaData('${disciplina}', '${subtopicId}', 'important', this.checked)"></td>
+                                <td><input type="text" placeholder="Observações..."
+                                           value="${subtopicNote}"
+                                           onchange="saveNote('${disciplina}', '${subtopicId}', this.value)"></td>
+                            `;
+                            tbody.appendChild(subRow);
+                        });
+                    });
+                }
+            }
+        }
+
+        // Atualizar dados da planilha
+        function updatePlanilhaData(disciplina, topicId, field, value) {
+            const concursoId = appState.currentConcurso;
+            
+            if (!appState.progressData[concursoId][disciplina]) {
+                appState.progressData[concursoId][disciplina] = {};
+            }
+            
+            if (!appState.progressData[concursoId][disciplina][topicId]) {
+                appState.progressData[concursoId][disciplina][topicId] = {
+                    studied: false,
+                    reviewed: false,
+                    questions: 0,
+                    important: false,
+                    lastStudied: null,
+                    timeSpent: 0
+                };
+            }
+            
+            if (field === 'studied' || field === 'reviewed' || field === 'important') {
+                appState.progressData[concursoId][disciplina][topicId][field] = value;
+                
+                // Se marcou como estudado, atualizar data
+                if (field === 'studied' && value) {
+                    appState.progressData[concursoId][disciplina][topicId].lastStudied = new Date().toISOString();
+                }
+            } else if (field === 'questions') {
+                appState.progressData[concursoId][disciplina][topicId][field] = parseInt(value) || 0;
+            }
+            
+            saveToLocalStorage();
+            updateStats();
+        }
+
+        // Salvar observação
+        function saveNote(disciplina, topicId, note) {
+            const concursoId = appState.currentConcurso;
+            const noteKey = `${concursoId}-${disciplina}-${topicId}`;
+            
+            if (note.trim()) {
+                appState.notes[noteKey] = note;
+            } else {
+                delete appState.notes[noteKey];
+            }
+            
+            saveToLocalStorage();
+        }
+
+        // Renderizar timeline
+        function renderTimeline() {
+            const timeline = document.getElementById('studyTimeline');
+            timeline.innerHTML = '';
+            
+            // Gerar semanas de estudo
+            const weeks = [
+                { week: 1, title: "Língua Portuguesa e Raciocínio Lógico", description: "Concentrar nos fundamentos básicos para todas as áreas." },
+                { week: 2, title: "Contabilidade Geral - Parte 1", description: "Princípios contábeis, patrimônio e escrituração." },
+                { week: 3, title: "Contabilidade Geral - Parte 2", description: "Demonstrações contábeis e análise." },
+                { week: 4, title: "Administração Geral e Pública", description: "Conceitos gerais de administração e gestão pública." },
+                { week: 5, title: "Direito Administrativo", description: "Foco em concursos públicos - parte administrativa." },
+                { week: 6, title: "Direito Comercial e Tributário", description: "Aspectos comerciais e tributários importantes." },
+                { week: 7, title: "Legislação e Auditoria", description: "Legislação municipal e conceitos de auditoria." },
+                { week: 8, title: "Revisão Geral e Simulados", description: "Revisão de todos os tópicos e resolução de questões." }
+            ];
+            
+            weeks.forEach((weekData, index) => {
+                const progress = Math.min(100, ((index + 1) / weeks.length) * 100);
+                const isCurrent = index === 3; // Semana 4 como exemplo de atual
+                
+                const item = document.createElement('div');
+                item.className = `timeline-item ${isCurrent ? 'current' : ''}`;
+                item.innerHTML = `
+                    <div class="timeline-content">
+                        <div class="timeline-date"><i class="fas fa-calendar-week"></i> Semana ${weekData.week}</div>
+                        <div class="timeline-title">${weekData.title}</div>
+                        <p>${weekData.description}</p>
+                        <div class="timeline-progress">
+                            <div class="timeline-progress-fill" style="width: ${progress}%"></div>
+                        </div>
+                    </div>
+                `;
+                
+                timeline.appendChild(item);
+            });
+        }
+
+        // Aplicar filtros
+        function applyFilters() {
+            const topicItems = document.querySelectorAll('.topic-item');
+            topicItems.forEach(item => {
+                const topicId = item.getAttribute('data-id');
+                const disciplina = item.getAttribute('data-disciplina');
+                const topicName = item.querySelector('.topic-text')?.textContent || '';
+                const concursoId = appState.currentConcurso;
+                
+                const topicData = appState.progressData[concursoId]?.[disciplina]?.[topicId] || {
+                    studied: false,
+                    reviewed: false,
+                    questions: 0,
+                    important: false,
+                    lastStudied: null,
+                    timeSpent: 0
+                };
+                
+                const shouldShow = shouldShowTopic(disciplina, topicId, topicName, topicData);
+                
+                if (shouldShow) {
+                    item.classList.remove('hidden');
+                } else {
+                    item.classList.add('hidden');
+                }
+            });
+        }
+
+        // Configurar event listeners
+        function setupEventListeners() {
+            // Seletores de concurso
+            document.querySelectorAll('.concurso-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    // Remover classe active de todos
+                    document.querySelectorAll('.concurso-btn').forEach(b => b.classList.remove('active'));
+                    // Adicionar classe active ao clicado
+                    this.classList.add('active');
+                    
+                    const concurso = this.getAttribute('data-concurso');
+                    const view = this.getAttribute('data-view');
+                    
+                    if (concurso) {
+                        appState.currentConcurso = concurso;
+                        switchView('disciplinas');
+                    } else if (view) {
+                        switchView(view);
+                    }
+                });
+            });
+            
+            // Filtros
+            document.getElementById('filter-studied').addEventListener('change', function() {
+                appState.filterStudied = this.checked;
+                applyFilters();
+            });
+            
+            document.getElementById('filter-pending').addEventListener('change', function() {
+                appState.filterPending = this.checked;
+                applyFilters();
+            });
+            
+            document.getElementById('filter-reviewed').addEventListener('change', function() {
+                appState.filterReviewed = this.checked;
+                applyFilters();
+            });
+            
+            document.getElementById('filter-important').addEventListener('change', function() {
+                appState.filterImportant = this.checked;
+                applyFilters();
+            });
+            
+            // Botões de controle
+            document.getElementById('markAllStudied').addEventListener('click', function() {
+                if (confirm('Deseja marcar TODOS os tópicos do concurso atual como estudados?')) {
+                    const concursoId = appState.currentConcurso;
+                    const concurso = concursosData[concursoId];
+                    
+                    for (const [areaName, disciplinas] of Object.entries(concurso.areas)) {
+                        for (const [disciplina, topicos] of Object.entries(disciplinas)) {
+                            topicos.forEach(topic => {
+                                // Tópico principal
+                                if (!appState.progressData[concursoId][disciplina]) {
+                                    appState.progressData[concursoId][disciplina] = {};
+                                }
+                                
+                                if (!appState.progressData[concursoId][disciplina][topic.id]) {
+                                    appState.progressData[concursoId][disciplina][topic.id] = {
+                                        studied: false,
+                                        reviewed: false,
+                                        questions: 0,
+                                        important: false,
+                                        lastStudied: null,
+                                        timeSpent: 0
+                                    };
+                                }
+                                
+                                appState.progressData[concursoId][disciplina][topic.id].studied = true;
+                                appState.progressData[concursoId][disciplina][topic.id].lastStudied = new Date().toISOString();
+                                
+                                // Subtópicos
+                                topic.subtopicos.forEach((subtopico, index) => {
+                                    const subtopicId = `${topic.id}-${index}`;
+                                    
+                                    if (!appState.progressData[concursoId][disciplina][subtopicId]) {
+                                        appState.progressData[concursoId][disciplina][subtopicId] = {
+                                            studied: false,
+                                            reviewed: false,
+                                            questions: 0,
+                                            important: false,
+                                            lastStudied: null,
+                                            timeSpent: 0
+                                        };
+                                    }
+                                    
+                                    appState.progressData[concursoId][disciplina][subtopicId].studied = true;
+                                    appState.progressData[concursoId][disciplina][subtopicId].lastStudied = new Date().toISOString();
+                                });
+                            });
+                        }
+                    }
+                    
+                    saveToLocalStorage();
+                    renderDisciplinas();
+                    updateStats();
+                    alert('Todos os tópicos foram marcados como estudados!');
+                }
+            });
+            
+            document.getElementById('markAllReviewed').addEventListener('click', function() {
+                if (confirm('Deseja marcar TODOS os tópicos do concurso atual como revisados?')) {
+                    const concursoId = appState.currentConcurso;
+                    const concurso = concursosData[concursoId];
+                    
+                    for (const [areaName, disciplinas] of Object.entries(concurso.areas)) {
+                        for (const [disciplina, topicos] of Object.entries(disciplinas)) {
+                            topicos.forEach(topic => {
+                                // Tópico principal
+                                if (!appState.progressData[concursoId][disciplina]) {
+                                    appState.progressData[concursoId][disciplina] = {};
+                                }
+                                
+                                if (!appState.progressData[concursoId][disciplina][topic.id]) {
+                                    appState.progressData[concursoId][disciplina][topic.id] = {
+                                        studied: false,
+                                        reviewed: false,
+                                        questions: 0,
+                                        important: false,
+                                        lastStudied: null,
+                                        timeSpent: 0
+                                    };
+                                }
+                                
+                                appState.progressData[concursoId][disciplina][topic.id].reviewed = true;
+                                
+                                // Subtópicos
+                                topic.subtopicos.forEach((subtopico, index) => {
+                                    const subtopicId = `${topic.id}-${index}`;
+                                    
+                                    if (!appState.progressData[concursoId][disciplina][subtopicId]) {
+                                        appState.progressData[concursoId][disciplina][subtopicId] = {
+                                            studied: false,
+                                            reviewed: false,
+                                            questions: 0,
+                                            important: false,
+                                            lastStudied: null,
+                                            timeSpent: 0
+                                        };
+                                    }
+                                    
+                                    appState.progressData[concursoId][disciplina][subtopicId].reviewed = true;
+                                });
+                            });
+                        }
+                    }
+                    
+                    saveToLocalStorage();
+                    renderDisciplinas();
+                    alert('Todos os tópicos foram marcados como revisados!');
+                }
+            });
+            
+            document.getElementById('resetProgress').addEventListener('click', function() {
+                if (confirm('Tem certeza que deseja reiniciar TODO o progresso? Esta ação não pode ser desfeita.')) {
+                    initializeProgressData();
+                    renderDisciplinas();
+                    updateStats();
+                    alert('Progresso reiniciado com sucesso!');
+                }
+            });
+            
+            document.getElementById('exportData').addEventListener('click', function() {
+                const dataStr = JSON.stringify(appState, null, 2);
+                const dataUri = 'data:application/json;charset=utf-8,'+ encodeURIComponent(dataStr);
+                const exportFileDefaultName = `estudos-concursos-completo-${new Date().toISOString().slice(0,10)}.json`;
+                
+                const linkElement = document.createElement('a');
+                linkElement.setAttribute('href', dataUri);
+                linkElement.setAttribute('download', exportFileDefaultName);
+                linkElement.click();
+                
+                alert('Dados exportados com sucesso!');
+            });
+            
+            document.getElementById('exportAll').addEventListener('click', function() {
+                exportAllData();
+            });
+            
+            document.getElementById('generateSchedule').addEventListener('click', function() {
+                switchView('timeline');
+            });
+            
+            // Botões de ação rápida
+            document.getElementById('addStudyGoal').addEventListener('click', function() {
+                document.getElementById('goalModal').style.display = 'flex';
+            });
+        }
+
+        // Exportar todos os dados
+        function exportAllData() {
+            const allData = {
+                progress: appState.progressData,
+                notes: appState.notes,
+                stats: {
+                    totalStudyTime: appState.studyTime,
+                    dailyStats: appState.dailyStats,
+                    importantTopics: appState.importantTopics
+                },
+                concursos: concursosData
+            };
+            
+            const dataStr = JSON.stringify(allData, null, 2);
+            const dataUri = 'data:application/json;charset=utf-8,'+ encodeURIComponent(dataStr);
+            const exportFileDefaultName = `concursos-completos-${new Date().toISOString().slice(0,10)}.json`;
+            
+            const linkElement = document.createElement('a');
+            linkElement.setAttribute('href', dataUri);
+            linkElement.setAttribute('download', exportFileDefaultName);
+            linkElement.click();
+            
+            alert('Todos os dados exportados com sucesso!');
+        }
+
+        // Configurar modais
+        function setupModals() {
+            // Modal de metas
+            const goalModal = document.getElementById('goalModal');
+            const closeGoalModal = document.getElementById('closeGoalModal');
+            const cancelGoal = document.getElementById('cancelGoal');
+            const goalForm = document.getElementById('goalForm');
+            
+            closeGoalModal.addEventListener('click', () => {
+                goalModal.style.display = 'none';
+            });
+            
+            cancelGoal.addEventListener('click', () => {
+                goalModal.style.display = 'none';
+            });
+            
+            goalForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                
+                const goal = {
+                    id: Date.now(),
+                    name: document.getElementById('goalName').value,
+                    deadline: document.getElementById('goalDeadline').value,
+                    hoursPerDay: document.getElementById('goalHours').value,
+                    priority: document.getElementById('goalPriority').value,
+                    createdAt: new Date().toISOString(),
+                    completed: false
+                };
+                
+                appState.goals.push(goal);
+                saveToLocalStorage();
+                
+                goalModal.style.display = 'none';
+                goalForm.reset();
+                
+                alert('Meta definida com sucesso!');
+            });
+            
+            // Modal de observações
+            const noteModal = document.getElementById('noteModal');
+            const closeNoteModal = document.getElementById('closeNoteModal');
+            const cancelNote = document.getElementById('cancelNote');
+            const noteForm = document.getElementById('noteForm');
+            
+            closeNoteModal.addEventListener('click', () => {
+                noteModal.style.display = 'none';
+            });
+            
+            cancelNote.addEventListener('click', () => {
+                noteModal.style.display = 'none';
+            });
+            
+            noteForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                
+                const note = document.getElementById('noteContent').value;
+                const topicId = document.getElementById('noteTopic').getAttribute('data-topic-id');
+                const disciplina = document.getElementById('noteTopic').getAttribute('data-disciplina');
+                
+                saveNote(disciplina, topicId, note);
+                
+                noteModal.style.display = 'none';
+                noteForm.reset();
+                
+                alert('Observação salva com sucesso!');
+            });
+        }
+
+        // Abrir modal de observações
+        function openNoteModal(disciplina, topicId, topicName) {
+            const noteModal = document.getElementById('noteModal');
+            const noteTopic = document.getElementById('noteTopic');
+            const noteContent = document.getElementById('noteContent');
+            
+            const concursoId = appState.currentConcurso;
+            const noteKey = `${concursoId}-${disciplina}-${topicId}`;
+            
+            noteTopic.value = topicName;
+            noteTopic.setAttribute('data-disciplina', disciplina);
+            noteTopic.setAttribute('data-topic-id', topicId);
+            noteContent.value = appState.notes[noteKey] || '';
+            
+            noteModal.style.display = 'flex';
+        }
+
+        // Alternar disciplina (expandir/recolher)
+        function toggleDisciplina(header) {
+            const card = header.closest('.disciplina-card');
+            card.classList.toggle('open');
+            
+            const icon = header.querySelector('.toggle-icon');
+            if (icon) {
+                icon.classList.toggle('fa-chevron-down');
+                icon.classList.toggle('fa-chevron-up');
+            }
+        }
+
+        // Fechar modais ao clicar fora
+        window.addEventListener('click', (e) => {
+            const goalModal = document.getElementById('goalModal');
+            const noteModal = document.getElementById('noteModal');
+            
+            if (e.target === goalModal) {
+                goalModal.style.display = 'none';
+            }
+            
+            if (e.target === noteModal) {
+                noteModal.style.display = 'none';
+            }
+        });
+
+        // Inicializar quando o DOM estiver carregado
+        document.addEventListener('DOMContentLoaded', initApp);
+        
+        // Expor funções para uso global
+        window.toggleDisciplina = toggleDisciplina;
+        window.toggleStudied = toggleStudied;
+        window.markAsReviewed = markAsReviewed;
+        window.addQuestions = addQuestions;
+        window.openNoteModal = openNoteModal;
+        window.toggleImportant = toggleImportant;
+        window.updatePlanilhaData = updatePlanilhaData;
+        window.saveNote = saveNote;
+    </script>
+</body>
+</html>
