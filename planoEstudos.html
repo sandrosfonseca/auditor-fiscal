@@ -1,0 +1,1725 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Planejador Premium - Concursos Públicos</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #1a237e;
+            --secondary-color: #303f9f;
+            --accent-color: #00bcd4;
+            --success-color: #4CAF50;
+            --warning-color: #FF9800;
+            --danger-color: #f44336;
+            --light-color: #f5f7fa;
+            --dark-color: #333;
+            --shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            --transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #f5f7fa 0%, #e4e8f0 100%);
+            color: var(--dark-color);
+            line-height: 1.6;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        /* Header */
+        .header {
+            background: linear-gradient(90deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+            color: white;
+            border-radius: 15px;
+            padding: 25px 30px;
+            margin-bottom: 30px;
+            box-shadow: var(--shadow);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 100%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 1px, transparent 1px);
+            background-size: 20px 20px;
+            opacity: 0.1;
+            z-index: 0;
+        }
+
+        .header-content {
+            position: relative;
+            z-index: 1;
+        }
+
+        h1 {
+            font-size: 2.8rem;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .subtitle {
+            font-size: 1.1rem;
+            opacity: 0.9;
+            max-width: 800px;
+            margin-bottom: 15px;
+        }
+
+        /* Dashboard Stats */
+        .stats-dashboard {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: var(--shadow);
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            transition: var(--transition);
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+        }
+
+        .stat-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8rem;
+            color: white;
+        }
+
+        .stat-icon.blue { background: linear-gradient(135deg, #1a237e 0%, #303f9f 100%); }
+        .stat-icon.green { background: linear-gradient(135deg, #4CAF50 0%, #8BC34A 100%); }
+        .stat-icon.orange { background: linear-gradient(135deg, #FF9800 0%, #FFB74D 100%); }
+        .stat-icon.purple { background: linear-gradient(135deg, #7B1FA2 0%, #9C27B0 100%); }
+
+        .stat-info h3 {
+            font-size: 2.2rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            margin-bottom: 5px;
+        }
+
+        .stat-info p {
+            color: #666;
+            font-size: 0.95rem;
+        }
+
+        /* Main Content Area */
+        .main-content {
+            display: grid;
+            grid-template-columns: 300px 1fr;
+            gap: 30px;
+        }
+
+        @media (max-width: 1100px) {
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Sidebar */
+        .sidebar {
+            background: white;
+            border-radius: 15px;
+            box-shadow: var(--shadow);
+            padding: 25px;
+            height: fit-content;
+        }
+
+        .sidebar-section {
+            margin-bottom: 30px;
+        }
+
+        .sidebar-section h3 {
+            color: var(--primary-color);
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #f0f0f0;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .concurso-selector {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .concurso-btn {
+            padding: 15px;
+            border: none;
+            background: #f5f5f5;
+            border-radius: 8px;
+            text-align: left;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .concurso-btn:hover {
+            background: #e8eaf6;
+            transform: translateX(5px);
+        }
+
+        .concurso-btn.active {
+            background: linear-gradient(90deg, #e8eaf6 0%, #c5cae9 100%);
+            color: var(--primary-color);
+            border-left: 4px solid var(--primary-color);
+        }
+
+        .filter-options {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .filter-option {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .filter-option input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            accent-color: var(--primary-color);
+        }
+
+        .progress-controls {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .progress-btn {
+            padding: 12px;
+            border: none;
+            border-radius: 8px;
+            background: #f5f5f5;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 500;
+        }
+
+        .progress-btn:hover {
+            background: #e0e0e0;
+        }
+
+        .progress-btn.reset {
+            color: var(--danger-color);
+        }
+
+        .progress-btn.export {
+            color: var(--primary-color);
+        }
+
+        /* Content Area */
+        .content-area {
+            background: white;
+            border-radius: 15px;
+            box-shadow: var(--shadow);
+            overflow: hidden;
+        }
+
+        .content-header {
+            background: #f9f9f9;
+            padding: 20px 25px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .content-header h2 {
+            color: var(--primary-color);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .concurso-info {
+            margin-top: 10px;
+            color: #666;
+            font-size: 0.95rem;
+        }
+
+        /* Disciplinas Grid */
+        .disciplinas-grid {
+            padding: 25px;
+            max-height: 600px;
+            overflow-y: auto;
+        }
+
+        .disciplina-card {
+            background: #f9f9f9;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            overflow: hidden;
+            border: 1px solid #eee;
+            transition: var(--transition);
+        }
+
+        .disciplina-card:hover {
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .disciplina-header {
+            padding: 18px 20px;
+            background: linear-gradient(90deg, #f5f5f5 0%, #f0f0f0 100%);
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #eee;
+        }
+
+        .disciplina-header h3 {
+            color: var(--primary-color);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .disciplina-stats {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .disciplina-progress {
+            width: 120px;
+            height: 8px;
+            background: #e0e0e0;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .disciplina-progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--success-color) 0%, #8BC34A 100%);
+            transition: width 0.5s ease;
+        }
+
+        .topics-container {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.5s ease;
+        }
+
+        .disciplina-card.open .topics-container {
+            max-height: 1000px;
+        }
+
+        .topic-list {
+            padding: 20px;
+        }
+
+        .topic-item {
+            padding: 12px 15px;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            transition: var(--transition);
+        }
+
+        .topic-item:hover {
+            background: #f5f5f5;
+        }
+
+        .topic-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .topic-checkbox {
+            width: 20px;
+            height: 20px;
+            accent-color: var(--success-color);
+        }
+
+        .topic-text {
+            font-weight: 500;
+        }
+
+        .topic-actions {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .topic-btn {
+            width: 32px;
+            height: 32px;
+            border-radius: 6px;
+            border: none;
+            background: #f0f0f0;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: var(--transition);
+        }
+
+        .topic-btn:hover {
+            background: #e0e0e0;
+            transform: scale(1.1);
+        }
+
+        .topic-btn.mark-reviewed {
+            color: var(--warning-color);
+        }
+
+        .topic-btn.add-questions {
+            color: var(--primary-color);
+        }
+
+        .topic-btn.add-note {
+            color: var(--accent-color);
+        }
+
+        /* Planilha View */
+        .planilha-container {
+            padding: 25px;
+            overflow-x: auto;
+        }
+
+        .planilha-table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 1000px;
+        }
+
+        .planilha-table th {
+            background: linear-gradient(90deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+            color: white;
+            padding: 15px;
+            text-align: left;
+            font-weight: 600;
+            position: sticky;
+            top: 0;
+        }
+
+        .planilha-table td {
+            padding: 12px 15px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .planilha-table tr:hover {
+            background: #f9f9f9;
+        }
+
+        .planilha-table input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+        }
+
+        .planilha-table input[type="number"] {
+            width: 80px;
+            padding: 5px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+
+        .planilha-table input[type="text"] {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+
+        /* Study Timeline */
+        .timeline-container {
+            padding: 25px;
+        }
+
+        .timeline {
+            position: relative;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .timeline::after {
+            content: '';
+            position: absolute;
+            width: 6px;
+            background: linear-gradient(to bottom, var(--primary-color), var(--accent-color));
+            top: 0;
+            bottom: 0;
+            left: 50%;
+            margin-left: -3px;
+            border-radius: 3px;
+        }
+
+        .timeline-item {
+            padding: 10px 40px;
+            position: relative;
+            width: 50%;
+            box-sizing: border-box;
+            margin-bottom: 30px;
+        }
+
+        .timeline-item:nth-child(odd) {
+            left: 0;
+        }
+
+        .timeline-item:nth-child(even) {
+            left: 50%;
+        }
+
+        .timeline-content {
+            padding: 20px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: var(--shadow);
+            position: relative;
+        }
+
+        .timeline-item:nth-child(odd) .timeline-content::after {
+            content: '';
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            right: -10px;
+            background: white;
+            top: 20px;
+            transform: rotate(45deg);
+            box-shadow: 3px -3px 5px rgba(0, 0, 0, 0.05);
+        }
+
+        .timeline-item:nth-child(even) .timeline-content::after {
+            content: '';
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            left: -10px;
+            background: white;
+            top: 20px;
+            transform: rotate(45deg);
+            box-shadow: -3px 3px 5px rgba(0, 0, 0, 0.05);
+        }
+
+        .timeline-date {
+            font-weight: 700;
+            color: var(--primary-color);
+            margin-bottom: 5px;
+        }
+
+        .timeline-title {
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: #333;
+        }
+
+        /* Footer */
+        .footer {
+            text-align: center;
+            margin-top: 40px;
+            padding: 20px;
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 15px;
+            width: 90%;
+            max-width: 500px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            animation: modalAppear 0.3s ease;
+        }
+
+        @keyframes modalAppear {
+            from { opacity: 0; transform: scale(0.9); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .modal-header h3 {
+            color: var(--primary-color);
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #666;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+
+        .form-group input, .form-group textarea, .form-group select {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 1rem;
+        }
+
+        .form-group textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+
+        .modal-actions {
+            display: flex;
+            gap: 10px;
+            justify-content: flex-end;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(90deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(26, 35, 126, 0.3);
+        }
+
+        .btn-secondary {
+            background: #f0f0f0;
+            color: #333;
+        }
+
+        .btn-secondary:hover {
+            background: #e0e0e0;
+        }
+
+        /* Responsividade */
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2rem;
+            }
+            
+            .stats-dashboard {
+                grid-template-columns: 1fr;
+            }
+            
+            .timeline::after {
+                left: 31px;
+            }
+            
+            .timeline-item {
+                width: 100%;
+                padding-left: 70px;
+                padding-right: 25px;
+            }
+            
+            .timeline-item:nth-child(even) {
+                left: 0;
+            }
+            
+            .timeline-item:nth-child(odd) .timeline-content::after,
+            .timeline-item:nth-child(even) .timeline-content::after {
+                left: -10px;
+                right: auto;
+            }
+        }
+
+        /* Scrollbar personalizada */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--primary-color);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--secondary-color);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-content">
+                <h1><i class="fas fa-graduation-cap"></i> Planejador Premium de Estudos</h1>
+                <p class="subtitle">Organize seus estudos para concursos públicos de forma inteligente e acompanhe seu progresso em tempo real.</p>
+                <div class="header-actions">
+                    <button class="btn btn-primary" id="addStudyGoal">
+                        <i class="fas fa-bullseye"></i> Definir Meta de Estudos
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <!-- Dashboard Stats -->
+        <div class="stats-dashboard">
+            <div class="stat-card">
+                <div class="stat-icon blue">
+                    <i class="fas fa-book"></i>
+                </div>
+                <div class="stat-info">
+                    <h3 id="totalTopics">0</h3>
+                    <p>Tópicos Totais</p>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon green">
+                    <i class="fas fa-check-circle"></i>
+                </div>
+                <div class="stat-info">
+                    <h3 id="studiedTopics">0</h3>
+                    <p>Tópicos Estudados</p>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon orange">
+                    <i class="fas fa-chart-line"></i>
+                </div>
+                <div class="stat-info">
+                    <h3 id="progressPercentage">0%</h3>
+                    <p>Progresso Geral</p>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon purple">
+                    <i class="fas fa-question-circle"></i>
+                </div>
+                <div class="stat-info">
+                    <h3 id="questionsDone">0</h3>
+                    <p>Questões Resolvidas</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <!-- Sidebar -->
+            <aside class="sidebar">
+                <div class="sidebar-section">
+                    <h3><i class="fas fa-folder-open"></i> Concursos</h3>
+                    <div class="concurso-selector">
+                        <button class="concurso-btn active" data-concurso="23-2023">
+                            <i class="fas fa-file-alt"></i> Concurso 23/2023
+                        </button>
+                        <button class="concurso-btn" data-concurso="08-2020">
+                            <i class="fas fa-file-alt"></i> Concurso 08/2020
+                        </button>
+                        <button class="concurso-btn" data-view="planilha">
+                            <i class="fas fa-table"></i> Planilha Completa
+                        </button>
+                        <button class="concurso-btn" data-view="timeline">
+                            <i class="fas fa-calendar-alt"></i> Cronograma
+                        </button>
+                    </div>
+                </div>
+
+                <div class="sidebar-section">
+                    <h3><i class="fas fa-filter"></i> Filtros</h3>
+                    <div class="filter-options">
+                        <label class="filter-option">
+                            <input type="checkbox" id="filter-studied" checked>
+                            <span>Mostrar estudados</span>
+                        </label>
+                        <label class="filter-option">
+                            <input type="checkbox" id="filter-pending" checked>
+                            <span>Mostrar pendentes</span>
+                        </label>
+                        <label class="filter-option">
+                            <input type="checkbox" id="filter-reviewed">
+                            <span>Apenas revisados</span>
+                        </label>
+                        <label class="filter-option">
+                            <input type="checkbox" id="filter-highlight">
+                            <span>Destacar importantes</span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="sidebar-section">
+                    <h3><i class="fas fa-tasks"></i> Controles</h3>
+                    <div class="progress-controls">
+                        <button class="progress-btn" id="markAllStudied">
+                            <i class="fas fa-check-double"></i> Marcar todos como estudados
+                        </button>
+                        <button class="progress-btn" id="resetProgress">
+                            <i class="fas fa-redo"></i> Reiniciar progresso
+                        </button>
+                        <button class="progress-btn export" id="exportData">
+                            <i class="fas fa-download"></i> Exportar dados
+                        </button>
+                        <button class="progress-btn" id="printPlan">
+                            <i class="fas fa-print"></i> Imprimir plano
+                        </button>
+                    </div>
+                </div>
+
+                <div class="sidebar-section">
+                    <h3><i class="fas fa-chart-pie"></i> Estatísticas</h3>
+                    <div class="stats-summary">
+                        <p><strong>Próxima revisão:</strong> <span id="nextReview">-</span></p>
+                        <p><strong>Tempo de estudo:</strong> <span id="studyTime">0h</span></p>
+                        <p><strong>Média diária:</strong> <span id="dailyAverage">0 tópicos</span></p>
+                    </div>
+                </div>
+            </aside>
+
+            <!-- Content Area -->
+            <main class="content-area">
+                <div class="content-header">
+                    <h2><i class="fas fa-book-open"></i> Concurso 23/2023 - Prefeitura Municipal</h2>
+                    <p class="concurso-info">Concurso com conhecimentos básicos e específicos para diversas áreas. Organize seus estudos por disciplina.</p>
+                </div>
+
+                <!-- Disciplinas View -->
+                <div class="disciplinas-grid" id="disciplinasView">
+                    <!-- Disciplinas serão carregadas aqui via JavaScript -->
+                </div>
+
+                <!-- Planilha View -->
+                <div class="planilha-container" id="planilhaView" style="display: none;">
+                    <table class="planilha-table">
+                        <thead>
+                            <tr>
+                                <th>Disciplina</th>
+                                <th>Tópico</th>
+                                <th>Subtópico</th>
+                                <th>Estudado?</th>
+                                <th>Revisado?</th>
+                                <th>Questões</th>
+                                <th>Observações</th>
+                            </tr>
+                        </thead>
+                        <tbody id="planilhaBody">
+                            <!-- Conteúdo da planilha será inserido aqui -->
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Timeline View -->
+                <div class="timeline-container" id="timelineView" style="display: none;">
+                    <div class="timeline">
+                        <div class="timeline-item">
+                            <div class="timeline-content">
+                                <div class="timeline-date">Semana 1</div>
+                                <div class="timeline-title">Língua Portuguesa</div>
+                                <p>Foco em interpretação de textos, vocabulário e pontuação.</p>
+                            </div>
+                        </div>
+                        <div class="timeline-item">
+                            <div class="timeline-content">
+                                <div class="timeline-date">Semana 2</div>
+                                <div class="timeline-title">Raciocínio Lógico</div>
+                                <p>Estruturas lógicas, lógica de argumentação e probabilidades.</p>
+                            </div>
+                        </div>
+                        <div class="timeline-item">
+                            <div class="timeline-content">
+                                <div class="timeline-date">Semana 3</div>
+                                <div class="timeline-title">Contabilidade Geral</div>
+                                <p>Princípios contábeis, componentes do patrimônio e escrituração.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <p>Planejador Premium de Estudos para Concursos Públicos © 2023</p>
+            <p>Use este planejador para organizar seus estudos de forma eficiente e alcançar sua aprovação!</p>
+        </footer>
+    </div>
+
+    <!-- Modal para adicionar meta -->
+    <div class="modal" id="goalModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3><i class="fas fa-bullseye"></i> Definir Meta de Estudos</h3>
+                <button class="modal-close" id="closeGoalModal">&times;</button>
+            </div>
+            <form id="goalForm">
+                <div class="form-group">
+                    <label for="goalName">Nome da Meta</label>
+                    <input type="text" id="goalName" placeholder="Ex: Completar Língua Portuguesa" required>
+                </div>
+                <div class="form-group">
+                    <label for="goalDeadline">Prazo</label>
+                    <input type="date" id="goalDeadline" required>
+                </div>
+                <div class="form-group">
+                    <label for="goalHours">Horas de estudo por dia</label>
+                    <input type="number" id="goalHours" min="1" max="10" value="2" required>
+                </div>
+                <div class="form-group">
+                    <label for="goalPriority">Prioridade</label>
+                    <select id="goalPriority">
+                        <option value="alta">Alta</option>
+                        <option value="media" selected>Média</option>
+                        <option value="baixa">Baixa</option>
+                    </select>
+                </div>
+                <div class="modal-actions">
+                    <button type="button" class="btn btn-secondary" id="cancelGoal">Cancelar</button>
+                    <button type="submit" class="btn btn-primary">Salvar Meta</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal para adicionar observações -->
+    <div class="modal" id="noteModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3><i class="fas fa-sticky-note"></i> Adicionar Observação</h3>
+                <button class="modal-close" id="closeNoteModal">&times;</button>
+            </div>
+            <form id="noteForm">
+                <div class="form-group">
+                    <label for="noteTopic">Tópico</label>
+                    <input type="text" id="noteTopic" readonly>
+                </div>
+                <div class="form-group">
+                    <label for="noteContent">Observação</label>
+                    <textarea id="noteContent" placeholder="Digite suas observações sobre este tópico..." required></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="notePriority">Prioridade</label>
+                    <select id="notePriority">
+                        <option value="baixa">Baixa</option>
+                        <option value="media" selected>Média</option>
+                        <option value="alta">Alta</option>
+                    </select>
+                </div>
+                <div class="modal-actions">
+                    <button type="button" class="btn btn-secondary" id="cancelNote">Cancelar</button>
+                    <button type="submit" class="btn btn-primary">Salvar Observação</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Dados completos dos concursos
+        const concursosData = {
+            "23-2023": {
+                nome: "Concurso 23/2023 - Prefeitura Municipal",
+                disciplinas: {
+                    "Língua Portuguesa": [
+                        { id: "lp-1", nome: "Leitura e interpretação de textos", subtopicos: [
+                            "Textos literários", "Textos não literários"
+                        ]},
+                        { id: "lp-2", nome: "Vocabulário", subtopicos: [
+                            "Sinônimos", "Antônimos", "Sentido próprio das palavras", "Sentido figurado das palavras"
+                        ]},
+                        { id: "lp-3", nome: "Pontuação", subtopicos: [] },
+                        { id: "lp-4", nome: "Classes de palavras", subtopicos: [
+                            "Substantivo", "Adjetivo", "Numeral", "Pronome", "Verbo", "Advérbio", "Preposição", "Conjunção"
+                        ]},
+                        { id: "lp-5", nome: "Concordância", subtopicos: [
+                            "Concordância verbal", "Concordância nominal"
+                        ]},
+                        { id: "lp-6", nome: "Regência", subtopicos: [
+                            "Regência verbal", "Regência nominal"
+                        ]},
+                        { id: "lp-7", nome: "Colocação pronominal", subtopicos: [] },
+                        { id: "lp-8", nome: "Crase", subtopicos: [] }
+                    ],
+                    "Raciocínio Lógico": [
+                        { id: "rl-1", nome: "Estruturas lógicas", subtopicos: [] },
+                        { id: "rl-2", nome: "Lógica de argumentação", subtopicos: [
+                            "Analogias", "Inferências", "Deduções", "Conclusões"
+                        ]},
+                        { id: "rl-3", nome: "Lógica sentencial (proposicional)", subtopicos: [
+                            "Proposições simples", "Proposições compostas", "Tabelas verdade", "Equivalências", "Leis de Morgan", "Diagramas lógicos"
+                        ]},
+                        { id: "rl-4", nome: "Lógica de primeira ordem", subtopicos: [] },
+                        { id: "rl-5", nome: "Princípios de contagem", subtopicos: [] },
+                        { id: "rl-6", nome: "Probabilidades", subtopicos: [] },
+                        { id: "rl-7", nome: "Raciocínio lógico envolvendo problemas", subtopicos: [] }
+                    ],
+                    "Legislação Municipal": [
+                        { id: "lm-1", nome: "Lei Orgânica do Município de Santos", subtopicos: [
+                            "Texto atualizado e/ou alterado"
+                        ]},
+                        { id: "lm-2", nome: "Estatuto dos Funcionários Públicos Municipais de Santos", subtopicos: [
+                            "Texto atualizado e/ou alterado"
+                        ]}
+                    ],
+                    "Contabilidade Geral": [
+                        { id: "cg-1", nome: "Contabilidade: aspectos gerais", subtopicos: [
+                            "Conceituação", "Objetivos", "Campo de atuação", "Usuários da informação contábil"
+                        ]},
+                        { id: "cg-2", nome: "Princípios e normas contábeis brasileiras", subtopicos: [
+                            "Normas emanadas pelo CFC (Conselho Federal de Contabilidade)"
+                        ]},
+                        { id: "cg-3", nome: "Componentes do patrimônio", subtopicos: [
+                            "Ativo", "Passivo", "Patrimônio líquido"
+                        ]},
+                        { id: "cg-4", nome: "Variação do patrimônio líquido", subtopicos: [
+                            "Receita", "Despesa", "Ganhos", "Perdas", "Apuração dos resultados"
+                        ]}
+                    ]
+                }
+            },
+            "08-2020": {
+                nome: "Concurso 08/2020 - Prefeitura Municipal",
+                disciplinas: {
+                    "Língua Portuguesa": [
+                        { id: "lp-1", nome: "Interpretação de textos", subtopicos: [
+                            "Questões de interpretação de texto", "Avaliação da capacidade de compreensão global e inferencial"
+                        ]},
+                        { id: "lp-2", nome: "Norma culta na modalidade escrita", subtopicos: [
+                            "Uso adequado da norma culta", "Emprego formal do idioma"
+                        ]},
+                        { id: "lp-3", nome: "Ortografia oficial", subtopicos: [] },
+                        { id: "lp-4", nome: "Acentuação gráfica", subtopicos: [] },
+                        { id: "lp-5", nome: "Pontuação", subtopicos: [] },
+                        { id: "lp-6", nome: "Classes gramaticais", subtopicos: [] },
+                        { id: "lp-7", nome: "Concordância", subtopicos: [
+                            "Concordância verbal", "Concordância nominal"
+                        ]},
+                        { id: "lp-8", nome: "Pronomes", subtopicos: [
+                            "Emprego dos pronomes", "Colocação pronominal"
+                        ]},
+                        { id: "lp-9", nome: "Regência", subtopicos: [
+                            "Regência nominal", "Regência verbal"
+                        ]}
+                    ],
+                    "Direito Administrativo": [
+                        { id: "da-1", nome: "Conceito de Direito Administrativo", subtopicos: [] },
+                        { id: "da-2", nome: "Princípios informativos do Direito Administrativo", subtopicos: [] },
+                        { id: "da-3", nome: "Administração Pública", subtopicos: [
+                            "Conceito", "Órgãos públicos", "Agentes públicos"
+                        ]}
+                    ]
+                }
+            }
+        };
+
+        // Estado da aplicação
+        let appState = {
+            currentConcurso: "23-2023",
+            currentView: "disciplinas",
+            progressData: {},
+            goals: [],
+            notes: {},
+            studyTime: 0,
+            dailyStats: {}
+        };
+
+        // Inicializar aplicação
+        function initApp() {
+            loadFromLocalStorage();
+            renderDisciplinas();
+            updateStats();
+            setupEventListeners();
+            setupModals();
+        }
+
+        // Carregar dados do localStorage
+        function loadFromLocalStorage() {
+            const saved = localStorage.getItem('studyPlannerData');
+            if (saved) {
+                appState = JSON.parse(saved);
+            } else {
+                // Inicializar dados de progresso
+                initializeProgressData();
+            }
+        }
+
+        // Inicializar dados de progresso
+        function initializeProgressData() {
+            appState.progressData = {};
+            
+            // Para cada concurso
+            for (const [concursoId, concurso] of Object.entries(concursosData)) {
+                appState.progressData[concursoId] = {};
+                
+                // Para cada disciplina
+                for (const [disciplina, topicos] of Object.entries(concurso.disciplinas)) {
+                    appState.progressData[concursoId][disciplina] = {};
+                    
+                    // Para cada tópico
+                    topicos.forEach(topic => {
+                        appState.progressData[concursoId][disciplina][topic.id] = {
+                            studied: false,
+                            reviewed: false,
+                            questions: 0,
+                            important: false,
+                            lastStudied: null
+                        };
+                        
+                        // Para cada subtópico
+                        topic.subtopicos.forEach((subtopico, index) => {
+                            const subtopicId = `${topic.id}-${index}`;
+                            appState.progressData[concursoId][disciplina][subtopicId] = {
+                                studied: false,
+                                reviewed: false,
+                                questions: 0,
+                                important: false,
+                                lastStudied: null
+                            };
+                        });
+                    });
+                }
+            }
+            
+            saveToLocalStorage();
+        }
+
+        // Salvar dados no localStorage
+        function saveToLocalStorage() {
+            localStorage.setItem('studyPlannerData', JSON.stringify(appState));
+        }
+
+        // Renderizar disciplinas
+        function renderDisciplinas() {
+            const container = document.getElementById('disciplinasView');
+            const concurso = concursosData[appState.currentConcurso];
+            
+            container.innerHTML = '';
+            
+            for (const [disciplina, topicos] of Object.entries(concurso.disciplinas)) {
+                // Calcular progresso da disciplina
+                const progress = calculateDisciplinaProgress(disciplina);
+                
+                // Criar card da disciplina
+                const card = document.createElement('div');
+                card.className = 'disciplina-card';
+                card.innerHTML = `
+                    <div class="disciplina-header" onclick="toggleDisciplina(this)">
+                        <h3><i class="fas fa-book"></i> ${disciplina}</h3>
+                        <div class="disciplina-stats">
+                            <div class="disciplina-progress">
+                                <div class="disciplina-progress-fill" style="width: ${progress.percentage}%"></div>
+                            </div>
+                            <span>${progress.percentage}%</span>
+                            <i class="fas fa-chevron-down toggle-icon"></i>
+                        </div>
+                    </div>
+                    <div class="topics-container">
+                        <div class="topic-list">
+                            ${topicos.map(topic => renderTopic(disciplina, topic)).join('')}
+                        </div>
+                    </div>
+                `;
+                
+                container.appendChild(card);
+            }
+        }
+
+        // Calcular progresso de uma disciplina
+        function calculateDisciplinaProgress(disciplina) {
+            const concursoId = appState.currentConcurso;
+            const topicos = concursosData[concursoId].disciplinas[disciplina];
+            let total = 0;
+            let studied = 0;
+            
+            topicos.forEach(topic => {
+                // Tópico principal
+                const topicData = appState.progressData[concursoId][disciplina][topic.id];
+                if (topicData) {
+                    total++;
+                    if (topicData.studied) studied++;
+                }
+                
+                // Subtópicos
+                topic.subtopicos.forEach((subtopico, index) => {
+                    const subtopicId = `${topic.id}-${index}`;
+                    const subtopicData = appState.progressData[concursoId][disciplina][subtopicId];
+                    if (subtopicData) {
+                        total++;
+                        if (subtopicData.studied) studied++;
+                    }
+                });
+            });
+            
+            return {
+                total,
+                studied,
+                percentage: total > 0 ? Math.round((studied / total) * 100) : 0
+            };
+        }
+
+        // Renderizar um tópico
+        function renderTopic(disciplina, topic) {
+            const concursoId = appState.currentConcurso;
+            const topicData = appState.progressData[concursoId][disciplina][topic.id];
+            
+            let subtopicosHTML = '';
+            if (topic.subtopicos.length > 0) {
+                subtopicosHTML = topic.subtopicos.map((subtopico, index) => {
+                    const subtopicId = `${topic.id}-${index}`;
+                    const subtopicData = appState.progressData[concursoId][disciplina][subtopicId];
+                    
+                    return `
+                        <div class="topic-item subtopico">
+                            <div class="topic-info">
+                                <input type="checkbox" class="topic-checkbox" 
+                                       data-id="${subtopicId}"
+                                       data-disciplina="${disciplina}"
+                                       ${subtopicData.studied ? 'checked' : ''}
+                                       onchange="toggleStudied(this)">
+                                <span class="topic-text">${subtopico}</span>
+                            </div>
+                            <div class="topic-actions">
+                                <button class="topic-btn mark-reviewed" title="Marcar como revisado"
+                                        onclick="markAsReviewed('${disciplina}', '${subtopicId}')">
+                                    <i class="fas fa-sync-alt"></i>
+                                </button>
+                                <button class="topic-btn add-questions" title="Adicionar questões"
+                                        onclick="addQuestions('${disciplina}', '${subtopicId}')">
+                                    <i class="fas fa-question-circle"></i>
+                                </button>
+                                <button class="topic-btn add-note" title="Adicionar observação"
+                                        onclick="openNoteModal('${disciplina}', '${subtopicId}', '${subtopico}')">
+                                    <i class="fas fa-sticky-note"></i>
+                                </button>
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+            }
+            
+            return `
+                <div class="topic-item">
+                    <div class="topic-info">
+                        <input type="checkbox" class="topic-checkbox" 
+                               data-id="${topic.id}"
+                               data-disciplina="${disciplina}"
+                               ${topicData.studied ? 'checked' : ''}
+                               onchange="toggleStudied(this)">
+                        <span class="topic-text">${topic.nome}</span>
+                    </div>
+                    <div class="topic-actions">
+                        <button class="topic-btn mark-reviewed" title="Marcar como revisado"
+                                onclick="markAsReviewed('${disciplina}', '${topic.id}')">
+                            <i class="fas fa-sync-alt"></i>
+                        </button>
+                        <button class="topic-btn add-questions" title="Adicionar questões"
+                                onclick="addQuestions('${disciplina}', '${topic.id}')">
+                            <i class="fas fa-question-circle"></i>
+                        </button>
+                        <button class="topic-btn add-note" title="Adicionar observação"
+                                onclick="openNoteModal('${disciplina}', '${topic.id}', '${topic.nome}')">
+                            <i class="fas fa-sticky-note"></i>
+                        </button>
+                    </div>
+                </div>
+                ${subtopicosHTML}
+            `;
+        }
+
+        // Alternar estado "estudado" de um tópico
+        function toggleStudied(checkbox) {
+            const concursoId = appState.currentConcurso;
+            const disciplina = checkbox.getAttribute('data-disciplina');
+            const topicId = checkbox.getAttribute('data-id');
+            
+            appState.progressData[concursoId][disciplina][topicId].studied = checkbox.checked;
+            appState.progressData[concursoId][disciplina][topicId].lastStudied = new Date().toISOString();
+            
+            saveToLocalStorage();
+            updateStats();
+            
+            // Atualizar progresso da disciplina
+            const disciplinaCard = checkbox.closest('.disciplina-card');
+            if (disciplinaCard) {
+                const progress = calculateDisciplinaProgress(disciplina);
+                const progressFill = disciplinaCard.querySelector('.disciplina-progress-fill');
+                const progressText = disciplinaCard.querySelector('.disciplina-stats span');
+                
+                progressFill.style.width = `${progress.percentage}%`;
+                progressText.textContent = `${progress.percentage}%`;
+            }
+        }
+
+        // Marcar como revisado
+        function markAsReviewed(disciplina, topicId) {
+            const concursoId = appState.currentConcurso;
+            appState.progressData[concursoId][disciplina][topicId].reviewed = true;
+            saveToLocalStorage();
+            
+            // Feedback visual
+            alert('Tópico marcado como revisado!');
+        }
+
+        // Adicionar questões
+        function addQuestions(disciplina, topicId) {
+            const concursoId = appState.currentConcurso;
+            const questions = prompt('Quantas questões você resolveu sobre este tópico?', '0');
+            
+            if (questions !== null) {
+                const numQuestions = parseInt(questions) || 0;
+                appState.progressData[concursoId][disciplina][topicId].questions += numQuestions;
+                saveToLocalStorage();
+                updateStats();
+                
+                alert(`${numQuestions} questões adicionadas ao tópico!`);
+            }
+        }
+
+        // Atualizar estatísticas
+        function updateStats() {
+            let totalTopics = 0;
+            let studiedTopics = 0;
+            let totalQuestions = 0;
+            
+            const concursoId = appState.currentConcurso;
+            const concurso = concursosData[concursoId];
+            
+            for (const [disciplina, topicos] of Object.entries(concurso.disciplinas)) {
+                topicos.forEach(topic => {
+                    // Tópico principal
+                    const topicData = appState.progressData[concursoId][disciplina][topic.id];
+                    if (topicData) {
+                        totalTopics++;
+                        if (topicData.studied) studiedTopics++;
+                        totalQuestions += topicData.questions;
+                    }
+                    
+                    // Subtópicos
+                    topic.subtopicos.forEach((subtopico, index) => {
+                        const subtopicId = `${topic.id}-${index}`;
+                        const subtopicData = appState.progressData[concursoId][disciplina][subtopicId];
+                        if (subtopicData) {
+                            totalTopics++;
+                            if (subtopicData.studied) studiedTopics++;
+                            totalQuestions += subtopicData.questions;
+                        }
+                    });
+                });
+            }
+            
+            const progressPercentage = totalTopics > 0 ? Math.round((studiedTopics / totalTopics) * 100) : 0;
+            
+            // Atualizar elementos DOM
+            document.getElementById('totalTopics').textContent = totalTopics;
+            document.getElementById('studiedTopics').textContent = studiedTopics;
+            document.getElementById('progressPercentage').textContent = `${progressPercentage}%`;
+            document.getElementById('questionsDone').textContent = totalQuestions;
+            
+            // Atualizar tempo de estudo estimado
+            const studyTime = Math.round(totalQuestions * 2); // 2 minutos por questão
+            document.getElementById('studyTime').textContent = `${studyTime}min`;
+            
+            // Atualizar média diária
+            const today = new Date().toDateString();
+            if (!appState.dailyStats[today]) {
+                appState.dailyStats[today] = 0;
+            }
+            const dailyAverage = appState.dailyStats[today];
+            document.getElementById('dailyAverage').textContent = `${dailyAverage} tópicos`;
+        }
+
+        // Alternar visualização
+        function switchView(view) {
+            appState.currentView = view;
+            
+            // Esconder todas as views
+            document.getElementById('disciplinasView').style.display = 'none';
+            document.getElementById('planilhaView').style.display = 'none';
+            document.getElementById('timelineView').style.display = 'none';
+            
+            // Mostrar view selecionada
+            if (view === 'disciplinas') {
+                document.getElementById('disciplinasView').style.display = 'block';
+                renderDisciplinas();
+            } else if (view === 'planilha') {
+                document.getElementById('planilhaView').style.display = 'block';
+                renderPlanilha();
+            } else if (view === 'timeline') {
+                document.getElementById('timelineView').style.display = 'block';
+            }
+        }
+
+        // Renderizar planilha
+        function renderPlanilha() {
+            const tbody = document.getElementById('planilhaBody');
+            const concursoId = appState.currentConcurso;
+            const concurso = concursosData[concursoId];
+            
+            tbody.innerHTML = '';
+            
+            for (const [disciplina, topicos] of Object.entries(concurso.disciplinas)) {
+                topicos.forEach(topic => {
+                    // Tópico principal
+                    const topicData = appState.progressData[concursoId][disciplina][topic.id];
+                    
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>${disciplina}</td>
+                        <td>${topic.nome}</td>
+                        <td>-</td>
+                        <td><input type="checkbox" ${topicData.studied ? 'checked' : ''} 
+                                   onchange="updatePlanilhaData('${disciplina}', '${topic.id}', 'studied', this.checked)"></td>
+                        <td><input type="checkbox" ${topicData.reviewed ? 'checked' : ''}
+                                   onchange="updatePlanilhaData('${disciplina}', '${topic.id}', 'reviewed', this.checked)"></td>
+                        <td><input type="number" value="${topicData.questions}" min="0"
+                                   onchange="updatePlanilhaData('${disciplina}', '${topic.id}', 'questions', this.value)"></td>
+                        <td><input type="text" placeholder="Observações..." 
+                                   value="${appState.notes[`${concursoId}-${disciplina}-${topic.id}`] || ''}"
+                                   onchange="saveNote('${disciplina}', '${topic.id}', this.value)"></td>
+                    `;
+                    tbody.appendChild(row);
+                    
+                    // Subtópicos
+                    topic.subtopicos.forEach((subtopico, index) => {
+                        const subtopicId = `${topic.id}-${index}`;
+                        const subtopicData = appState.progressData[concursoId][disciplina][subtopicId];
+                        
+                        const subRow = document.createElement('tr');
+                        subRow.innerHTML = `
+                            <td>${disciplina}</td>
+                            <td>${topic.nome}</td>
+                            <td>${subtopico}</td>
+                            <td><input type="checkbox" ${subtopicData.studied ? 'checked' : ''}
+                                       onchange="updatePlanilhaData('${disciplina}', '${subtopicId}', 'studied', this.checked)"></td>
+                            <td><input type="checkbox" ${subtopicData.reviewed ? 'checked' : ''}
+                                       onchange="updatePlanilhaData('${disciplina}', '${subtopicId}', 'reviewed', this.checked)"></td>
+                            <td><input type="number" value="${subtopicData.questions}" min="0"
+                                       onchange="updatePlanilhaData('${disciplina}', '${subtopicId}', 'questions', this.value)"></td>
+                            <td><input type="text" placeholder="Observações..."
+                                       value="${appState.notes[`${concursoId}-${disciplina}-${subtopicId}`] || ''}"
+                                       onchange="saveNote('${disciplina}', '${subtopicId}', this.value)"></td>
+                        `;
+                        tbody.appendChild(subRow);
+                    });
+                });
+            }
+        }
+
+        // Atualizar dados da planilha
+        function updatePlanilhaData(disciplina, topicId, field, value) {
+            const concursoId = appState.currentConcurso;
+            
+            if (field === 'studied' || field === 'reviewed') {
+                appState.progressData[concursoId][disciplina][topicId][field] = value;
+            } else if (field === 'questions') {
+                appState.progressData[concursoId][disciplina][topicId][field] = parseInt(value) || 0;
+            }
+            
+            saveToLocalStorage();
+            updateStats();
+        }
+
+        // Salvar observação
+        function saveNote(disciplina, topicId, note) {
+            const concursoId = appState.currentConcurso;
+            const noteKey = `${concursoId}-${disciplina}-${topicId}`;
+            
+            if (note.trim()) {
+                appState.notes[noteKey] = note;
+            } else {
+                delete appState.notes[noteKey];
+            }
+            
+            saveToLocalStorage();
+        }
+
+        // Configurar event listeners
+        function setupEventListeners() {
+            // Seletores de concurso
+            document.querySelectorAll('.concurso-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    // Remover classe active de todos
+                    document.querySelectorAll('.concurso-btn').forEach(b => b.classList.remove('active'));
+                    // Adicionar classe active ao clicado
+                    this.classList.add('active');
+                    
+                    const concurso = this.getAttribute('data-concurso');
+                    const view = this.getAttribute('data-view');
+                    
+                    if (concurso) {
+                        appState.currentConcurso = concurso;
+                        document.querySelector('.content-header h2').innerHTML = `
+                            <i class="fas fa-book-open"></i> ${concursosData[concurso].nome}
+                        `;
+                        switchView('disciplinas');
+                    } else if (view) {
+                        switchView(view);
+                    }
+                });
+            });
+            
+            // Botões de controle
+            document.getElementById('markAllStudied').addEventListener('click', function() {
+                if (confirm('Deseja marcar TODOS os tópicos como estudados?')) {
+                    const concursoId = appState.currentConcurso;
+                    const concurso = concursosData[concursoId];
+                    
+                    for (const [disciplina, topicos] of Object.entries(concurso.disciplinas)) {
+                        topicos.forEach(topic => {
+                            // Tópico principal
+                            appState.progressData[concursoId][disciplina][topic.id].studied = true;
+                            appState.progressData[concursoId][disciplina][topic.id].lastStudied = new Date().toISOString();
+                            
+                            // Subtópicos
+                            topic.subtopicos.forEach((subtopico, index) => {
+                                const subtopicId = `${topic.id}-${index}`;
+                                appState.progressData[concursoId][disciplina][subtopicId].studied = true;
+                                appState.progressData[concursoId][disciplina][subtopicId].lastStudied = new Date().toISOString();
+                            });
+                        });
+                    }
+                    
+                    saveToLocalStorage();
+                    renderDisciplinas();
+                    updateStats();
+                    alert('Todos os tópicos foram marcados como estudados!');
+                }
+            });
+            
+            document.getElementById('resetProgress').addEventListener('click', function() {
+                if (confirm('Tem certeza que deseja reiniciar TODO o progresso? Esta ação não pode ser desfeita.')) {
+                    initializeProgressData();
+                    renderDisciplinas();
+                    updateStats();
+                    alert('Progresso reiniciado com sucesso!');
+                }
+            });
+            
+            document.getElementById('exportData').addEventListener('click', function() {
+                const dataStr = JSON.stringify(appState, null, 2);
+                const dataUri = 'data:application/json;charset=utf-8,'+ encodeURIComponent(dataStr);
+                const exportFileDefaultName = `estudos-concursos-${new Date().toISOString().slice(0,10)}.json`;
+                
+                const linkElement = document.createElement('a');
+                linkElement.setAttribute('href', dataUri);
+                linkElement.setAttribute('download', exportFileDefaultName);
+                linkElement.click();
+                
+                alert('Dados exportados com sucesso!');
+            });
+            
+            document.getElementById('printPlan').addEventListener('click', function() {
+                window.print();
+            });
+            
+            // Filtros
+            document.getElementById('filter-studied').addEventListener('change', function() {
+                applyFilters();
+            });
+            
+            document.getElementById('filter-pending').addEventListener('change', function() {
+                applyFilters();
+            });
+        }
+
+        // Aplicar filtros
+        function applyFilters() {
+            const showStudied = document.getElementById('filter-studied').checked;
+            const showPending = document.getElementById('filter-pending').checked;
+            
+            document.querySelectorAll('.topic-item').forEach(item => {
+                const checkbox = item.querySelector('.topic-checkbox');
+                const isStudied = checkbox ? checkbox.checked : false;
+                
+                if ((isStudied && !showStudied) || (!isStudied && !showPending)) {
+                    item.style.display = 'none';
+                } else {
+                    item.style.display = 'flex';
+                }
+            });
+        }
+
+        // Configurar modais
+        function setupModals() {
+            // Modal de metas
+            const goalModal = document.getElementById('goalModal');
+            const addGoalBtn = document.getElementById('addStudyGoal');
+            const closeGoalModal = document.getElementById('closeGoalModal');
+            const cancelGoal = document.getElementById('cancelGoal');
+            const goalForm = document.getElementById('goalForm');
+            
+            addGoalBtn.addEventListener('click', () => {
+                goalModal.style.display = 'flex';
+            });
+            
+            closeGoalModal.addEventListener('click', () => {
+                goalModal.style.display = 'none';
+            });
+            
+            cancelGoal.addEventListener('click', () => {
+                goalModal.style.display = 'none';
+            });
+            
+            goalForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                
+                const goal = {
+                    id: Date.now(),
+                    name: document.getElementById('goalName').value,
+                    deadline: document.getElementById('goalDeadline').value,
+                    hoursPerDay: document.getElementById('goalHours').value,
+                    priority: document.getElementById('goalPriority').value,
+                    createdAt: new Date().toISOString()
+                };
+                
+                appState.goals.push(goal);
+                saveToLocalStorage();
+                
+                goalModal.style.display = 'none';
+                goalForm.reset();
+                
+                alert('Meta definida com sucesso!');
+            });
+            
+            // Modal de observações
+            const noteModal = document.getElementById('noteModal');
+            const closeNoteModal = document.getElementById('closeNoteModal');
+            const cancelNote = document.getElementById('cancelNote');
+            const noteForm = document.getElementById('noteForm');
+            
+            closeNoteModal.addEventListener('click', () => {
+                noteModal.style.display = 'none';
+            });
+            
+            cancelNote.addEventListener('click', () => {
+                noteModal.style.display = 'none';
+            });
+            
+            noteForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                
+                const note = document.getElementById('noteContent').value;
+                const topicId = document.getElementById('noteTopic').getAttribute('data-topic-id');
+                const disciplina = document.getElementById('noteTopic').getAttribute('data-disciplina');
+                
+                saveNote(disciplina, topicId, note);
+                
+                noteModal.style.display = 'none';
+                noteForm.reset();
+                
+                alert('Observação salva com sucesso!');
+            });
+        }
+
+        // Abrir modal de observações
+        function openNoteModal(disciplina, topicId, topicName) {
+            const noteModal = document.getElementById('noteModal');
+            const noteTopic = document.getElementById('noteTopic');
+            const noteContent = document.getElementById('noteContent');
+            
+            const concursoId = appState.currentConcurso;
+            const noteKey = `${concursoId}-${disciplina}-${topicId}`;
+            
+            noteTopic.value = topicName;
+            noteTopic.setAttribute('data-disciplina', disciplina);
+            noteTopic.setAttribute('data-topic-id', topicId);
+            noteContent.value = appState.notes[noteKey] || '';
+            
+            noteModal.style.display = 'flex';
+        }
+
+        // Alternar disciplina (expandir/recolher)
+        function toggleDisciplina(header) {
+            const card = header.closest('.disciplina-card');
+            card.classList.toggle('open');
+            
+            const icon = header.querySelector('.toggle-icon');
+            icon.classList.toggle('fa-chevron-down');
+            icon.classList.toggle('fa-chevron-up');
+        }
+
+        // Fechar modais ao clicar fora
+        window.addEventListener('click', (e) => {
+            const goalModal = document.getElementById('goalModal');
+            const noteModal = document.getElementById('noteModal');
+            
+            if (e.target === goalModal) {
+                goalModal.style.display = 'none';
+            }
+            
+            if (e.target === noteModal) {
+                noteModal.style.display = 'none';
+            }
+        });
+
+        // Inicializar quando o DOM estiver carregado
+        document.addEventListener('DOMContentLoaded', initApp);
+    </script>
+</body>
+</html>
