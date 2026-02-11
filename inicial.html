@@ -29,62 +29,6 @@
             margin: 0 auto;
         }
 
-        /* ===== DASHBOARD ===== */
-        .dashboard {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-            gap: 1.5rem;
-            margin-bottom: 2.5rem;
-        }
-
-        .card {
-            background: rgba(255,255,255,0.75);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-            border: 1px solid rgba(255,255,255,0.5);
-            border-radius: 28px;
-            padding: 1.5rem 1.2rem;
-            box-shadow: 0 15px 35px rgba(0,20,50,0.1);
-            display: flex;
-            align-items: center;
-            transition: transform 0.2s ease;
-        }
-
-        .card:hover {
-            transform: translateY(-5px);
-            background: rgba(255,255,255,0.9);
-        }
-
-        .card-icon {
-            font-size: 2.4rem;
-            color: #0a5c8c;
-            background: rgba(8, 96, 148, 0.1);
-            padding: 0.8rem;
-            border-radius: 18px;
-            margin-right: 1rem;
-        }
-
-        .card-content h3 {
-            font-size: 0.85rem;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            color: #3a5e6e;
-            font-weight: 600;
-        }
-
-        .card-content .number {
-            font-size: 1.9rem;
-            font-weight: 700;
-            color: #0b3b4e;
-            line-height: 1.2;
-        }
-
-        .card-content .small-note {
-            font-size: 0.75rem;
-            color: #4e6b7c;
-            margin-top: 4px;
-        }
-
         /* ===== FORMULÁRIO PRINCIPAL ===== */
         .form-wrapper {
             background: white;
@@ -93,7 +37,6 @@
             box-shadow: 0 25px 50px -8px rgba(0,40,80,0.15);
             border: 1px solid rgba(255,255,255,0.6);
             backdrop-filter: blur(4px);
-            margin-bottom: 2rem;
         }
 
         h1 {
@@ -215,25 +158,6 @@
             font-size: 1.2rem;
         }
 
-        /* ===== EXEMPLO/PRÉVIA ===== */
-        .example-note {
-            background: #ebf5f7;
-            border-radius: 18px;
-            padding: 1.2rem 1.5rem;
-            margin-top: 1.8rem;
-            font-size: 0.85rem;
-            color: #155664;
-            display: flex;
-            flex-wrap: wrap;
-            align-items: center;
-            gap: 12px;
-            border-left: 6px solid #2494a6;
-        }
-
-        .example-note i {
-            font-size: 1.3rem;
-        }
-
         /* ===== RESPONSIVO ===== */
         @media (max-width: 750px) {
             .grid-form {
@@ -241,9 +165,6 @@
             }
             .full-width {
                 grid-column: span 1;
-            }
-            .dashboard {
-                grid-template-columns: 1fr;
             }
             body { padding: 1rem; }
         }
@@ -268,42 +189,6 @@
 </head>
 <body>
     <div class="container">
-        <!-- ===== DASHBOARD TOPO ===== -->
-        <div class="dashboard">
-            <div class="card">
-                <div class="card-icon"><i class="fas fa-calendar-alt"></i></div>
-                <div class="card-content">
-                    <h3>Último registro</h3>
-                    <div class="number" id="lastDate">07/01/2026</div>
-                    <div class="small-note">16:00:32</div>
-                </div>
-            </div>
-            <div class="card">
-                <div class="card-icon"><i class="fas fa-file-invoice"></i></div>
-                <div class="card-content">
-                    <h3>Processos ativos</h3>
-                    <div class="number" id="totalProcessos">42</div>
-                    <div class="small-note">+3 este mês</div>
-                </div>
-            </div>
-            <div class="card">
-                <div class="card-icon"><i class="fas fa-hand-holding-usd"></i></div>
-                <div class="card-content">
-                    <h3>Total empenhado</h3>
-                    <div class="number">R$ 1.280.000</div>
-                    <div class="small-note">última: R$ 30.000</div>
-                </div>
-            </div>
-            <div class="card">
-                <div class="card-icon"><i class="fas fa-building"></i></div>
-                <div class="card-content">
-                    <h3>Entidades beneficiadas</h3>
-                    <div class="number" id="totalEntidades">23</div>
-                    <div class="small-note">somente 2026</div>
-                </div>
-            </div>
-        </div>
-
         <!-- ===== FORMULÁRIO ===== -->
         <div class="form-wrapper">
             <h1>
@@ -315,68 +200,61 @@
 
             <form id="emendaForm">
                 <div class="grid-form">
-                    <!-- DATA E HORA (automática, mas editável) -->
+                    <!-- DATA E HORA -->
                     <div class="form-group">
                         <label><i class="far fa-calendar-check"></i> Data e hora *</label>
-                        <input type="text" class="form-control" id="dataHora" name="dataHora" value="07/01/2026  16:00:32" placeholder="dd/mm/aaaa  hh:mm:ss" required>
+                        <input type="text" class="form-control" id="dataHora" name="dataHora" placeholder="dd/mm/aaaa  hh:mm:ss" required>
                     </div>
                     <!-- PROC. ADM. -->
                     <div class="form-group">
                         <label><i class="fas fa-hashtag"></i> PROC. ADM.</label>
-                        <input type="text" class="form-control" id="procAdm" name="procAdm" value="00835/2026-91" placeholder="00000/0000-00">
+                        <input type="text" class="form-control" id="procAdm" name="procAdm" placeholder="00000/0000-00">
                     </div>
                     <!-- PROC. ADM. CÂMARA -->
                     <div class="form-group">
                         <label><i class="fas fa-gavel"></i> PROC. ADM. CÂMARA</label>
-                        <input type="text" class="form-control" id="procCamara" name="procCamara" value="11760/2025" placeholder="00000/0000">
+                        <input type="text" class="form-control" id="procCamara" name="procCamara" placeholder="00000/0000">
                     </div>
                     <!-- EMENDA PARLAMENTAR -->
                     <div class="form-group">
                         <label><i class="fas fa-landmark"></i> EMENDA PARLAMENTAR</label>
-                        <input type="text" class="form-control" id="emenda" name="emenda" value="755/2026" placeholder="000/0000">
+                        <input type="text" class="form-control" id="emenda" name="emenda" placeholder="000/0000">
                     </div>
                     <!-- VALOR -->
                     <div class="form-group valor-input">
-                        <label><i class="fas fa-coins"></i> VALOR (R$) *</label>
-                        <span>R$</span>
-                        <input type="text" class="form-control" id="valor" name="valor" value="30.000,00" placeholder="0.000,00" style="padding-left: 40px;" required>
+                        <label><i class="fas fa-coins"></i> VALOR (R$) *</label>                        
+                        <input type="text" class="form-control" id="valor" name="valor" placeholder="0.000,00" style="padding-left: 40px;" required>
                     </div>
                     <!-- RESPONSÁVEL -->
                     <div class="form-group">
                         <label><i class="fas fa-user-tie"></i> Responsável *</label>
-                        <input type="text" class="form-control" id="responsavel" name="responsavel" value="ADILSON JÚNIOR" placeholder="Nome completo" required>
+                        <input type="text" class="form-control" id="responsavel" name="responsavel" placeholder="Nome completo" required>
                     </div>
                     <!-- ENTIDADE (full width) -->
                     <div class="form-group full-width">
                         <label><i class="fas fa-users"></i> ENTIDADE *</label>
-                        <input type="text" class="form-control" id="entidade" name="entidade" value="ASSOCIAÇÃO DE MORADORES PRÓ MELHORAMENTOS DO JARDIM CASTELO" placeholder="Nome da associação / entidade" required>
+                        <input type="text" class="form-control" id="entidade" name="entidade" placeholder="Nome da associação / entidade" required>
                     </div>
                     <!-- DESCRIÇÃO (full width) -->
                     <div class="form-group full-width">
                         <label><i class="fas fa-align-left"></i> DESCRIÇÃO *</label>
-                        <textarea class="form-control" id="descricao" name="descricao" rows="2" placeholder="Detalhamento da destinação da verba" required>VERBA DESTINADA PARA CUSTEIO DAS ATIVIDADES E PROJETOS DA ASSOCIAÇÃO</textarea>
+                        <textarea class="form-control" id="descricao" name="descricao" rows="2" placeholder="Detalhamento da destinação da verba" required></textarea>
                     </div>
                     <!-- DOTAÇÃO (full width) -->
                     <div class="form-group full-width">
                         <label><i class="fas fa-code-branch"></i> Dotação</label>
-                        <input type="text" class="form-control" id="dotacao" name="dotacao" value="01.43.10.14.422.0111.1900.3.3.90.36 08 110.0000">
+                        <input type="text" class="form-control" id="dotacao" name="dotacao" placeholder="Ex: 01.43.10.14.422.0111.1900...">
                     </div>
                     <!-- LINK (full width) -->
                     <div class="form-group full-width">
                         <label><i class="fas fa-link"></i> Link do Processo</label>
-                        <input type="url" class="form-control" id="link" name="link" value="https://egov.santos.sp.gov.br/cpnet/consulta/tramite/externo/835/2026/91" placeholder="https://...">
+                        <input type="url" class="form-control" id="link" name="link" placeholder="https://...">
                     </div>
                 </div>
 
                 <button type="submit" class="btn-submit">
                     <i class="fas fa-paper-plane"></i> Registrar e enviar para Planilha
                 </button>
-                
-                <div class="example-note">
-                    <i class="fas fa-flask"></i>
-                    <strong>Exemplo carregado:</strong> Processo 00835/2026-91 · ADILSON JÚNIOR · R$ 30.000,00
-                    <span style="margin-left:auto; opacity:0.7;">os dados serão anexados à planilha</span>
-                </div>
             </form>
         </div>
     </div>
@@ -392,7 +270,7 @@
 
             // ==========  COLE AQUI SUA URL DO GOOGLE APPS SCRIPT  ==========
             // !! SUBSTITUA PELA SUA URL APÓS IMPLANTAR O WEB APP !!
-            const APPS_SCRIPT_URL = "https://script.google.com/macros/s/SEU_ID_AQUI/exec";
+            const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyhyMyLqFF8iUt21ynz_jB0fsYPPFAOIk7RWfDqQW9dqGfUDFHNYSAMuDZ-Q6JG5f_EAg/exec";
             // =================================================================
 
             const form = document.getElementById('emendaForm');
@@ -406,17 +284,6 @@
                 toast.style.background = isError ? '#962020' : '#1e3e4a';
                 setTimeout(() => { toast.style.display = 'none'; }, 5000);
             }
-
-            // Atualiza dashboard com dados simulados (apenas estética)
-            function updateDashboard() {
-                // os números são estáticos para demonstração, mas você pode incrementar via localStorage se quiser
-                document.getElementById('lastDate').innerText = new Date().toLocaleDateString('pt-BR');
-                // incrementos fictícios para simular
-                let total = document.getElementById('totalProcessos');
-                total.innerText = 42 + Math.floor(Math.random() * 3);
-                document.getElementById('totalEntidades').innerText = 23 + Math.floor(Math.random() * 2);
-            }
-            updateDashboard();
 
             // Envio do formulário
             form.addEventListener('submit', function(e) {
@@ -453,31 +320,20 @@
                     body: new URLSearchParams(formData).toString()
                 })
                 .then(() => {
-                    // Com 'no-cors' não podemos ler resposta; assumimos sucesso.
                     showMessage('✔ Registro enviado! (verifique na planilha em instantes)');
-                    // Opcional: limpar ou incrementar dashboard fictício
-                    updateDashboard();
-                    // Opcional: reset para o exemplo padrão? vamos manter os dados de exemplo
-                    // se quiser reset, descomente abaixo:
-                    // form.reset(); 
+                    // Limpa o formulário após envio bem-sucedido
+                    form.reset();
                 })
                 .catch(error => {
                     console.error('Erro no fetch:', error);
                     showMessage('Erro na conexão com a planilha. Verifique a URL do Script.', true);
                 });
             });
-
-            // Pré-popular com valores de exemplo (já estão nos atributos value)
-            // Garantir que o campo VALOR mostre corretamente
-            const valorField = document.getElementById('valor');
-            if (valorField.value && !valorField.value.startsWith('R$')) {
-                // apenas visual, o dado enviado será tratado para incluir R$
-            }
         })();
     </script>
 
     <!-- Nota: a planilha precisa estar publicada como Web App - veja as instruções no código do Google Apps Script -->
-    <div style="margin-top: 1rem; font-size: 0.75rem; text-align: center; color: #568696;">
+    <div style="margin-top: 1.5rem; font-size: 0.75rem; text-align: center; color: #568696;">
         <i class="fas fa-shield-alt"></i> Dados não serão salvos até que você configure o Google Apps Script com a URL correta. 
         Consulte o arquivo <strong>Code.gs</strong> incluso.
     </div>
