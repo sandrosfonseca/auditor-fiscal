@@ -1,0 +1,906 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.5">
+    <title>Dashboard de Emendas · Busca Global + Nº Processo</title>
+    <!-- Google Font & Font Awesome -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <!-- Chart.js e PapaParse CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+        }
+        body {
+            background: linear-gradient(145deg, #f0f3fa 0%, #f8faff 100%);
+            padding: 2rem 1.5rem;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .dashboard-wrapper {
+            max-width: 1600px;
+            width: 100%;
+        }
+        .header {
+            margin-bottom: 2.5rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+        .header h1 {
+            font-weight: 700;
+            font-size: 2.2rem;
+            background: linear-gradient(135deg, #1e3c72, #2a5298);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            letter-spacing: -0.5px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .header h1 i {
+            background: white;
+            padding: 12px;
+            border-radius: 24px;
+            box-shadow: 0 8px 20px rgba(0,20,80,0.08);
+            color: #1e3c72;
+            -webkit-text-fill-color: #1e3c72;
+            font-size: 1.8rem;
+        }
+        .subhead {
+            color: #4a5b73;
+            font-size: 1.1rem;
+            font-weight: 400;
+            margin-left: 8px;
+            display: flex;
+            gap: 20px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        .drop-zone {
+            background: rgba(255,255,255,0.75);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 2px dashed rgba(46, 91, 255, 0.3);
+            border-radius: 32px;
+            padding: 1.8rem 2rem;
+            margin-bottom: 2.8rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            box-shadow: 0 15px 35px rgba(0,35,70,0.05);
+            transition: all 0.25s ease;
+        }
+        .drop-zone:hover {
+            border-color: #2e5bff;
+            background: rgba(255,255,255,0.9);
+            box-shadow: 0 20px 40px rgba(46,91,255,0.08);
+        }
+        .drop-zone .info {
+            display: flex;
+            align-items: center;
+            gap: 18px;
+        }
+        .drop-zone i {
+            font-size: 2.5rem;
+            color: #2e5bff;
+            opacity: 0.8;
+        }
+        .drop-zone .text {
+            font-weight: 500;
+            color: #1e2f4e;
+        }
+        .text span {
+            font-size: 0.9rem;
+            color: #65748c;
+            display: block;
+            margin-top: 6px;
+        }
+        .btn-group {
+            display: flex;
+            gap: 12px;
+        }
+        .btn {
+            padding: 12px 26px;
+            border-radius: 40px;
+            border: none;
+            font-weight: 600;
+            font-size: 0.95rem;
+            background: white;
+            color: #1e3c72;
+            box-shadow: 0 5px 12px rgba(0,0,0,0.02);
+            cursor: pointer;
+            transition: 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            border: 1px solid rgba(0,0,0,0.02);
+        }
+        .btn-primary {
+            background: linear-gradient(145deg, #1e3c72, #122b4c);
+            color: white;
+            border: none;
+            box-shadow: 0 8px 18px rgba(28,57,107,0.2);
+        }
+        .btn-primary:hover {
+            background: #0f2240;
+            transform: translateY(-2px);
+        }
+        .btn-outline:hover {
+            background: #f0f4ff;
+            border-color: #2e5bff;
+        }
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 24px;
+            margin-bottom: 40px;
+        }
+        .card {
+            background: white;
+            border-radius: 28px;
+            padding: 1.8rem 1.5rem;
+            box-shadow: 0 12px 32px -8px rgba(0,30,60,0.04);
+            transition: 0.2s;
+            border: 1px solid rgba(255,255,255,0.6);
+            backdrop-filter: blur(4px);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .card:hover {
+            box-shadow: 0 20px 35px -8px rgba(18,52,102,0.08);
+            transform: translateY(-4px);
+        }
+        .card-icon {
+            background: rgba(46, 91, 255, 0.05);
+            border-radius: 50%;
+            width: 56px;
+            height: 56px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #2e5bff;
+            font-size: 1.7rem;
+        }
+        .card-content {
+            text-align: right;
+        }
+        .card-label {
+            font-size: 0.9rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #6c7a94;
+        }
+        .card-value {
+            font-size: 2.2rem;
+            font-weight: 700;
+            color: #0a1a2e;
+            line-height: 1.2;
+        }
+        .card-value small {
+            font-size: 1rem;
+            font-weight: 400;
+            color: #557da5;
+        }
+        .charts-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 28px;
+            margin-bottom: 45px;
+        }
+        .chart-card {
+            background: white;
+            border-radius: 26px;
+            padding: 1.8rem 1.5rem;
+            box-shadow: 0 8px 28px rgba(0,0,0,0.02);
+            border: 1px solid #f1f5fd;
+        }
+        .chart-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #1e3c72;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .chart-title i {
+            color: #2e5bff;
+            font-size: 1.3rem;
+        }
+        canvas {
+            max-height: 280px;
+            width: 100% !important;
+        }
+        /* --- TABELA COM BUSCA GLOBAL E ORDENAÇÃO --- */
+        .table-section {
+            background: white;
+            border-radius: 26px;
+            padding: 1.8rem 1.5rem;
+            box-shadow: 0 8px 28px rgba(0,0,0,0.02);
+            margin-top: 10px;
+            overflow-x: auto;
+        }
+        .table-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.8rem;
+            flex-wrap: wrap;
+            gap: 16px;
+        }
+        .table-header h3 {
+            font-weight: 700;
+            color: #1e3c72;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .badge {
+            background: #eef3ff;
+            color: #1e3c72;
+            padding: 6px 16px;
+            border-radius: 40px;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+        .global-search {
+            display: flex;
+            align-items: center;
+            background: #f5f9ff;
+            border-radius: 40px;
+            padding: 0.3rem 0.3rem 0.3rem 1.2rem;
+            border: 1px solid #dee6f0;
+            flex: 1 1 300px;
+            max-width: 400px;
+        }
+        .global-search i {
+            color: #2e5bff;
+            font-size: 1rem;
+            margin-right: 8px;
+        }
+        .global-search input {
+            border: none;
+            background: transparent;
+            padding: 0.7rem 0;
+            font-size: 0.95rem;
+            width: 100%;
+            outline: none;
+        }
+        .global-search input::placeholder {
+            color: #8a9db0;
+            font-weight: 400;
+        }
+        .table-container {
+            overflow-x: auto;
+            max-height: 480px;
+            border-radius: 18px;
+            border: 1px solid #edf2f9;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.9rem;
+            min-width: 1200px; /* aumentado para nova coluna */
+        }
+        th {
+            background: #f5f9ff;
+            color: #1e3c72;
+            font-weight: 600;
+            border-bottom: 2px solid #dbe4ee;
+            padding: 0.9rem 0.8rem;
+            position: relative;
+            vertical-align: middle;
+            white-space: nowrap;
+        }
+        .th-content {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            cursor: pointer;
+            user-select: none;
+        }
+        .sort-icon {
+            margin-left: 6px;
+            color: #8a9db0;
+            font-size: 0.8rem;
+            width: 16px;
+            display: inline-block;
+        }
+        td {
+            padding: 0.9rem 0.8rem;
+            border-bottom: 1px solid #edf1f8;
+            color: #2b3f57;
+            background-color: white;
+            white-space: nowrap;
+        }
+        td:not(.link-cell) {
+            white-space: normal;
+            word-break: break-word;
+        }
+        tr:hover td {
+            background-color: #f5f9ff;
+        }
+        .link-cell {
+            max-width: 150px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+        .link-cell a {
+            color: #2e5bff;
+            text-decoration: none;
+            font-weight: 500;
+        }
+        .valor-formatado {
+            font-weight: 700;
+            color: #0a2942;
+            white-space: nowrap;
+        }
+        .empty-message {
+            padding: 3rem;
+            text-align: center;
+            color: #6a7f9b;
+            font-style: italic;
+        }
+        .footer-info {
+            margin-top: 30px;
+            color: #6b7b92;
+            font-size: 0.9rem;
+            text-align: center;
+        }
+        @media (max-width: 900px) {
+            .charts-row { grid-template-columns: 1fr; }
+            .drop-zone { flex-direction: column; align-items: flex-start; gap: 20px; }
+            .table-header { flex-direction: column; align-items: flex-start; }
+            .global-search { max-width: 100%; width: 100%; }
+        }
+        @media (max-width: 550px) {
+            body { padding: 1.5rem 1rem; }
+            .metrics-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard-wrapper">
+        <!-- cabeçalho -->
+        <div class="header">
+            <h1>
+                <i class="fas fa-landmark"></i> 
+                Emendas · Transparência
+            </h1>
+            <div class="subhead">
+                <span><i class="far fa-calendar-alt" style="margin-right: 6px; color: #2e5bff;"></i> Exercício 2026</span>
+                <span><i class="fas fa-file-csv" style="margin-right: 6px; color: #2e5bff;"></i> Arraste um ou vários arquivos .CSV</span>
+            </div>
+        </div>
+
+        <!-- zona de drag & drop -->
+        <div id="dropZone" class="drop-zone">
+            <div class="info">
+                <i class="fas fa-cloud-upload-alt"></i>
+                <div class="text">
+                    <strong style="font-size: 1.2rem;">Área de transferência</strong>
+                    <span><i class="fas fa-mouse-pointer"></i> Clique ou arraste os arquivos (formato EmendaParlamentar)</span>
+                </div>
+            </div>
+            <div class="btn-group">
+                <button id="loadExampleBtn" class="btn btn-outline"><i class="fas fa-rotate-left"></i> Exemplo</button>
+                <button id="clearBtn" class="btn btn-outline"><i class="fas fa-trash-alt"></i> Limpar</button>
+            </div>
+        </div>
+        <input type="file" id="fileInput" accept=".csv" multiple style="display: none;">
+
+        <!-- Cards de resumo -->
+        <div class="metrics-grid" id="summaryCards"></div>
+
+        <!-- Gráficos duplos -->
+        <div class="charts-row">
+            <div class="chart-card">
+                <div class="chart-title">
+                    <i class="fas fa-users-between-lines"></i> Valor por vereador
+                </div>
+                <canvas id="chartVereadores"></canvas>
+            </div>
+            <div class="chart-card">
+                <div class="chart-title">
+                    <i class="fas fa-building"></i> Valor por entidade (top 5)
+                </div>
+                <canvas id="chartEntidades"></canvas>
+            </div>
+        </div>
+
+        <!-- Tabela detalhada com BUSCA GLOBAL e Nº Processo -->
+        <div class="table-section">
+            <div class="table-header">
+                <h3><i class="fas fa-table-list" style="color: #2e5bff;"></i> Emendas parlamentares · registro completo</h3>
+                <div class="global-search">
+                    <i class="fas fa-search"></i>
+                    <input type="text" id="globalFilterInput" placeholder="Pesquisar em todas as colunas..." autocomplete="off">
+                </div>
+                <span id="rowCountBadge" class="badge">0 emendas</span>
+            </div>
+            <div class="table-container" id="tableContainer">
+                <table id="dataTable">
+                    <thead id="tableHeader"></thead>
+                    <tbody id="tableBody"></tbody>
+                </table>
+            </div>
+        </div>
+        <div class="footer-info">
+            <i class="fas fa-check-circle" style="color: #27ae60;"></i> Dashboard interativo — clique nos cabeçalhos para ordenar, campo global filtra todas as colunas
+        </div>
+    </div>
+
+    <script>
+        (function(){
+            "use strict";
+
+            // ---------- CONSTANTE COM O CSV EXEMPLO ----------
+            const DEFAULT_CSV = `﻿DATA;PROC. ADM.;PROC. ADM.CAMARA;EMENDA PARLAMENTAR ;VALOR;Responsável;ENTIDADE;DESCRIÇÃO;Dotação;Link
+07/01/2026 16:00;835/2026-91;11760/2025;755/2026;R$ 30.000,00;VEREADOR ADILSON JÚNIOR;ASSOCIAÇÃO DE MORADORES PRÓ MELHORAMENTOS DO JARDIM CASTELO;VERBA DESTINADA PARA CUSTEIO DAS ATIVIDADES E PROJETOS DA ASSOCIAÇÃO;01.43.10.14.422.0111.1900.3.3.90.36 08 110.0000;https://egov.santos.sp.gov.br/cpnet/consulta/tramite/externo/835/2026/91
+07/01/2026 15:59;833/2026-65;11760/2025;748/2026;R$ 200.000,00;VEREADOR ADILSON JÚNIOR;CENTRO COMUNITÁRIO DO CONJUNTO RESIDENCIAL “MARECHAL ARTHUR DA COSTA E SILVA”;VERBA DESTINADA PARA CUSTEIO DE MATERIAL PARA OBRAS E/OU REFORMAS NO CENTRO COMUNITARIO;01.43.10.14.422.0111.1900.3.3.90.30 08 110.0000;https://egov.santos.sp.gov.br/cpnet/consulta/tramite/externo/833/2026/65
+09/01/2026 16:18;1984/2026-86;11760/2025;283/2026;R$ 30.000,00;VEREADOR ZEQUINHA TEIXEIRA;CENTRO COMUNITÁRIO CASTELO BRANCO;VERBA DESTINADA PARA O CENTRO COMUNITÁRIO CASTELO BRANCO;01.43.10.14.422.0111.1900.3.3.50.43 08 110.0000;https://egov.santos.sp.gov.br/cpnet/consulta/tramite/externo/1984/2026/86
+09/01/2026 16:13;1975/2026-95;11760/2025;237/2026;R$ 40.000,00;VEREADOR ZEQUINHA TEIXEIRA;SOCIEDADE DE MELHORAMENTOS DO BAIRRO CAMPO GRANDE;VERBA DESTINADA PARA COMPRA DE EQUIPAMENTOS PARA A SOCIEDADE DE MELHORAMENTO DO CAMPO GRANDE;01.43.10.14.422.0111.1900.3.3.90.52 08 110.0000;https://egov.santos.sp.gov.br/cpnet/consulta/tramite/externo/1975/2026/95
+09/01/2026 12:44;1710/2026-51;11760/2025;431/2026;R$ 15.000,00;VEREADOR DR. CASEIRO;SECRETARIA MUNICIPAL DA MULHER, DA CIDADANIA, DA DIVERSIDADE E DOS DIREITOS HUMANOS;VERBA DESTINADA PARA VERBA DESTINADA AO CONLGBT;01.43.10.14.422.0111.1900.3.3.90.30 08 110.0000;https://egov.santos.sp.gov.br/cpnet/consulta/tramite/externo/1710/2026/51
+08/01/2026 13:53;1250/2026-42;11760/2025;96/2026;R$ 35.000,00;VEREADOR CACÁ TEIXEIRA;SECRETARIA MUNICIPAL DA MULHER, DA CIDADANIA, DA DIVERSIDADE E DOS DIREITOS HUMANOS;VERBA DESTINADA PARA USO DO CONSELHO MUNICIPAL DE PARTICIPAÇÃO E DESENVOLVIMENTO DA COMUNIDADE NEGRA E DE PROMOÇÃO DE IGUALDADE RACIAL - CMPDCNPIR;01.43.10.14.422.0111.1900.3.3.90.32 08 110.0000;https://egov.santos.sp.gov.br/cpnet/consulta/tramite/externo/1250/2026/42
+08/01/2026 13:52;1449/2026-63;11760/2025;95/2026;R$ 30.000,00;VEREADOR CACÁ TEIXEIRA;SECRETARIA MUNICIPAL DA MULHER, DA CIDADANIA, DA DIVERSIDADE E DOS DIREITOS HUMANOS;VERBA DESTINADA PARA CONSELHO MUNICIPAL DE POLÍTICAS LGBT - CONLGBT;01.43.10.14.422.0111.1900.3.3.90.32 08 110.0000;https://egov.santos.sp.gov.br/cpnet/consulta/tramite/externo/1249/2026/63
+08/01/2026 13:50;1247/2026-38;11760/2025;94/2026;R$ 20.000,00;VEREADOR CACÁ TEIXEIRA;CENTRO COMUNITÁRIO CASTELO BRANCO;VERBA DESTINADA PARA CUSTEIO DE PROJETOS E DESPESAS PELA ENTIDADE;01.43.10.14.422.0111.1900.3.3.50.43 08 110.0000;https://egov.santos.sp.gov.br/cpnet/consulta/tramite/externo/1247/2026/38
+12/01/2026 11:18;2374/2026-91;11760/2025;1208/2026;R$ 280.000,00;VEREADOR CHITA MENEZES;ASSOCIAÇÃO DE MORADORES E AMIGOS DA VILA MATHIAS;VERBA DESTINADA PARA ATIVIDADES OU PROJETOS DA ENTIDADE ;01.43.10.14.422.0111.1900.3.3.50.43 08 110.0000;https://egov.santos.sp.gov.br/cpnet/consulta/tramite/externo/2374/2026/91
+12/01/2026 11:16;2370/2026-30;11760/2025;1157/2026;R$ 60.000,00;VEREADOR CHITA MENEZES;SOCIEDADE DE MELHORAMENTOS DO BAIRRO E MORROS JABAQUARA;VERBA DESTINADA PARA ATIVIDADES OU PROJETOS DA ENTIDADE;01.43.10.14.422.0111.1900.3.3.50.43 08 110.0000;https://egov.santos.sp.gov.br/cpnet/consulta/tramite/externo/2370/2026/30
+12/01/2026 11:16;2369/2026-51;11760/2025;1135/2026;R$ 180.000,00;VEREADOR CHITA MENEZES;ASSOCIAÇÃO DE MORADORES E AMIGOS DA VILA MATHIAS;VERBA DESTINADA PARA ATIVIDADES OU PROJETOS DA ENTIDADE;01.43.10.14.422.0111.1900.3.3.50.43 08 110.0000;https://egov.santos.sp.gov.br/cpnet/consulta/tramite/externo/2369/2026/51
+09/01/2026 10:34;1580/2026-47;11760/2025;1229 / 2026;R$ 180.000,00;VEREADOR FÁBIO DUARTE;ASSOCIAÇÃO DE MORADORES E AMIGOS DA VILA MATHIAS;TRANSFERÊNCIA DE RECURSOS PARA INSTITUIÇÃO SEM FINS LUCRATIVOS.;01.43.10.14.422.0111.1900.3.3.50.43 08 110.0000;https://egov.santos.sp.gov.br/cpnet/consulta/tramite/externo/1580/2026/47
+;;;;;;;;;
+;;;;;;;;;`;
+
+            // ---------- Estado global ----------
+            let currentData = [];               // todos os dados enriquecidos
+            
+            // Definição das colunas da tabela — AGORA INCLUI Nº PROCESSO (PROC. ADM.)
+            const TABLE_COLUMNS = [
+                { header: 'DATA', field: 'DATA', sortable: true, sortField: 'DATA' },
+                { header: 'Nº Processo', field: 'PROC. ADM.', sortable: true, sortField: 'PROC. ADM.' },
+                { header: 'EMENDA PARLAMENTAR', field: 'EMENDA PARLAMENTAR', sortable: true, sortField: 'EMENDA PARLAMENTAR' },
+                { header: 'VALOR', field: 'VALOR', sortable: true, sortField: 'valor_num' },
+                { header: 'Responsável', field: 'Responsável', sortable: true, sortField: 'Responsável' },
+                { header: 'ENTIDADE', field: 'ENTIDADE', sortable: true, sortField: 'ENTIDADE' },
+                { header: 'DESCRIÇÃO', field: 'DESCRIÇÃO', sortable: true, sortField: 'DESCRIÇÃO' },
+                { header: 'Link', field: 'Link', sortable: false }
+            ];
+
+            // Estado da busca global (único campo)
+            let globalFilterText = '';
+
+            // Estado da ordenação
+            let sortColumn = { field: 'DATA', direction: 'asc' };
+
+            // Gráficos
+            let chartVereador = null;
+            let chartEntidade = null;
+
+            // ---------- Utilitários ----------
+            function removerBOM(texto) {
+                return texto.replace(/^\uFEFF/, '');
+            }
+
+            function parseValorBR(valorStr) {
+                if (!valorStr) return 0;
+                let limpo = valorStr.replace('R$', '').replace(/\./g, '').replace(',', '.').trim();
+                const num = parseFloat(limpo);
+                return isNaN(num) ? 0 : num;
+            }
+
+            function formatarMoeda(valor) {
+                return valor.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+            }
+
+            function limparLinha(obj) {
+                const novo = {};
+                Object.keys(obj).forEach(k => {
+                    const chaveLimpa = k.trim();
+                    novo[chaveLimpa] = obj[k] ? obj[k].trim() : '';
+                });
+                return novo;
+            }
+
+            // ---------- Parse do CSV ----------
+            function parseCSV(textoCSV) {
+                const semBOM = removerBOM(textoCSV);
+                const resultado = Papa.parse(semBOM, {
+                    delimiter: ';',
+                    header: true,
+                    skipEmptyLines: 'greedy',
+                    transformHeader: h => h.trim()
+                });
+                return resultado.data.filter(row => row && row.DATA && row.DATA.trim() !== '');
+            }
+
+            function enriquecerDados(rows) {
+                return rows.map(row => {
+                    const limpo = limparLinha(row);
+                    limpo.valor_num = parseValorBR(limpo.VALOR);
+                    return limpo;
+                }).filter(r => r.valor_num > 0 || r.DATA);
+            }
+
+            // ---------- FILTRO GLOBAL (busca em todas as colunas textuais) ----------
+            function filtrarDados(dados) {
+                if (!globalFilterText.trim()) return dados;
+
+                const termo = globalFilterText.toLowerCase().trim();
+                return dados.filter(row => {
+                    // Campos que serão pesquisados (todas as colunas exceto Link)
+                    const camposParaBuscar = [
+                        row.DATA || '',
+                        row['PROC. ADM.'] || '',
+                        row['EMENDA PARLAMENTAR'] || '',
+                        row.VALOR || '',                 // string como "R$ 30.000,00"
+                        row.Responsável || '',
+                        row.ENTIDADE || '',
+                        row.DESCRIÇÃO || ''
+                    ];
+                    return camposParaBuscar.some(val => val.toLowerCase().includes(termo));
+                });
+            }
+
+            // ---------- ORDENAÇÃO ----------
+            function ordenarDados(dados) {
+                const { field, direction } = sortColumn;
+                const colDef = TABLE_COLUMNS.find(c => c.field === field);
+                const sortField = colDef?.sortField || field;
+
+                return [...dados].sort((a, b) => {
+                    let valA = a[sortField];
+                    let valB = b[sortField];
+                    
+                    if (valA === undefined || valA === null) valA = '';
+                    if (valB === undefined || valB === null) valB = '';
+
+                    // Ordenação numérica
+                    if (typeof valA === 'number' && typeof valB === 'number') {
+                        return direction === 'asc' ? valA - valB : valB - valA;
+                    }
+                    // Tratamento especial para datas
+                    if (field === 'DATA') {
+                        const parseData = (str) => {
+                            const [data, hora] = str.split(' ');
+                            const [dia, mes, ano] = data.split('/');
+                            return new Date(`${ano}-${mes}-${dia}T${hora}`).getTime();
+                        };
+                        valA = parseData(valA) || 0;
+                        valB = parseData(valB) || 0;
+                        return direction === 'asc' ? valA - valB : valB - valA;
+                    }
+                    // Padrão: string case-insensitive
+                    valA = String(valA).toLowerCase();
+                    valB = String(valB).toLowerCase();
+                    if (valA < valB) return direction === 'asc' ? -1 : 1;
+                    if (valA > valB) return direction === 'asc' ? 1 : -1;
+                    return 0;
+                });
+            }
+
+            // ---------- Renderização completa ----------
+            function renderizarTudo() {
+                renderSummaryCards(currentData);
+                renderCharts(currentData);
+                renderTabelaComFiltroGlobal();
+            }
+
+            // ---------- Cards de resumo ----------
+            function renderSummaryCards(rows) {
+                const totalEmendas = rows.length;
+                const totalValor = rows.reduce((acc, r) => acc + (r.valor_num || 0), 0);
+                const uniqueVereadores = new Set(rows.map(r => r['Responsável']).filter(Boolean)).size;
+                const uniqueEntidades = new Set(rows.map(r => r['ENTIDADE']).filter(Boolean)).size;
+                const mediaValor = totalEmendas > 0 ? totalValor / totalEmendas : 0;
+
+                const cardsHtml = `
+                    <div class="card">
+                        <div class="card-icon"><i class="fas fa-file-invoice"></i></div>
+                        <div class="card-content">
+                            <div class="card-label">Emendas</div>
+                            <div class="card-value">${totalEmendas}</div>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="card-icon"><i class="fas fa-coins"></i></div>
+                        <div class="card-content">
+                            <div class="card-label">Valor total</div>
+                            <div class="card-value">${formatarMoeda(totalValor)}</div>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="card-icon"><i class="fas fa-user-tie"></i></div>
+                        <div class="card-content">
+                            <div class="card-label">Vereadores</div>
+                            <div class="card-value">${uniqueVereadores}</div>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="card-icon"><i class="fas fa-building"></i></div>
+                        <div class="card-content">
+                            <div class="card-label">Entidades</div>
+                            <div class="card-value">${uniqueEntidades}</div>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="card-icon"><i class="fas fa-calculator"></i></div>
+                        <div class="card-content">
+                            <div class="card-label">Média / emenda</div>
+                            <div class="card-value">${formatarMoeda(mediaValor)}</div>
+                        </div>
+                    </div>
+                `;
+                document.getElementById('summaryCards').innerHTML = cardsHtml;
+            }
+
+            // ---------- Gráficos (Chart.js) ----------
+            function renderCharts(rows) {
+                const vereadorMap = new Map();
+                rows.forEach(r => {
+                    const nome = r['Responsável'] || 'Não informado';
+                    vereadorMap.set(nome, (vereadorMap.get(nome) || 0) + (r.valor_num || 0));
+                });
+                const sortedVereador = Array.from(vereadorMap.entries()).sort((a,b) => b[1] - a[1]);
+                const topVereadores = sortedVereador.slice(0,6);
+                const vereadorLabels = topVereadores.map(v => v[0].replace('VEREADOR ', '').substring(0,20) + (v[0].length>20?'…':''));
+                const vereadorValues = topVereadores.map(v => v[1]);
+
+                if (chartVereador) chartVereador.destroy();
+                const ctxVereador = document.getElementById('chartVereadores').getContext('2d');
+                chartVereador = new Chart(ctxVereador, {
+                    type: 'bar',
+                    data: {
+                        labels: vereadorLabels,
+                        datasets: [{
+                            label: 'Valor destinado (R$)',
+                            data: vereadorValues,
+                            backgroundColor: 'rgba(46, 91, 255, 0.7)',
+                            borderRadius: 8,
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: true,
+                        plugins: {
+                            legend: { display: false },
+                            tooltip: { callbacks: { label: (ctx) => `R$ ${ctx.raw.toLocaleString('pt-BR', {minimumFractionDigits:2})}` } }
+                        },
+                        scales: { y: { beginAtZero: true, ticks: { callback: (val) => 'R$ ' + val.toLocaleString('pt-BR') } } }
+                    }
+                });
+
+                const entidadeMap = new Map();
+                rows.forEach(r => {
+                    const ent = r['ENTIDADE'] || 'Sem entidade';
+                    entidadeMap.set(ent, (entidadeMap.get(ent) || 0) + (r.valor_num || 0));
+                });
+                const sortedEntidade = Array.from(entidadeMap.entries()).sort((a,b) => b[1] - a[1]);
+                const topEntidades = sortedEntidade.slice(0,5);
+                const entLabels = topEntidades.map(e => e[0].length > 28 ? e[0].substring(0,26)+'…' : e[0]);
+                const entValues = topEntidades.map(e => e[1]);
+
+                if (chartEntidade) chartEntidade.destroy();
+                const ctxEntidade = document.getElementById('chartEntidades').getContext('2d');
+                chartEntidade = new Chart(ctxEntidade, {
+                    type: 'doughnut',
+                    data: {
+                        labels: entLabels,
+                        datasets: [{
+                            data: entValues,
+                            backgroundColor: ['#2e5bff', '#36b9cc', '#1cc88a', '#f6c23e', '#e74a3b'],
+                            borderWidth: 0,
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: true,
+                        plugins: {
+                            legend: { position: 'bottom', labels: { boxWidth: 12, font: {size: 11} } },
+                            tooltip: { callbacks: { label: (ctx) => `${ctx.label}: R$ ${ctx.raw.toLocaleString('pt-BR', {minimumFractionDigits:2})}` } }
+                        },
+                        cutout: '65%',
+                    }
+                });
+            }
+
+            // ---------- TABELA COM FILTRO GLOBAL E ORDENAÇÃO ----------
+            function renderTabelaComFiltroGlobal() {
+                if (!currentData.length) {
+                    document.getElementById('tableHeader').innerHTML = '';
+                    document.getElementById('tableBody').innerHTML = `<tr><td colspan="${TABLE_COLUMNS.length}" class="empty-message"><i class="fas fa-cloud-upload-alt" style="font-size:2rem; opacity:0.5; margin-bottom:10px; display:block;"></i>Nenhuma emenda carregada. Arraste um CSV ou clique no exemplo.</td></tr>`;
+                    document.getElementById('rowCountBadge').innerHTML = '0 emendas';
+                    return;
+                }
+
+                // Aplicar filtro global e ordenação
+                const dadosFiltrados = filtrarDados(currentData);
+                const dadosOrdenados = ordenarDados(dadosFiltrados);
+                const totalFiltrados = dadosOrdenados.length;
+                document.getElementById('rowCountBadge').innerHTML = `${totalFiltrados} emenda${totalFiltrados !== 1 ? 's' : ''}`;
+
+                // Construir cabeçalho (sem filtros individuais, apenas ordenação)
+                let theadHTML = `<tr>`;
+                TABLE_COLUMNS.forEach(col => {
+                    const isSorted = sortColumn.field === col.field;
+                    const sortIcon = isSorted ? (sortColumn.direction === 'asc' ? '↑' : '↓') : '↕';
+                    theadHTML += `<th>`;
+                    if (col.sortable) {
+                        theadHTML += `<div class="th-content" onclick="window.__sort('${col.field}')">`;
+                        theadHTML += `<span>${col.header}</span>`;
+                        theadHTML += `<span class="sort-icon">${sortIcon}</span>`;
+                        theadHTML += `</div>`;
+                    } else {
+                        theadHTML += `<div class="th-content">${col.header}</div>`;
+                    }
+                    theadHTML += `</th>`;
+                });
+                theadHTML += `</tr>`;
+                document.getElementById('tableHeader').innerHTML = theadHTML;
+
+                // Corpo da tabela (exibir no máximo 150 linhas para performance)
+                let tbodyHTML = '';
+                const linhasExibir = dadosOrdenados.slice(0, 150);
+                linhasExibir.forEach(row => {
+                    tbodyHTML += `<tr>`;
+                    TABLE_COLUMNS.forEach(col => {
+                        if (col.field === 'Link') {
+                            const link = row[col.field] || '#';
+                            tbodyHTML += `<td class="link-cell"><a href="${link}" target="_blank" title="${link}"><i class="fas fa-external-link-alt"></i> processo</a></td>`;
+                        } else {
+                            let valor = row[col.field] || '';
+                            if (col.field === 'VALOR') {
+                                valor = row['VALOR'] || formatarMoeda(row.valor_num || 0);
+                                tbodyHTML += `<td class="valor-formatado">${valor}</td>`;
+                            } else if (col.field === 'Responsável') {
+                                valor = valor.replace('VEREADOR ', '');
+                                tbodyHTML += `<td>${valor}</td>`;
+                            } else if (col.field === 'DESCRIÇÃO' && valor.length > 80) {
+                                tbodyHTML += `<td>${valor.substring(0, 80)}…</td>`;
+                            } else {
+                                tbodyHTML += `<td>${valor}</td>`;
+                            }
+                        }
+                    });
+                    tbodyHTML += `</tr>`;
+                });
+                if (totalFiltrados > 150) {
+                    tbodyHTML += `<tr><td colspan="${TABLE_COLUMNS.length}" style="text-align:center; background: #f8fbff; font-weight:500;">... e mais ${totalFiltrados - 150} emendas (exibindo 150)</td></tr>`;
+                }
+                document.getElementById('tableBody').innerHTML = tbodyHTML;
+            }
+
+            // ---------- Função de ordenação exposta globalmente ----------
+            window.__sort = function(field) {
+                const colDef = TABLE_COLUMNS.find(c => c.field === field);
+                if (!colDef || !colDef.sortable) return;
+                if (sortColumn.field === field) {
+                    sortColumn.direction = sortColumn.direction === 'asc' ? 'desc' : 'asc';
+                } else {
+                    sortColumn.field = field;
+                    sortColumn.direction = 'asc';
+                }
+                renderTabelaComFiltroGlobal();
+            };
+
+            // ---------- Processar múltiplos arquivos ----------
+            async function processFiles(fileList) {
+                const allRows = [];
+                const filesArray = Array.from(fileList).filter(f => f.name.toLowerCase().endsWith('.csv'));
+                if (filesArray.length === 0) return;
+
+                for (const file of filesArray) {
+                    const text = await file.text();
+                    const parsed = parseCSV(text);
+                    const enriquecidos = enriquecerDados(parsed);
+                    allRows.push(...enriquecidos);
+                }
+                if (allRows.length > 0) {
+                    currentData = allRows;
+                    // Resetar filtro global e ordenação
+                    globalFilterText = '';
+                    document.getElementById('globalFilterInput').value = '';
+                    sortColumn = { field: 'DATA', direction: 'asc' };
+                    renderizarTudo();
+                } else {
+                    alert('Nenhum dado válido encontrado nos arquivos CSV.');
+                }
+            }
+
+            // ---------- Carregar exemplo ----------
+            function carregarExemplo() {
+                const parsed = parseCSV(DEFAULT_CSV);
+                const enriquecidos = enriquecerDados(parsed);
+                currentData = enriquecidos;
+                globalFilterText = '';
+                document.getElementById('globalFilterInput').value = '';
+                sortColumn = { field: 'DATA', direction: 'asc' };
+                renderizarTudo();
+            }
+
+            // ---------- Limpar tudo ----------
+            function limparTudo() {
+                currentData = [];
+                globalFilterText = '';
+                document.getElementById('globalFilterInput').value = '';
+                sortColumn = { field: 'DATA', direction: 'asc' };
+                renderizarTudo();
+            }
+
+            // ---------- Eventos de UI ----------
+            function initEventListeners() {
+                const dropZone = document.getElementById('dropZone');
+                const fileInput = document.getElementById('fileInput');
+                const loadExampleBtn = document.getElementById('loadExampleBtn');
+                const clearBtn = document.getElementById('clearBtn');
+                const globalFilterInput = document.getElementById('globalFilterInput');
+
+                // Busca global: atualiza e re-renderiza a tabela
+                globalFilterInput.addEventListener('input', function() {
+                    globalFilterText = this.value;
+                    renderTabelaComFiltroGlobal(); // apenas a tabela, mantém cards/gráficos totais
+                });
+
+                dropZone.addEventListener('click', (e) => {
+                    if (e.target.closest('.btn-group')) return;
+                    fileInput.click();
+                });
+
+                dropZone.addEventListener('dragover', (e) => {
+                    e.preventDefault();
+                    dropZone.style.background = 'rgba(46,91,255,0.05)';
+                    dropZone.style.borderColor = '#2e5bff';
+                });
+                dropZone.addEventListener('dragleave', () => {
+                    dropZone.style.background = 'rgba(255,255,255,0.75)';
+                    dropZone.style.borderColor = 'rgba(46, 91, 255, 0.3)';
+                });
+                dropZone.addEventListener('drop', async (e) => {
+                    e.preventDefault();
+                    dropZone.style.background = 'rgba(255,255,255,0.75)';
+                    dropZone.style.borderColor = 'rgba(46, 91, 255, 0.3)';
+                    if (e.dataTransfer.files.length) {
+                        await processFiles(e.dataTransfer.files);
+                    }
+                });
+
+                fileInput.addEventListener('change', async (e) => {
+                    if (fileInput.files.length) {
+                        await processFiles(fileInput.files);
+                        fileInput.value = '';
+                    }
+                });
+
+                loadExampleBtn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    carregarExemplo();
+                });
+
+                clearBtn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    limparTudo();
+                });
+            }
+
+            // ---------- Start ----------
+            window.onload = () => {
+                initEventListeners();
+                carregarExemplo();
+            };
+        })();
+    </script>
+</body>
+</html>
