@@ -3,127 +3,194 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.5">
-    <title>Gestão de Emendas · Grid + Filtros</title>
-    <!-- Google Fonts & Font Awesome -->
+    <title>Formulário de Inscrição · Emendas Parlamentares</title>
+    <!-- Google Fonts e Font Awesome -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <!-- Tabulator (grid poderoso e leve) -->
-    <link href="https://unpkg.com/tabulator-tables@5.5.0/dist/css/tabulator_modern.min.css" rel="stylesheet">
-    <script src="https://unpkg.com/tabulator-tables@5.5.0/dist/js/tabulator.min.js"></script>
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
+        /* ===== RESET & VARIÁVEIS ===== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
         body {
             font-family: 'Inter', sans-serif;
-            background: #f4f8fc;
-            color: #133a4c;
-            padding: 2rem 1.5rem;
+            background: linear-gradient(145deg, #f6f9fc 0%, #edf2f9 100%);
+            color: #1e293b;
             line-height: 1.5;
+            padding: 2rem 1.5rem;
+            min-height: 100vh;
         }
-        .container { max-width: 1440px; margin: 0 auto; }
 
-        /* DASHBOARD */
+        .container {
+            max-width: 1280px;
+            margin: 0 auto;
+        }
+
+        /* ===== DASHBOARD ===== */
         .dashboard {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
             gap: 1.5rem;
             margin-bottom: 2.5rem;
         }
+
         .card {
-            background: rgba(255,255,255,0.8);
+            background: rgba(255,255,255,0.75);
             backdrop-filter: blur(10px);
-            border: 1px solid rgba(255,255,255,0.6);
-            border-radius: 24px;
-            padding: 1.3rem 1.5rem;
-            box-shadow: 0 12px 30px rgba(0,30,50,0.08);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.5);
+            border-radius: 28px;
+            padding: 1.5rem 1.2rem;
+            box-shadow: 0 15px 35px rgba(0,20,50,0.1);
             display: flex;
             align-items: center;
+            transition: transform 0.2s ease;
         }
+
+        .card:hover {
+            transform: translateY(-5px);
+            background: rgba(255,255,255,0.9);
+        }
+
         .card-icon {
-            font-size: 2.2rem;
-            color: #0f6a7a;
-            background: rgba(15,106,122,0.1);
-            padding: 0.7rem;
+            font-size: 2.4rem;
+            color: #0a5c8c;
+            background: rgba(8, 96, 148, 0.1);
+            padding: 0.8rem;
             border-radius: 18px;
-            margin-right: 1.2rem;
+            margin-right: 1rem;
         }
+
         .card-content h3 {
-            font-size: 0.8rem;
+            font-size: 0.85rem;
             text-transform: uppercase;
-            color: #2a5f6e;
+            letter-spacing: 0.5px;
+            color: #3a5e6e;
             font-weight: 600;
         }
+
         .card-content .number {
             font-size: 1.9rem;
             font-weight: 700;
-            color: #094c5c;
+            color: #0b3b4e;
             line-height: 1.2;
         }
 
-        /* FORMULÁRIO */
-        .form-card {
-            background: white;
-            border-radius: 28px;
-            padding: 2rem;
-            box-shadow: 0 20px 40px rgba(0,45,65,0.1);
-            margin-bottom: 2.8rem;
+        .card-content .small-note {
+            font-size: 0.75rem;
+            color: #4e6b7c;
+            margin-top: 4px;
         }
+
+        /* ===== FORMULÁRIO PRINCIPAL ===== */
+        .form-wrapper {
+            background: white;
+            border-radius: 36px;
+            padding: 2.2rem 2rem;
+            box-shadow: 0 25px 50px -8px rgba(0,40,80,0.15);
+            border: 1px solid rgba(255,255,255,0.6);
+            backdrop-filter: blur(4px);
+            margin-bottom: 2rem;
+        }
+
         h1 {
-            font-size: 1.8rem;
+            font-size: 1.9rem;
             font-weight: 700;
             display: flex;
             align-items: center;
-            gap: 10px;
-            color: #0a4c5c;
-            margin-bottom: 0.3rem;
+            gap: 12px;
+            margin-bottom: 0.2rem;
+            color: #0e4b66;
         }
+
+        h1 i {
+            color: #1f7a8c;
+            font-size: 2rem;
+        }
+
         .subhead {
-            color: #3a6d7a;
+            color: #3f6b7a;
             font-size: 0.95rem;
-            border-bottom: 2px dashed #b6d3db;
-            padding-bottom: 1rem;
-            margin-bottom: 1.8rem;
+            margin-bottom: 2rem;
+            padding-bottom: 0.7rem;
+            border-bottom: 2px dashed #bdd3df;
         }
+
         .grid-form {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
-            gap: 1.5rem 2rem;
+            gap: 1.8rem 2rem;
         }
-        .full-width { grid-column: span 2; }
+
+        .full-width {
+            grid-column: span 2;
+        }
+
         .form-group {
             display: flex;
             flex-direction: column;
         }
+
         .form-group label {
             font-weight: 600;
-            font-size: 0.75rem;
-            letter-spacing: 0.5px;
+            font-size: 0.8rem;
+            letter-spacing: 0.4px;
             text-transform: uppercase;
-            color: #146473;
+            color: #1e5262;
             margin-bottom: 0.4rem;
             display: flex;
             align-items: center;
             gap: 6px;
         }
-        .form-control {
-            border: 1.5px solid #dae9ee;
-            border-radius: 14px;
-            padding: 0.8rem 1.2rem;
-            font-size: 0.95rem;
-            background: #f9fdfe;
-            transition: 0.15s;
+
+        .form-group label i {
+            color: #278098;
+            width: 18px;
         }
+
+        .form-control {
+            border: 1.5px solid #e2ecf0;
+            border-radius: 16px;
+            padding: 0.85rem 1.2rem;
+            font-size: 0.95rem;
+            font-family: 'Inter', sans-serif;
+            transition: all 0.15s;
+            background: #fafdfe;
+        }
+
         .form-control:focus {
             border-color: #1f9ab3;
-            box-shadow: 0 0 0 3px rgba(31,154,179,0.1);
-            outline: none;
             background: white;
+            box-shadow: 0 0 0 4px rgba(31,154,179,0.1);
+            outline: none;
         }
+
+        .valor-input {
+            position: relative;
+        }
+
+        .valor-input span {
+            position: absolute;
+            left: 14px;
+            top: 12px;
+            font-weight: 700;
+            color: #0a5c6e;
+        }
+
+        .valor-input input {
+            padding-left: 40px;
+        }
+
+        /* ===== BOTÃO ===== */
         .btn-submit {
-            background: linear-gradient(145deg, #0f6e80, #0b5668);
+            background: linear-gradient(145deg, #0d5e70, #0a4a5c);
             border: none;
             border-radius: 40px;
-            padding: 0.9rem 2rem;
-            font-size: 1.05rem;
+            padding: 1rem 2rem;
+            font-size: 1.1rem;
             font-weight: 700;
             color: white;
             display: flex;
@@ -131,434 +198,288 @@
             justify-content: center;
             gap: 12px;
             cursor: pointer;
-            width: 100%;
-            margin-top: 1.5rem;
+            transition: all 0.2s;
             border: 1px solid rgba(255,255,255,0.3);
-            box-shadow: 0 8px 18px rgba(8,90,110,0.3);
-            transition: 0.2s;
+            margin-top: 0.8rem;
+            box-shadow: 0 8px 20px rgba(8,80,100,0.3);
+            width: 100%;
         }
+
         .btn-submit:hover {
-            background: linear-gradient(145deg, #128498, #0e6b7c);
+            background: linear-gradient(145deg, #0e6f84, #0c596b);
             transform: scale(1.01);
+            box-shadow: 0 12px 28px rgba(8,100,120,0.4);
         }
 
-        /* GRID (TABULATOR) */
-        .grid-wrapper {
-            background: white;
-            border-radius: 28px;
-            padding: 1.8rem 1.8rem 2.2rem;
-            box-shadow: 0 20px 40px rgba(0,45,65,0.1);
-            margin-top: 1.5rem;
-        }
-        .grid-header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            margin-bottom: 1.5rem;
-        }
-        .grid-header h2 {
-            font-size: 1.5rem;
-            font-weight: 600;
-            color: #094c5c;
-        }
-        .filter-global {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            background: #f0f6f9;
-            padding: 0.3rem 0.3rem 0.3rem 1rem;
-            border-radius: 40px;
-        }
-        .filter-global i { color: #1f7a8c; }
-        .filter-global input {
-            border: none;
-            background: transparent;
-            padding: 0.6rem 0;
-            font-size: 0.95rem;
-            width: 220px;
-        }
-        .filter-global input:focus { outline: none; }
-        #emendas-table {
-            border-radius: 16px;
-            overflow: hidden;
+        .btn-submit i {
+            font-size: 1.2rem;
         }
 
-        /* MODAL DE CONSULTA */
-        .modal {
-            display: none;
+        /* ===== EXEMPLO/PRÉVIA ===== */
+        .example-note {
+            background: #ebf5f7;
+            border-radius: 18px;
+            padding: 1.2rem 1.5rem;
+            margin-top: 1.8rem;
+            font-size: 0.85rem;
+            color: #155664;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 12px;
+            border-left: 6px solid #2494a6;
+        }
+
+        .example-note i {
+            font-size: 1.3rem;
+        }
+
+        /* ===== RESPONSIVO ===== */
+        @media (max-width: 750px) {
+            .grid-form {
+                grid-template-columns: 1fr;
+            }
+            .full-width {
+                grid-column: span 1;
+            }
+            .dashboard {
+                grid-template-columns: 1fr;
+            }
+            body { padding: 1rem; }
+        }
+
+        /* ===== MENSAGEM FLUTUANTE ===== */
+        .toast-message {
             position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.5);
-            align-items: center;
-            justify-content: center;
-            z-index: 999;
-        }
-        .modal-content {
-            background: white;
-            border-radius: 36px;
-            max-width: 700px;
-            width: 90%;
-            padding: 2.2rem;
-            box-shadow: 0 30px 50px rgba(0,0,0,0.3);
-            position: relative;
-        }
-        .close {
-            position: absolute;
-            top: 20px; right: 25px;
-            font-size: 1.8rem;
-            cursor: pointer;
-            color: #6b8a94;
-        }
-        .detalhe-item {
-            display: flex;
-            border-bottom: 1px solid #e3f0f2;
-            padding: 0.9rem 0;
-        }
-        .detalhe-label {
-            font-weight: 700;
-            width: 180px;
-            color: #0b5565;
-        }
-        .detalhe-value {
-            flex: 1;
-            color: #1e3e4a;
-            word-break: break-word;
-        }
-
-        .toast {
-            position: fixed;
-            bottom: 30px; right: 30px;
-            background: #1e4a5a;
+            bottom: 30px;
+            right: 30px;
+            background: #1e3e4a;
             color: white;
             padding: 1rem 2rem;
             border-radius: 50px;
+            font-weight: 500;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
             display: none;
             align-items: center;
             gap: 10px;
-            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
-            z-index: 1000;
-        }
-        @media (max-width: 800px) {
-            .grid-form { grid-template-columns: 1fr; }
-            .full-width { grid-column: span 1; }
+            z-index: 999;
         }
     </style>
 </head>
 <body>
-<div class="container">
-
-    <!-- DASHBOARD (dinâmico via grid) -->
-    <div class="dashboard">
-        <div class="card">
-            <div class="card-icon"><i class="fas fa-calendar-alt"></i></div>
-            <div class="card-content">
-                <h3>Última Emenda</h3>
-                <div class="number" id="lastDate">--</div>
-                <div class="small-note" id="lastHour">--</div>
-            </div>
-        </div>
-        <div class="card">
-            <div class="card-icon"><i class="fas fa-file-invoice"></i></div>
-            <div class="card-content">
-                <h3>Total Processos</h3>
-                <div class="number" id="totalProcessos">0</div>
-            </div>
-        </div>
-        <div class="card">
-            <div class="card-icon"><i class="fas fa-hand-holding-usd"></i></div>
-            <div class="card-content">
-                <h3>Total Empenhado</h3>
-                <div class="number" id="totalValor">R$ 0</div>
-            </div>
-        </div>
-        <div class="card">
-            <div class="card-icon"><i class="fas fa-building"></i></div>
-            <div class="card-content">
-                <h3>Entidades</h3>
-                <div class="number" id="totalEntidades">0</div>
-            </div>
-        </div>
-    </div>
-
-    <!-- FORMULÁRIO DE CADASTRO -->
-    <div class="form-card">
-        <h1><i class="fas fa-pen-fancy"></i> Nova Emenda</h1>
-        <div class="subhead"><i class="fas fa-info-circle"></i> Os campos com * são obrigatórios</div>
-        <form id="emendaForm">
-            <div class="grid-form">
-                <div class="form-group">
-                    <label><i class="far fa-calendar-check"></i> Data e hora *</label>
-                    <input type="text" class="form-control" id="dataHora" name="dataHora" value="07/01/2026  16:00:32" required>
-                </div>
-                <div class="form-group">
-                    <label><i class="fas fa-hashtag"></i> PROC. ADM.</label>
-                    <input type="text" class="form-control" id="procAdm" value="00835/2026-91">
-                </div>
-                <div class="form-group">
-                    <label><i class="fas fa-gavel"></i> PROC. ADM.CAMARA</label>
-                    <input type="text" class="form-control" id="procCamara" value="11760/2025">
-                </div>
-                <div class="form-group">
-                    <label><i class="fas fa-landmark"></i> EMENDA PARLAMENTAR</label>
-                    <input type="text" class="form-control" id="emenda" value="755/2026">
-                </div>
-                <div class="form-group">
-                    <label><i class="fas fa-coins"></i> VALOR (R$) *</label>
-                    <input type="text" class="form-control" id="valor" value="30.000,00" placeholder="0.000,00" required>
-                </div>
-                <div class="form-group">
-                    <label><i class="fas fa-user-tie"></i> Responsável *</label>
-                    <input type="text" class="form-control" id="responsavel" value="ADILSON JÚNIOR" required>
-                </div>
-                <div class="form-group full-width">
-                    <label><i class="fas fa-users"></i> ENTIDADE *</label>
-                    <input type="text" class="form-control" id="entidade" value="ASSOCIAÇÃO DE MORADORES PRÓ MELHORAMENTOS DO JARDIM CASTELO" required>
-                </div>
-                <div class="form-group full-width">
-                    <label><i class="fas fa-align-left"></i> DESCRIÇÃO *</label>
-                    <textarea class="form-control" id="descricao" rows="2">VERBA DESTINADA PARA CUSTEIO DAS ATIVIDADES E PROJETOS DA ASSOCIAÇÃO</textarea>
-                </div>
-                <div class="form-group full-width">
-                    <label><i class="fas fa-code-branch"></i> Dotação</label>
-                    <input type="text" class="form-control" id="dotacao" value="01.43.10.14.422.0111.1900.3.3.90.36 08 110.0000">
-                </div>
-                <div class="form-group full-width">
-                    <label><i class="fas fa-link"></i> Link do Processo</label>
-                    <input type="url" class="form-control" id="link" value="https://egov.santos.sp.gov.br/cpnet/consulta/tramite/externo/835/2026/91">
+    <div class="container">
+        <!-- ===== DASHBOARD TOPO ===== -->
+        <div class="dashboard">
+            <div class="card">
+                <div class="card-icon"><i class="fas fa-calendar-alt"></i></div>
+                <div class="card-content">
+                    <h3>Último registro</h3>
+                    <div class="number" id="lastDate">07/01/2026</div>
+                    <div class="small-note">16:00:32</div>
                 </div>
             </div>
-            <button type="submit" class="btn-submit"><i class="fas fa-paper-plane"></i> Salvar na Planilha</button>
-        </form>
-    </div>
-
-    <!-- GRID COM FILTROS E ORDENAÇÃO -->
-    <div class="grid-wrapper">
-        <div class="grid-header">
-            <h2><i class="fas fa-table"></i> Emendas Cadastradas</h2>
-            <div class="filter-global">
-                <i class="fas fa-search"></i>
-                <input type="text" id="global-filter" placeholder="Filtrar toda a tabela...">
+            <div class="card">
+                <div class="card-icon"><i class="fas fa-file-invoice"></i></div>
+                <div class="card-content">
+                    <h3>Processos ativos</h3>
+                    <div class="number" id="totalProcessos">42</div>
+                    <div class="small-note">+3 este mês</div>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-icon"><i class="fas fa-hand-holding-usd"></i></div>
+                <div class="card-content">
+                    <h3>Total empenhado</h3>
+                    <div class="number">R$ 1.280.000</div>
+                    <div class="small-note">última: R$ 30.000</div>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-icon"><i class="fas fa-building"></i></div>
+                <div class="card-content">
+                    <h3>Entidades beneficiadas</h3>
+                    <div class="number" id="totalEntidades">23</div>
+                    <div class="small-note">somente 2026</div>
+                </div>
             </div>
         </div>
-        <div id="emendas-table"></div>
-        <div style="margin-top: 1.2rem; text-align: right; font-size: 0.8rem; color: #336b79;">
-            <i class="fas fa-click-pointer"></i> Clique em qualquer linha para ver detalhes completos
-        </div>
-    </div>
-</div>
 
-<!-- MODAL DE CONSULTA -->
-<div id="detalheModal" class="modal">
-    <div class="modal-content">
-        <span class="close" id="closeModal">&times;</span>
-        <h2 style="color: #094c5c; margin-bottom: 1.5rem;"><i class="fas fa-file-alt"></i> Detalhes da Emenda</h2>
-        <div id="modal-body"></div>
-    </div>
-</div>
+        <!-- ===== FORMULÁRIO ===== -->
+        <div class="form-wrapper">
+            <h1>
+                <i class="fas fa-pen-fancy"></i> Registro de Emenda Parlamentar
+            </h1>
+            <div class="subhead">
+                <i class="fas fa-info-circle"></i> Preencha os dados conforme documentação oficial. Campos com * são essenciais.
+            </div>
 
-<!-- TOAST NOTIFICATION -->
-<div id="toastMsg" class="toast"><i class="fas fa-check-circle"></i> <span id="toastText"></span></div>
+            <form id="emendaForm">
+                <div class="grid-form">
+                    <!-- DATA E HORA (automática, mas editável) -->
+                    <div class="form-group">
+                        <label><i class="far fa-calendar-check"></i> Data e hora *</label>
+                        <input type="text" class="form-control" id="dataHora" name="dataHora" value="07/01/2026  16:00:32" placeholder="dd/mm/aaaa  hh:mm:ss" required>
+                    </div>
+                    <!-- PROC. ADM. -->
+                    <div class="form-group">
+                        <label><i class="fas fa-hashtag"></i> PROC. ADM.</label>
+                        <input type="text" class="form-control" id="procAdm" name="procAdm" value="00835/2026-91" placeholder="00000/0000-00">
+                    </div>
+                    <!-- PROC. ADM. CÂMARA -->
+                    <div class="form-group">
+                        <label><i class="fas fa-gavel"></i> PROC. ADM. CÂMARA</label>
+                        <input type="text" class="form-control" id="procCamara" name="procCamara" value="11760/2025" placeholder="00000/0000">
+                    </div>
+                    <!-- EMENDA PARLAMENTAR -->
+                    <div class="form-group">
+                        <label><i class="fas fa-landmark"></i> EMENDA PARLAMENTAR</label>
+                        <input type="text" class="form-control" id="emenda" name="emenda" value="755/2026" placeholder="000/0000">
+                    </div>
+                    <!-- VALOR -->
+                    <div class="form-group valor-input">
+                        <label><i class="fas fa-coins"></i> VALOR (R$) *</label>
+                        <span>R$</span>
+                        <input type="text" class="form-control" id="valor" name="valor" value="30.000,00" placeholder="0.000,00" style="padding-left: 40px;" required>
+                    </div>
+                    <!-- RESPONSÁVEL -->
+                    <div class="form-group">
+                        <label><i class="fas fa-user-tie"></i> Responsável *</label>
+                        <input type="text" class="form-control" id="responsavel" name="responsavel" value="ADILSON JÚNIOR" placeholder="Nome completo" required>
+                    </div>
+                    <!-- ENTIDADE (full width) -->
+                    <div class="form-group full-width">
+                        <label><i class="fas fa-users"></i> ENTIDADE *</label>
+                        <input type="text" class="form-control" id="entidade" name="entidade" value="ASSOCIAÇÃO DE MORADORES PRÓ MELHORAMENTOS DO JARDIM CASTELO" placeholder="Nome da associação / entidade" required>
+                    </div>
+                    <!-- DESCRIÇÃO (full width) -->
+                    <div class="form-group full-width">
+                        <label><i class="fas fa-align-left"></i> DESCRIÇÃO *</label>
+                        <textarea class="form-control" id="descricao" name="descricao" rows="2" placeholder="Detalhamento da destinação da verba" required>VERBA DESTINADA PARA CUSTEIO DAS ATIVIDADES E PROJETOS DA ASSOCIAÇÃO</textarea>
+                    </div>
+                    <!-- DOTAÇÃO (full width) -->
+                    <div class="form-group full-width">
+                        <label><i class="fas fa-code-branch"></i> Dotação</label>
+                        <input type="text" class="form-control" id="dotacao" name="dotacao" value="01.43.10.14.422.0111.1900.3.3.90.36 08 110.0000">
+                    </div>
+                    <!-- LINK (full width) -->
+                    <div class="form-group full-width">
+                        <label><i class="fas fa-link"></i> Link do Processo</label>
+                        <input type="url" class="form-control" id="link" name="link" value="https://egov.santos.sp.gov.br/cpnet/consulta/tramite/externo/835/2026/91" placeholder="https://...">
+                    </div>
+                </div>
 
-<script>
-    (function() {
-        "use strict";
-
-        // ==========  CONFIGURAÇÃO: URL DO APPS SCRIPT ==========
-        const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyhyMyLqFF8iUt21ynz_jB0fsYPPFAOIk7RWfDqQW9dqGfUDFHNYSAMuDZ-Q6JG5f_EAg/exec";  // <-- ALTERE AQUI
-        // =======================================================
-
-        // Instância do Tabulator
-        let table;
-
-        // Elementos
-        const form = document.getElementById('emendaForm');
-        const modal = document.getElementById('detalheModal');
-        const modalBody = document.getElementById('modal-body');
-        const closeModal = document.getElementById('closeModal');
-        const toast = document.getElementById('toastMsg');
-        const toastText = document.getElementById('toastText');
-
-        // Função de notificação
-        function showToast(msg, isError = false) {
-            toastText.innerText = msg;
-            toast.style.background = isError ? '#962020' : '#1e4a5a';
-            toast.style.display = 'flex';
-            setTimeout(() => { toast.style.display = 'none'; }, 4000);
-        }
-
-        // ---------- CARREGAR DADOS DO GOOGLE SHEETS ----------
-        async function loadSheetData() {
-            try {
-                const response = await fetch(APPS_SCRIPT_URL + '?action=getAll');  // GET com parâmetro
-                const data = await response.json();
-                if (data.error) throw new Error(data.error);
+                <button type="submit" class="btn-submit">
+                    <i class="fas fa-paper-plane"></i> Registrar e enviar para Planilha
+                </button>
                 
-                // Atualiza dashboard com os dados reais
-                updateDashboard(data.rows);
-                // Alimenta o grid
-                if (table) {
-                    table.replaceData(data.rows);
-                } else {
-                    initTabulator(data.rows);
+                <div class="example-note">
+                    <i class="fas fa-flask"></i>
+                    <strong>Exemplo carregado:</strong> Processo 00835/2026-91 · ADILSON JÚNIOR · R$ 30.000,00
+                    <span style="margin-left:auto; opacity:0.7;">os dados serão anexados à planilha</span>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- MENSAGEM DE RETORNO -->
+    <div id="liveToast" class="toast-message">
+        <i class="fas fa-check-circle"></i> <span id="toastText">Registro enviado com sucesso!</span>
+    </div>
+
+    <script>
+        (function() {
+            "use strict";
+
+            // ==========  COLE AQUI SUA URL DO GOOGLE APPS SCRIPT  ==========
+            // !! SUBSTITUA PELA SUA URL APÓS IMPLANTAR O WEB APP !!
+            const APPS_SCRIPT_URL = "https://script.google.com/macros/s/SEU_ID_AQUI/exec";
+            // =================================================================
+
+            const form = document.getElementById('emendaForm');
+            const toast = document.getElementById('liveToast');
+            const toastText = document.getElementById('toastText');
+
+            // Função para exibir notificação
+            function showMessage(msg, isError = false) {
+                toastText.innerText = msg;
+                toast.style.display = 'flex';
+                toast.style.background = isError ? '#962020' : '#1e3e4a';
+                setTimeout(() => { toast.style.display = 'none'; }, 5000);
+            }
+
+            // Atualiza dashboard com dados simulados (apenas estética)
+            function updateDashboard() {
+                // os números são estáticos para demonstração, mas você pode incrementar via localStorage se quiser
+                document.getElementById('lastDate').innerText = new Date().toLocaleDateString('pt-BR');
+                // incrementos fictícios para simular
+                let total = document.getElementById('totalProcessos');
+                total.innerText = 42 + Math.floor(Math.random() * 3);
+                document.getElementById('totalEntidades').innerText = 23 + Math.floor(Math.random() * 2);
+            }
+            updateDashboard();
+
+            // Envio do formulário
+            form.addEventListener('submit', function(e) {
+                e.preventDefault();
+
+                // Coleta os dados exatamente com os cabeçalhos da planilha
+                const formData = {
+                    'DATA e hora': document.getElementById('dataHora').value.trim(),
+                    'PROC. ADM.': document.getElementById('procAdm').value.trim(),
+                    'PROC. ADM.CAMARA': document.getElementById('procCamara').value.trim(),
+                    'EMENDA PARLAMENTAR': document.getElementById('emenda').value.trim(),
+                    'VALOR(R$)': 'R$ ' + document.getElementById('valor').value.trim().replace(/^R\$ ?/i, ''),
+                    'Responsável': document.getElementById('responsavel').value.trim().toUpperCase(),
+                    'ENTIDADE': document.getElementById('entidade').value.trim().toUpperCase(),
+                    'DESCRIÇÃO': document.getElementById('descricao').value.trim(),
+                    'Dotação': document.getElementById('dotacao').value.trim(),
+                    'Link': document.getElementById('link').value.trim()
+                };
+
+                // Validação simples
+                if (!formData['DATA e hora'] || !formData['VALOR(R$)'] || !formData['Responsável'] || !formData['ENTIDADE']) {
+                    showMessage('Preencha os campos obrigatórios (*)', true);
+                    return;
                 }
-            } catch (err) {
-                console.error(err);
-                showToast('Erro ao carregar dados da planilha. Verifique a URL do Web App.', true);
-                // Inicia grid vazio se falhar
-                initTabulator([]);
-            }
-        }
 
-        // ---------- DASHBOARD ----------
-        function updateDashboard(rows) {
-            if (!rows || rows.length === 0) {
-                document.getElementById('lastDate').innerText = '--';
-                document.getElementById('lastHour').innerText = '--';
-                document.getElementById('totalProcessos').innerText = '0';
-                document.getElementById('totalValor').innerText = 'R$ 0';
-                document.getElementById('totalEntidades').innerText = '0';
-                return;
-            }
-
-            // Última data (considera a primeira linha como mais recente? vamos ordenar por data decrescente)
-            const sorted = [...rows].sort((a,b) => (a.dataHoraRaw || '').localeCompare(b.dataHoraRaw || '') * -1);
-            const last = sorted[0];
-            if (last.dataHora) {
-                const parts = last.dataHora.split('  ');
-                document.getElementById('lastDate').innerText = parts[0] || '--';
-                document.getElementById('lastHour').innerText = parts[1] || '--';
-            }
-
-            document.getElementById('totalProcessos').innerText = rows.length;
-
-            // Soma dos valores
-            let total = 0;
-            rows.forEach(row => {
-                let val = row.valor || row['VALOR(R$)'] || '0';
-                val = val.replace(/[R$\s.]/g, '').replace(',', '.');
-                total += parseFloat(val) || 0;
-            });
-            document.getElementById('totalValor').innerText = 'R$ ' + total.toLocaleString('pt-BR', {minimumFractionDigits: 2, maximumFractionDigits: 2});
-
-            // Contagem de entidades distintas
-            const entidades = new Set(rows.map(r => r.entidade || r.ENTIDADE));
-            document.getElementById('totalEntidades').innerText = entidades.size;
-        }
-
-        // ---------- GRID (TABULATOR) ----------
-        function initTabulator(data) {
-            table = new Tabulator("#emendas-table", {
-                data: data,
-                layout: "fitColumns",
-                pagination: "local",
-                paginationSize: 10,
-                paginationSizeSelector: [5, 10, 20, 50],
-                movableColumns: true,
-                resizableRows: false,
-                columns: [
-                    { title: "Data/Hora", field: "dataHora", sorter: "string", width: 160, headerFilter: "input" },
-                    { title: "Proc. ADM", field: "procAdm", sorter: "string", headerFilter: "input" },
-                    { title: "Proc. Câmara", field: "procCamara", sorter: "string", headerFilter: "input" },
-                    { title: "Emenda", field: "emenda", sorter: "string", headerFilter: "input" },
-                    { title: "Valor (R$)", field: "valor", sorter: "string", headerFilter: "input" },
-                    { title: "Responsável", field: "responsavel", sorter: "string", headerFilter: "input" },
-                    { title: "Entidade", field: "entidade", sorter: "string", headerFilter: "input" },
-                    { title: "Ações", field: "actions", formatter: function(cell) {
-                        return '<i class="fas fa-eye" style="color: #0f6a7a; cursor: pointer;" title="Ver detalhes"></i>';
-                    }, width: 80, hozAlign: "center", headerSort: false, cellClick: function(e, cell) {
-                        showDetails(cell.getRow().getData());
-                    }}
-                ],
-                rowClick: function(e, row) {
-                    showDetails(row.getData());
-                }
-            });
-
-            // Filtro global (busca em todas as colunas)
-            document.getElementById('global-filter').addEventListener('input', function(e) {
-                table.setFilter(e.target.value);
-            });
-        }
-
-        // ---------- MODAL DE DETALHES ----------
-        function showDetails(row) {
-            const fields = [
-                { label: "DATA e hora", value: row.dataHora },
-                { label: "PROC. ADM.", value: row.procAdm },
-                { label: "PROC. ADM.CAMARA", value: row.procCamara },
-                { label: "EMENDA PARLAMENTAR", value: row.emenda },
-                { label: "VALOR(R$)", value: row.valor },
-                { label: "Responsável", value: row.responsavel },
-                { label: "ENTIDADE", value: row.entidade },
-                { label: "DESCRIÇÃO", value: row.descricao },
-                { label: "Dotação", value: row.dotacao },
-                { label: "Link", value: row.link, isLink: true }
-            ];
-
-            let html = '';
-            fields.forEach(f => {
-                let val = f.value || '—';
-                if (f.isLink && val !== '—') {
-                    val = `<a href="${val}" target="_blank" style="color: #0e7b8c;">${val}</a>`;
-                }
-                html += `<div class="detalhe-item"><span class="detalhe-label">${f.label}</span><span class="detalhe-value">${val}</span></div>`;
-            });
-            modalBody.innerHTML = html;
-            modal.style.display = 'flex';
-        }
-
-        closeModal.onclick = () => modal.style.display = 'none';
-        window.onclick = (e) => { if (e.target === modal) modal.style.display = 'none'; };
-
-        // ---------- ENVIO DO FORMULÁRIO ----------
-        form.addEventListener('submit', async function(e) {
-            e.preventDefault();
-
-            const formData = {
-                'DATA e hora': document.getElementById('dataHora').value.trim(),
-                'PROC. ADM.': document.getElementById('procAdm').value.trim(),
-                'PROC. ADM.CAMARA': document.getElementById('procCamara').value.trim(),
-                'EMENDA PARLAMENTAR': document.getElementById('emenda').value.trim(),
-                'VALOR(R$)': 'R$ ' + document.getElementById('valor').value.trim().replace(/^R\$ ?/i, ''),
-                'Responsável': document.getElementById('responsavel').value.trim().toUpperCase(),
-                'ENTIDADE': document.getElementById('entidade').value.trim().toUpperCase(),
-                'DESCRIÇÃO': document.getElementById('descricao').value.trim(),
-                'Dotação': document.getElementById('dotacao').value.trim(),
-                'Link': document.getElementById('link').value.trim()
-            };
-
-            if (!formData['DATA e hora'] || !formData['VALOR(R$)'] || !formData['Responsável'] || !formData['ENTIDADE']) {
-                showToast('Preencha todos os campos obrigatórios (*)', true);
-                return;
-            }
-
-            showToast('Enviando...');
-
-            try {
-                const response = await fetch(APPS_SCRIPT_URL, {
+                // Mostra status de envio
+                showMessage('Enviando para o Google Planilhas...', false);
+                
+                // Envia para o Google Apps Script (Web App)
+                fetch(APPS_SCRIPT_URL, {
                     method: 'POST',
-                    mode: 'no-cors',
+                    mode: 'no-cors', // necessário para evitar erros CORS em Web App anônimo
                     headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
                     body: new URLSearchParams(formData).toString()
+                })
+                .then(() => {
+                    // Com 'no-cors' não podemos ler resposta; assumimos sucesso.
+                    showMessage('✔ Registro enviado! (verifique na planilha em instantes)');
+                    // Opcional: limpar ou incrementar dashboard fictício
+                    updateDashboard();
+                    // Opcional: reset para o exemplo padrão? vamos manter os dados de exemplo
+                    // se quiser reset, descomente abaixo:
+                    // form.reset(); 
+                })
+                .catch(error => {
+                    console.error('Erro no fetch:', error);
+                    showMessage('Erro na conexão com a planilha. Verifique a URL do Script.', true);
                 });
-                showToast('✔ Registro enviado! Atualizando lista...');
-                // Aguarda 1s para o Google Sheets atualizar e recarrega dados
-                setTimeout(() => loadSheetData(), 1500);
-                form.reset();  // opcional
-            } catch (error) {
-                showToast('Erro ao enviar. Verifique a URL do script.', true);
+            });
+
+            // Pré-popular com valores de exemplo (já estão nos atributos value)
+            // Garantir que o campo VALOR mostre corretamente
+            const valorField = document.getElementById('valor');
+            if (valorField.value && !valorField.value.startsWith('R$')) {
+                // apenas visual, o dado enviado será tratado para incluir R$
             }
-        });
+        })();
+    </script>
 
-        // ---------- INICIALIZAÇÃO ----------
-        loadSheetData();
-    })();
-</script>
-
-<!-- Instrução visível enquanto não configura a URL -->
-<div style="margin-top: 2rem; font-size: 0.8rem; background: #f0f6f9; padding: 1rem; border-radius: 16px; text-align: center; color: #215a66;">
-    <i class="fas fa-key"></i> Para o grid funcionar, você precisa implantar o <strong>Google Apps Script</strong> (código abaixo) e colar a URL do Web App na variável <code style="background: #dbe7ec;">APPS_SCRIPT_URL</code>.
-</div>
+    <!-- Nota: a planilha precisa estar publicada como Web App - veja as instruções no código do Google Apps Script -->
+    <div style="margin-top: 1rem; font-size: 0.75rem; text-align: center; color: #568696;">
+        <i class="fas fa-shield-alt"></i> Dados não serão salvos até que você configure o Google Apps Script com a URL correta. 
+        Consulte o arquivo <strong>Code.gs</strong> incluso.
+    </div>
 </body>
 </html>
-
